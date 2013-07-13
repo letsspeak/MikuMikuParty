@@ -2,7 +2,7 @@
 //  ViewController.m
 //  MikuMikuParty
 //
-//  Created by masa on 13/07/11.
+//  Created by letsspeak on 13/07/11.
 //
 //
 
@@ -16,7 +16,7 @@
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
+  [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
 }
 

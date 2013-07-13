@@ -2,7 +2,7 @@
 //  AppDelegate.m
 //  MikuMikuParty
 //
-//  Created by masa on 13/07/11.
+//  Created by letsspeak on 13/07/11.
 //
 //
 
@@ -12,6 +12,7 @@
 #import "pmdReader.h"
 #import "ES2Renderer.h"
 #import "ViewController.h"
+#import "MMDHubViewController.h"
 
 @implementation AppDelegate
 
@@ -23,9 +24,23 @@
   
   self.glView = [[EAGLView alloc] initWithFrame:[self.window bounds]];
   [self.viewController setView:self.glView];
-  [self.window addSubview: self.viewController.view];
   
+  self.navigationController = [[[UINavigationController alloc] initWithRootViewController:self.viewController] autorelease];
+  self.navigationController.navigationBarHidden = YES;
+  
+  [self.window setRootViewController:self.navigationController];
   [self.window makeKeyAndVisible];
+  
+  ///////
+  
+  MMDHubViewController *mmdhubViewController = [[[MMDHubViewController alloc] initWithNibName:@"MMDHubViewController" bundle:nil] autorelease];
+  [self.navigationController pushViewController:mmdhubViewController animated:NO];
+
+	return YES;
+}
+
+- (void)loadDefaultModels
+{
   
   NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 	NSString* doc = [paths objectAtIndex:0];
@@ -76,11 +91,27 @@
 		}
 	}
 	
-	[self picked:_iCurrentSelection[ _iPickerMode ]];
+  //	[self picked:_iCurrentSelection[ _iPickerMode ]];
+  
+  
+  NSString* strFile = nil;
+	if( _strModelFile )
+	{
+		strFile = [NSString stringWithFormat:@"%@/%@", doc, _strModelFile];
+	}
+	NSString* strMotionFile = nil;
+	if( _strMotionFile )
+	{
+		strMotionFile = [NSString stringWithFormat:@"%@/%@", doc, _strMotionFile];
+	}
+  
+  NSLog(@"strFile = %@", strFile);
+  NSLog(@"strMotionFile = %@", strMotionFile);
+  [self.glView.renderer load:strFile motion:strMotionFile];
+  
 	//	[glView.renderer load:strFile motion:strMotionFile];
   
   [self.glView startAnimation];
-	return YES;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
@@ -212,7 +243,10 @@
 		strMotionFile = [NSString stringWithFormat:@"%@/%@", doc, _strMotionFile];
 	}
   
-  [self.glView.renderer load:strFile motion:strMotionFile];
+  NSLog(@"strFile = %@", strFile);
+  NSLog(@"strMotionFile = %@", strMotionFile);
+  
+//  [self.glView.renderer load:strFile motion:strMotionFile];
 }
 
 - (int32_t) getSelection

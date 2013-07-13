@@ -2,7 +2,7 @@
 //  ViewController.h
 //  MikuMikuParty
 //
-//  Created by masa on 13/07/11.
+//  Created by letsspeak on 13/07/11.
 //
 //
 

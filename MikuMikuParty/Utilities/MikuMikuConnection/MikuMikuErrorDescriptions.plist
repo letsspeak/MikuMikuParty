@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>MikuMikuErrorUnknown</key>
+	<dict>
+		<key>code</key>
+		<integer>-1</integer>
+		<key>localizedDescription</key>
+		<string>Unknown error.</string>
+		<key>localizedFailureReasonError</key>
+		<string>unknown error</string>
+		<key>LocalizedRecoverySuggestionError</key>
+		<string>unknown error has occured</string>
+	</dict>
+	<key>MikuMikuErrorOffline</key>
+	<dict>
+		<key>code</key>
+		<integer>1</integer>
+		<key>localizedDescription</key>
+		<string>network error.</string>
+		<key>localizedFailureReasonError</key>
+		<string>network error.</string>
+		<key>LocalizedRecoverySuggestionError</key>
+		<string>check your internet connection.</string>
+	</dict>
+	<key>MikuMikuErrorTimeOut</key>
+	<dict>
+		<key>code</key>
+		<integer>2</integer>
+		<key>localizedDescription</key>
+		<string>Connection timeout error.</string>
+		<key>localizedFailureReasonError</key>
+		<string>timeout error</string>
+		<key>LocalizedRecoverySuggestionError</key>
+		<string>check if connection URI host is valid.</string>
+	</dict>
+	<key>MikuMikuErrorConnectionFailed</key>
+	<dict>
+		<key>code</key>
+		<integer>3</integer>
+		<key>localizedDescription</key>
+		<string>Connection error.</string>
+		<key>localizedFailureReasonError</key>
+		<string>connection error</string>
+		<key>LocalizedRecoverySuggestionError</key>
+		<string>NSURLConnection returns error.</string>
+	</dict>
+	<key>MikuMikuErrorInvalidRequest</key>
+	<dict>
+		<key>code</key>
+		<integer>51</integer>
+		<key>localizedDescription</key>
+		<string>Invalid request.</string>
+		<key>localizedFailureReasonError</key>
+		<string>invalid request</string>
+		<key>LocalizedRecoverySuggestionError</key>
+		<string>send request on contract file</string>
+	</dict>
+	<key>MikuMikuErrorCannotConvertRequest</key>
+	<dict>
+		<key>code</key>
+		<integer>52</integer>
+		<key>localizedDescription</key>
+		<string>cannot convert request</string>
+		<key>localizedFailureReasonError</key>
+		<string>convert request to json failed</string>
+		<key>LocalizedRecoverySuggestionError</key>
+		<string>send valid request dictionary</string>
+	</dict>
+	<key>MikuMikuErrorBadStatusCode</key>
+	<dict>
+		<key>code</key>
+		<integer>101</integer>
+		<key>localizedDescription</key>
+		<string>Status code error.</string>
+		<key>localizedFailureReasonError</key>
+		<string>server response status code error</string>
+		<key>LocalizedRecoverySuggestionError</key>
+		<string>check if connection URI host is valid.</string>
+	</dict>
+	<key>MikuMikuErrorCannotSerializeJson</key>
+	<dict>
+		<key>code</key>
+		<integer>102</integer>
+		<key>localizedDescription</key>
+		<string>Json serialization error.</string>
+		<key>localizedFailureReasonError</key>
+		<string>Json serialization error.</string>
+		<key>LocalizedRecoverySuggestionError</key>
+		<string>check your parameter and result parameter.</string>
+	</dict>
+	<key>MikuMikuErrorInvalidResponse</key>
+	<dict>
+		<key>code</key>
+		<integer>103</integer>
+		<key>localizedDescription</key>
+		<string>Invalid response error.</string>
+		<key>localizedFailureReasonError</key>
+		<string>Server response is invalid.</string>
+		<key>LocalizedRecoverySuggestionError</key>
+		<string>check server response parameters</string>
+	</dict>
+	<key>MikuMikuErrorSessionTimeOut</key>
+	<dict>
+		<key>code</key>
+		<integer>201</integer>
+		<key>localizedDescription</key>
+		<string>Session timeout error</string>
+		<key>localizedFailureReasonError</key>
+		<string>session timeout error</string>
+		<key>LocalizedRecoverySuggestionError</key>
+		<string>login to the server again</string>
+	</dict>
+	<key>MikuMikuErrorObsoleteVersion</key>
+	<dict>
+		<key>code</key>
+		<integer>302</integer>
+		<key>localizedDescription</key>
+		<string>Obsolete version</string>
+		<key>localizedFailureReasonError</key>
+		<string>Server throw error of obsolete version.</string>
+		<key>LocalizedRecoverySuggestionError</key>
+		<string>please update your app</string>
+	</dict>
+	<key>MikuMikuErrorUnderMaintenance</key>
+	<dict>
+		<key>code</key>
+		<integer>303</integer>
+		<key>localizedDescription</key>
+		<string>Under maintenance</string>
+		<key>localizedFailureReasonError</key>
+		<string>Server is now under maintenance</string>
+		<key>LocalizedRecoverySuggestionError</key>
+		<string>please wait for finishing server maintenance</string>
+	</dict>
+	<key>MikuMikuErrorServerReload</key>
+	<dict>
+		<key>code</key>
+		<integer>401</integer>
+		<key>localizedDescription</key>
+		<string>Server reload error</string>
+		<key>localizedFailureReasonError</key>
+		<string>Server throw reload error.</string>
+		<key>LocalizedRecoverySuggestionError</key>
+		<string>replace TopScene</string>
+	</dict>
+	<key>MikuMikuErrorServerRetention</key>
+	<dict>
+		<key>code</key>
+		<integer>402</integer>
+		<key>localizedDescription</key>
+		<string>Server retention error</string>
+		<key>localizedFailureReasonError</key>
+		<string>Server throw retention error</string>
+		<key>LocalizedRecoverySuggestionError</key>
+		<string>show dialog</string>
+	</dict>
+	<key>MikuMikuErrorServerAction</key>
+	<dict>
+		<key>code</key>
+		<integer>403</integer>
+		<key>localizedDescription</key>
+		<string>Server action error</string>
+		<key>localizedFailureReasonError</key>
+		<string>Server throw action error</string>
+		<key>LocalizedRecoverySuggestionError</key>
+		<string>action</string>
+	</dict>
+	<key>MikuMikuErrorReloginFailed</key>
+	<dict>
+		<key>code</key>
+		<integer>501</integer>
+		<key>localizedDescription</key>
+		<string>Login error.</string>
+		<key>localizedFailureReasonError</key>
+		<string>Cannot login server.</string>
+		<key>LocalizedRecoverySuggestionError</key>
+		<string>Check server status and your auth information</string>
+	</dict>
+</dict>
+</plist>

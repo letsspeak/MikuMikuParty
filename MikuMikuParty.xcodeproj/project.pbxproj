@@ -34,6 +34,18 @@
 		0E82C7B5178DBD5800E9E0A5 /* ShaderPlainTex.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 0E82C7AD178DBD5800E9E0A5 /* ShaderPlainTex.vsh */; };
 		0E82C7B7178DBD8700E9E0A5 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E82C7B6178DBD8700E9E0A5 /* QuartzCore.framework */; };
 		0E82C7B9178DBD8F00E9E0A5 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E82C7B8178DBD8F00E9E0A5 /* OpenGLES.framework */; };
+		0E916881179124E7001FD3A6 /* MMDHubViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E91687F179124E7001FD3A6 /* MMDHubViewController.m */; };
+		0E916882179124E7001FD3A6 /* MMDHubViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E916880179124E7001FD3A6 /* MMDHubViewController.xib */; };
+		0E91688617912837001FD3A6 /* MikuMikuConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E91688517912837001FD3A6 /* MikuMikuConnection.m */; };
+		0E91688C17912873001FD3A6 /* MikuMikuRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E91688B17912873001FD3A6 /* MikuMikuRequest.m */; };
+		0E91689117912A48001FD3A6 /* WindowLocker.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E91689017912A48001FD3A6 /* WindowLocker.m */; };
+		0E91689417912A78001FD3A6 /* WindowLocker+MikuMikuConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E91689317912A78001FD3A6 /* WindowLocker+MikuMikuConnection.m */; };
+		0E91689717912B4D001FD3A6 /* MikuMikuResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E91689617912B4D001FD3A6 /* MikuMikuResponse.m */; };
+		0E91689A17912B66001FD3A6 /* MikuMikuError.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E91689917912B66001FD3A6 /* MikuMikuError.m */; };
+		0E91689D17912F43001FD3A6 /* MikuMikuRequestPerformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E91689C17912F43001FD3A6 /* MikuMikuRequestPerformer.m */; };
+		0EAAC65817914263008EAE4F /* MikuMikuErrorDescriptions.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0EAAC65717914263008EAE4F /* MikuMikuErrorDescriptions.plist */; };
+		0EAAC65E1791973B008EAE4F /* MikuMikuConnectionServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EAAC65D1791973B008EAE4F /* MikuMikuConnectionServer.m */; };
+		0EAAC6621791A133008EAE4F /* MikuMikuConnectionServers.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0EAAC6611791A132008EAE4F /* MikuMikuConnectionServers.plist */; };
 		0EF8DD93178DB7A00067522B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EF8DD92178DB7A00067522B /* UIKit.framework */; };
 		0EF8DD95178DB7A00067522B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EF8DD94178DB7A00067522B /* Foundation.framework */; };
 		0EF8DD97178DB7A00067522B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EF8DD96178DB7A00067522B /* CoreGraphics.framework */; };
@@ -109,6 +121,27 @@
 		0E82C7AD178DBD5800E9E0A5 /* ShaderPlainTex.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = ShaderPlainTex.vsh; path = Shaders/ShaderPlainTex.vsh; sourceTree = "<group>"; };
 		0E82C7B6178DBD8700E9E0A5 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		0E82C7B8178DBD8F00E9E0A5 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		0E91687E179124E7001FD3A6 /* MMDHubViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMDHubViewController.h; path = MMDHub/MMDHubViewController.h; sourceTree = "<group>"; };
+		0E91687F179124E7001FD3A6 /* MMDHubViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMDHubViewController.m; path = MMDHub/MMDHubViewController.m; sourceTree = "<group>"; };
+		0E916880179124E7001FD3A6 /* MMDHubViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MMDHubViewController.xib; path = MMDHub/MMDHubViewController.xib; sourceTree = "<group>"; };
+		0E91688417912837001FD3A6 /* MikuMikuConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MikuMikuConnection.h; path = Utilities/MikuMikuConnection/MikuMikuConnection.h; sourceTree = "<group>"; };
+		0E91688517912837001FD3A6 /* MikuMikuConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MikuMikuConnection.m; path = Utilities/MikuMikuConnection/MikuMikuConnection.m; sourceTree = "<group>"; };
+		0E91688A17912873001FD3A6 /* MikuMikuRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MikuMikuRequest.h; path = Utilities/MikuMikuConnection/MikuMikuRequest.h; sourceTree = "<group>"; };
+		0E91688B17912873001FD3A6 /* MikuMikuRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MikuMikuRequest.m; path = Utilities/MikuMikuConnection/MikuMikuRequest.m; sourceTree = "<group>"; };
+		0E91688F17912A48001FD3A6 /* WindowLocker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WindowLocker.h; path = Utilities/WindowLocker/WindowLocker.h; sourceTree = "<group>"; };
+		0E91689017912A48001FD3A6 /* WindowLocker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WindowLocker.m; path = Utilities/WindowLocker/WindowLocker.m; sourceTree = "<group>"; };
+		0E91689217912A78001FD3A6 /* WindowLocker+MikuMikuConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "WindowLocker+MikuMikuConnection.h"; path = "Utilities/WindowLocker/WindowLocker+MikuMikuConnection.h"; sourceTree = "<group>"; };
+		0E91689317912A78001FD3A6 /* WindowLocker+MikuMikuConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "WindowLocker+MikuMikuConnection.m"; path = "Utilities/WindowLocker/WindowLocker+MikuMikuConnection.m"; sourceTree = "<group>"; };
+		0E91689517912B4D001FD3A6 /* MikuMikuResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MikuMikuResponse.h; path = Utilities/MikuMikuConnection/MikuMikuResponse.h; sourceTree = "<group>"; };
+		0E91689617912B4D001FD3A6 /* MikuMikuResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MikuMikuResponse.m; path = Utilities/MikuMikuConnection/MikuMikuResponse.m; sourceTree = "<group>"; };
+		0E91689817912B66001FD3A6 /* MikuMikuError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MikuMikuError.h; path = Utilities/MikuMikuConnection/MikuMikuError.h; sourceTree = "<group>"; };
+		0E91689917912B66001FD3A6 /* MikuMikuError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MikuMikuError.m; path = Utilities/MikuMikuConnection/MikuMikuError.m; sourceTree = "<group>"; };
+		0E91689B17912F43001FD3A6 /* MikuMikuRequestPerformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MikuMikuRequestPerformer.h; path = Utilities/MikuMikuConnection/MikuMikuRequestPerformer.h; sourceTree = "<group>"; };
+		0E91689C17912F43001FD3A6 /* MikuMikuRequestPerformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MikuMikuRequestPerformer.m; path = Utilities/MikuMikuConnection/MikuMikuRequestPerformer.m; sourceTree = "<group>"; };
+		0EAAC65717914263008EAE4F /* MikuMikuErrorDescriptions.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = MikuMikuErrorDescriptions.plist; path = Utilities/MikuMikuConnection/MikuMikuErrorDescriptions.plist; sourceTree = "<group>"; };
+		0EAAC65C1791973B008EAE4F /* MikuMikuConnectionServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MikuMikuConnectionServer.h; path = Utilities/MikuMikuConnection/MikuMikuConnectionServer.h; sourceTree = "<group>"; };
+		0EAAC65D1791973B008EAE4F /* MikuMikuConnectionServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MikuMikuConnectionServer.m; path = Utilities/MikuMikuConnection/MikuMikuConnectionServer.m; sourceTree = "<group>"; };
+		0EAAC6611791A132008EAE4F /* MikuMikuConnectionServers.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = MikuMikuConnectionServers.plist; path = Utilities/MikuMikuConnection/MikuMikuConnectionServers.plist; sourceTree = "<group>"; };
 		0EF8DD8F178DB7A00067522B /* MikuMikuParty.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MikuMikuParty.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0EF8DD92178DB7A00067522B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		0EF8DD94178DB7A00067522B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -163,6 +196,8 @@
 		0E82C74C178DB96800E9E0A5 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				0E91688E17912A13001FD3A6 /* WindowLocker */,
+				0E91688317912788001FD3A6 /* MikuMikuConnection */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";
@@ -259,6 +294,48 @@
 			name = vmd;
 			sourceTree = "<group>";
 		};
+		0E91687817912437001FD3A6 /* MMDHub */ = {
+			isa = PBXGroup;
+			children = (
+				0E91687E179124E7001FD3A6 /* MMDHubViewController.h */,
+				0E91687F179124E7001FD3A6 /* MMDHubViewController.m */,
+				0E916880179124E7001FD3A6 /* MMDHubViewController.xib */,
+			);
+			name = MMDHub;
+			sourceTree = "<group>";
+		};
+		0E91688317912788001FD3A6 /* MikuMikuConnection */ = {
+			isa = PBXGroup;
+			children = (
+				0E91688417912837001FD3A6 /* MikuMikuConnection.h */,
+				0E91688517912837001FD3A6 /* MikuMikuConnection.m */,
+				0EAAC65C1791973B008EAE4F /* MikuMikuConnectionServer.h */,
+				0EAAC65D1791973B008EAE4F /* MikuMikuConnectionServer.m */,
+				0EAAC6611791A132008EAE4F /* MikuMikuConnectionServers.plist */,
+				0E91688A17912873001FD3A6 /* MikuMikuRequest.h */,
+				0E91688B17912873001FD3A6 /* MikuMikuRequest.m */,
+				0E91689B17912F43001FD3A6 /* MikuMikuRequestPerformer.h */,
+				0E91689C17912F43001FD3A6 /* MikuMikuRequestPerformer.m */,
+				0E91689517912B4D001FD3A6 /* MikuMikuResponse.h */,
+				0E91689617912B4D001FD3A6 /* MikuMikuResponse.m */,
+				0E91689817912B66001FD3A6 /* MikuMikuError.h */,
+				0E91689917912B66001FD3A6 /* MikuMikuError.m */,
+				0EAAC65717914263008EAE4F /* MikuMikuErrorDescriptions.plist */,
+			);
+			name = MikuMikuConnection;
+			sourceTree = "<group>";
+		};
+		0E91688E17912A13001FD3A6 /* WindowLocker */ = {
+			isa = PBXGroup;
+			children = (
+				0E91688F17912A48001FD3A6 /* WindowLocker.h */,
+				0E91689017912A48001FD3A6 /* WindowLocker.m */,
+				0E91689217912A78001FD3A6 /* WindowLocker+MikuMikuConnection.h */,
+				0E91689317912A78001FD3A6 /* WindowLocker+MikuMikuConnection.m */,
+			);
+			name = WindowLocker;
+			sourceTree = "<group>";
+		};
 		0EF8DD86178DB7A00067522B = {
 			isa = PBXGroup;
 			children = (
@@ -294,6 +371,8 @@
 		0EF8DD98178DB7A00067522B /* MikuMikuParty */ = {
 			isa = PBXGroup;
 			children = (
+				0E82C74C178DB96800E9E0A5 /* Utilities */,
+				0E91687817912437001FD3A6 /* MMDHub */,
 				0E82C79B178DBC0A00E9E0A5 /* vmd */,
 				0E82C797178DBBEA00E9E0A5 /* SGXSkininngEvaluator */,
 				0E82C781178DBBD300E9E0A5 /* PVR */,
@@ -301,7 +380,6 @@
 				0E82C772178DBBBB00E9E0A5 /* ESRenderer */,
 				0E82C76C178DBB8E00E9E0A5 /* App */,
 				0E82C76B178DBB6600E9E0A5 /* Shaders */,
-				0E82C74C178DB96800E9E0A5 /* Utilities */,
 				0EF8DDA1178DB7A00067522B /* AppDelegate.h */,
 				0EF8DDA2178DB7A00067522B /* AppDelegate.mm */,
 				0EF8DDAA178DB7A00067522B /* ViewController.h */,
@@ -431,6 +509,9 @@
 				0E82C7B3178DBD5800E9E0A5 /* ShaderPlainSkin.vsh in Resources */,
 				0E82C7B4178DBD5800E9E0A5 /* ShaderPlainTex.fsh in Resources */,
 				0E82C7B5178DBD5800E9E0A5 /* ShaderPlainTex.vsh in Resources */,
+				0E916882179124E7001FD3A6 /* MMDHubViewController.xib in Resources */,
+				0EAAC65817914263008EAE4F /* MikuMikuErrorDescriptions.plist in Resources */,
+				0EAAC6621791A133008EAE4F /* MikuMikuConnectionServers.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -484,6 +565,15 @@
 				0E82C7A3178DBC1000E9E0A5 /* vmdMotonProviderIK.mm in Sources */,
 				0E82C7A4178DBC1000E9E0A5 /* vmdMotonProviderSkinAnimation.mm in Sources */,
 				0E82C7A5178DBC1000E9E0A5 /* vmdReader.mm in Sources */,
+				0E916881179124E7001FD3A6 /* MMDHubViewController.m in Sources */,
+				0E91688617912837001FD3A6 /* MikuMikuConnection.m in Sources */,
+				0E91688C17912873001FD3A6 /* MikuMikuRequest.m in Sources */,
+				0E91689117912A48001FD3A6 /* WindowLocker.m in Sources */,
+				0E91689417912A78001FD3A6 /* WindowLocker+MikuMikuConnection.m in Sources */,
+				0E91689717912B4D001FD3A6 /* MikuMikuResponse.m in Sources */,
+				0E91689A17912B66001FD3A6 /* MikuMikuError.m in Sources */,
+				0E91689D17912F43001FD3A6 /* MikuMikuRequestPerformer.m in Sources */,
+				0EAAC65E1791973B008EAE4F /* MikuMikuConnectionServer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

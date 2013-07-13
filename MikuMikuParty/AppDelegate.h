@@ -2,7 +2,7 @@
 //  AppDelegate.h
 //  MikuMikuParty
 //
-//  Created by masa on 13/07/11.
+//  Created by letsspeak on 13/07/11.
 //
 //
 
@@ -32,6 +32,7 @@
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) ViewController *viewController;
 @property (nonatomic, retain) EAGLView *glView;
+@property (nonatomic, assign) UINavigationController *navigationController;
 
 @property (nonatomic, retain) NSMutableArray* motionFiles;
 @property (nonatomic, retain) NSMutableArray* modelFiles;
