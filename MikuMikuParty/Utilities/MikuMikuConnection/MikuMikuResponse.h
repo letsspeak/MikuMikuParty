@@ -12,8 +12,11 @@
 
 @interface MikuMikuResponse : NSObject
 
-@property (nonatomic, retain) NSDictionary *responses;
+@property (nonatomic, retain) NSMutableDictionary *responses;
 @property (nonatomic, retain) MikuMikuRequest *request;
+
+- (id)objectForKeyedSubscript:(id)key;
+- (void)setObject:(id)object forKeyedSubscript:(id)key;
 
 + (id)responseWithJsonDictionary:(NSDictionary*)jsonDictionary request:(MikuMikuRequest*)request;
 

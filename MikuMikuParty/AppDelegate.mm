@@ -11,8 +11,11 @@
 #import "EAGLView.h"
 #import "pmdReader.h"
 #import "ES2Renderer.h"
+
 #import "ViewController.h"
 #import "MMDHubViewController.h"
+#import "DownloadsViewController.h"
+#import "PartyViewController.h"
 
 @implementation AppDelegate
 
@@ -33,8 +36,21 @@
   
   ///////
   
-  MMDHubViewController *mmdhubViewController = [[[MMDHubViewController alloc] initWithNibName:@"MMDHubViewController" bundle:nil] autorelease];
-  [self.navigationController pushViewController:mmdhubViewController animated:NO];
+ 
+  MMDHubViewController *mmdhub = [[[MMDHubViewController alloc] initWithNibName:@"MMDHubViewController" bundle:nil] autorelease];
+  UINavigationController *mmdhubNav = [[[UINavigationController alloc] initWithRootViewController:mmdhub] autorelease];
+
+  DownloadsViewController *downloads = [[[DownloadsViewController alloc] initWithNibName:@"DownloadsViewController" bundle:nil] autorelease];
+  UINavigationController *downloadsNav = [[[UINavigationController alloc] initWithRootViewController:downloads] autorelease];
+  
+  PartyViewController *party = [[[PartyViewController alloc] initWithNibName:@"PartyViewController" bundle:nil] autorelease];
+  UINavigationController *partyNav = [[[UINavigationController alloc] initWithRootViewController:party] autorelease];
+  
+  self.tabBarController = [[UITabBarController alloc] init];
+  self.tabBarController.viewControllers = @[mmdhubNav, downloadsNav, partyNav];
+  self.tabBarController.view.backgroundColor = [UIColor yellowColor];
+ 
+  [self.navigationController pushViewController:self.tabBarController animated:NO];
 
 	return YES;
 }

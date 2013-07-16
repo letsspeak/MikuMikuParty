@@ -34,8 +34,6 @@
 		0E82C7B5178DBD5800E9E0A5 /* ShaderPlainTex.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 0E82C7AD178DBD5800E9E0A5 /* ShaderPlainTex.vsh */; };
 		0E82C7B7178DBD8700E9E0A5 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E82C7B6178DBD8700E9E0A5 /* QuartzCore.framework */; };
 		0E82C7B9178DBD8F00E9E0A5 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E82C7B8178DBD8F00E9E0A5 /* OpenGLES.framework */; };
-		0E916881179124E7001FD3A6 /* MMDHubViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E91687F179124E7001FD3A6 /* MMDHubViewController.m */; };
-		0E916882179124E7001FD3A6 /* MMDHubViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E916880179124E7001FD3A6 /* MMDHubViewController.xib */; };
 		0E91688617912837001FD3A6 /* MikuMikuConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E91688517912837001FD3A6 /* MikuMikuConnection.m */; };
 		0E91688C17912873001FD3A6 /* MikuMikuRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E91688B17912873001FD3A6 /* MikuMikuRequest.m */; };
 		0E91689117912A48001FD3A6 /* WindowLocker.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E91689017912A48001FD3A6 /* WindowLocker.m */; };
@@ -46,6 +44,25 @@
 		0EAAC65817914263008EAE4F /* MikuMikuErrorDescriptions.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0EAAC65717914263008EAE4F /* MikuMikuErrorDescriptions.plist */; };
 		0EAAC65E1791973B008EAE4F /* MikuMikuConnectionServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EAAC65D1791973B008EAE4F /* MikuMikuConnectionServer.m */; };
 		0EAAC6621791A133008EAE4F /* MikuMikuConnectionServers.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0EAAC6611791A132008EAE4F /* MikuMikuConnectionServers.plist */; };
+		0EB7E4B71792D002009F2FFF /* MMDHubItemTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EB7E4B31792D002009F2FFF /* MMDHubItemTableView.m */; };
+		0EB7E4B81792D002009F2FFF /* MMDHubViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EB7E4B51792D002009F2FFF /* MMDHubViewController.m */; };
+		0EB7E4B91792D002009F2FFF /* MMDHubViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0EB7E4B61792D002009F2FFF /* MMDHubViewController.xib */; };
+		0EB7E4C61792D2BE009F2FFF /* DownloadsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EB7E4C41792D2BE009F2FFF /* DownloadsViewController.m */; };
+		0EB7E4C71792D2BE009F2FFF /* DownloadsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0EB7E4C51792D2BE009F2FFF /* DownloadsViewController.xib */; };
+		0EB7E4CC1792D372009F2FFF /* PartyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EB7E4CA1792D372009F2FFF /* PartyViewController.m */; };
+		0EB7E4CD1792D372009F2FFF /* PartyViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0EB7E4CB1792D372009F2FFF /* PartyViewController.xib */; };
+		0EB7E4D1179308D0009F2FFF /* ItemDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EB7E4CF179308D0009F2FFF /* ItemDetailViewController.m */; };
+		0EB7E4D2179308D0009F2FFF /* ItemDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0EB7E4D0179308D0009F2FFF /* ItemDetailViewController.xib */; };
+		0EB7E4D617930CDC009F2FFF /* MMDHubItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EB7E4D517930CDC009F2FFF /* MMDHubItem.m */; };
+		0EB7E4D917930CFF009F2FFF /* MMDHubItemCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EB7E4D817930CFF009F2FFF /* MMDHubItemCollection.m */; };
+		0EB7E4DD1795A0EF009F2FFF /* DownloadController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EB7E4DC1795A0EF009F2FFF /* DownloadController.m */; };
+		0EB7E4E11795A768009F2FFF /* MikuMikuDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EB7E4E01795A768009F2FFF /* MikuMikuDownloader.m */; };
+		0EB7E4E51795B30E009F2FFF /* ZipArchive.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0EB7E4E41795B30E009F2FFF /* ZipArchive.mm */; };
+		0EB7E4F01795B331009F2FFF /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 0EB7E4E81795B331009F2FFF /* ioapi.c */; };
+		0EB7E4F11795B331009F2FFF /* mztools.c in Sources */ = {isa = PBXBuildFile; fileRef = 0EB7E4EA1795B331009F2FFF /* mztools.c */; };
+		0EB7E4F21795B331009F2FFF /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = 0EB7E4EC1795B331009F2FFF /* unzip.c */; };
+		0EB7E4F31795B331009F2FFF /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = 0EB7E4EE1795B331009F2FFF /* zip.c */; };
+		0EB7E4F51795B38E009F2FFF /* libz.1.2.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EB7E4F41795B38D009F2FFF /* libz.1.2.5.dylib */; };
 		0EF8DD93178DB7A00067522B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EF8DD92178DB7A00067522B /* UIKit.framework */; };
 		0EF8DD95178DB7A00067522B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EF8DD94178DB7A00067522B /* Foundation.framework */; };
 		0EF8DD97178DB7A00067522B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EF8DD96178DB7A00067522B /* CoreGraphics.framework */; };
@@ -121,9 +138,6 @@
 		0E82C7AD178DBD5800E9E0A5 /* ShaderPlainTex.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = ShaderPlainTex.vsh; path = Shaders/ShaderPlainTex.vsh; sourceTree = "<group>"; };
 		0E82C7B6178DBD8700E9E0A5 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		0E82C7B8178DBD8F00E9E0A5 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
-		0E91687E179124E7001FD3A6 /* MMDHubViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMDHubViewController.h; path = MMDHub/MMDHubViewController.h; sourceTree = "<group>"; };
-		0E91687F179124E7001FD3A6 /* MMDHubViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMDHubViewController.m; path = MMDHub/MMDHubViewController.m; sourceTree = "<group>"; };
-		0E916880179124E7001FD3A6 /* MMDHubViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MMDHubViewController.xib; path = MMDHub/MMDHubViewController.xib; sourceTree = "<group>"; };
 		0E91688417912837001FD3A6 /* MikuMikuConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MikuMikuConnection.h; path = Utilities/MikuMikuConnection/MikuMikuConnection.h; sourceTree = "<group>"; };
 		0E91688517912837001FD3A6 /* MikuMikuConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MikuMikuConnection.m; path = Utilities/MikuMikuConnection/MikuMikuConnection.m; sourceTree = "<group>"; };
 		0E91688A17912873001FD3A6 /* MikuMikuRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MikuMikuRequest.h; path = Utilities/MikuMikuConnection/MikuMikuRequest.h; sourceTree = "<group>"; };
@@ -142,6 +156,40 @@
 		0EAAC65C1791973B008EAE4F /* MikuMikuConnectionServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MikuMikuConnectionServer.h; path = Utilities/MikuMikuConnection/MikuMikuConnectionServer.h; sourceTree = "<group>"; };
 		0EAAC65D1791973B008EAE4F /* MikuMikuConnectionServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MikuMikuConnectionServer.m; path = Utilities/MikuMikuConnection/MikuMikuConnectionServer.m; sourceTree = "<group>"; };
 		0EAAC6611791A132008EAE4F /* MikuMikuConnectionServers.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = MikuMikuConnectionServers.plist; path = Utilities/MikuMikuConnection/MikuMikuConnectionServers.plist; sourceTree = "<group>"; };
+		0EB7E4B21792D002009F2FFF /* MMDHubItemTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMDHubItemTableView.h; path = Contents/MMDHub/MMDHubItemTableView.h; sourceTree = "<group>"; };
+		0EB7E4B31792D002009F2FFF /* MMDHubItemTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMDHubItemTableView.m; path = Contents/MMDHub/MMDHubItemTableView.m; sourceTree = "<group>"; };
+		0EB7E4B41792D002009F2FFF /* MMDHubViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMDHubViewController.h; path = Contents/MMDHub/MMDHubViewController.h; sourceTree = "<group>"; };
+		0EB7E4B51792D002009F2FFF /* MMDHubViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMDHubViewController.m; path = Contents/MMDHub/MMDHubViewController.m; sourceTree = "<group>"; };
+		0EB7E4B61792D002009F2FFF /* MMDHubViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MMDHubViewController.xib; path = Contents/MMDHub/MMDHubViewController.xib; sourceTree = "<group>"; };
+		0EB7E4C31792D2BE009F2FFF /* DownloadsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DownloadsViewController.h; path = Contents/Downloads/DownloadsViewController.h; sourceTree = "<group>"; };
+		0EB7E4C41792D2BE009F2FFF /* DownloadsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DownloadsViewController.m; path = Contents/Downloads/DownloadsViewController.m; sourceTree = "<group>"; };
+		0EB7E4C51792D2BE009F2FFF /* DownloadsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = DownloadsViewController.xib; path = Contents/Downloads/DownloadsViewController.xib; sourceTree = "<group>"; };
+		0EB7E4C91792D372009F2FFF /* PartyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PartyViewController.h; path = Contents/Party/PartyViewController.h; sourceTree = "<group>"; };
+		0EB7E4CA1792D372009F2FFF /* PartyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PartyViewController.m; path = Contents/Party/PartyViewController.m; sourceTree = "<group>"; };
+		0EB7E4CB1792D372009F2FFF /* PartyViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PartyViewController.xib; path = Contents/Party/PartyViewController.xib; sourceTree = "<group>"; };
+		0EB7E4CE179308D0009F2FFF /* ItemDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ItemDetailViewController.h; path = Contents/MMDHub/ItemDetailViewController.h; sourceTree = "<group>"; };
+		0EB7E4CF179308D0009F2FFF /* ItemDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ItemDetailViewController.m; path = Contents/MMDHub/ItemDetailViewController.m; sourceTree = "<group>"; };
+		0EB7E4D0179308D0009F2FFF /* ItemDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ItemDetailViewController.xib; path = Contents/MMDHub/ItemDetailViewController.xib; sourceTree = "<group>"; };
+		0EB7E4D417930CDC009F2FFF /* MMDHubItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMDHubItem.h; path = Contents/MMDHub/MMDHubItem/MMDHubItem.h; sourceTree = "<group>"; };
+		0EB7E4D517930CDC009F2FFF /* MMDHubItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMDHubItem.m; path = Contents/MMDHub/MMDHubItem/MMDHubItem.m; sourceTree = "<group>"; };
+		0EB7E4D717930CFF009F2FFF /* MMDHubItemCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMDHubItemCollection.h; path = Contents/MMDHub/MMDHubItem/MMDHubItemCollection.h; sourceTree = "<group>"; };
+		0EB7E4D817930CFF009F2FFF /* MMDHubItemCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMDHubItemCollection.m; path = Contents/MMDHub/MMDHubItem/MMDHubItemCollection.m; sourceTree = "<group>"; };
+		0EB7E4DB1795A0EF009F2FFF /* DownloadController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DownloadController.h; path = DownloadController/DownloadController.h; sourceTree = "<group>"; };
+		0EB7E4DC1795A0EF009F2FFF /* DownloadController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DownloadController.m; path = DownloadController/DownloadController.m; sourceTree = "<group>"; };
+		0EB7E4DF1795A768009F2FFF /* MikuMikuDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MikuMikuDownloader.h; path = Utilities/MikuMikuDownloader/MikuMikuDownloader.h; sourceTree = "<group>"; };
+		0EB7E4E01795A768009F2FFF /* MikuMikuDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MikuMikuDownloader.m; path = Utilities/MikuMikuDownloader/MikuMikuDownloader.m; sourceTree = "<group>"; };
+		0EB7E4E31795B30E009F2FFF /* ZipArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZipArchive.h; path = Utilities/ZipArchive/ZipArchive.h; sourceTree = "<group>"; };
+		0EB7E4E41795B30E009F2FFF /* ZipArchive.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ZipArchive.mm; path = Utilities/ZipArchive/ZipArchive.mm; sourceTree = "<group>"; };
+		0EB7E4E71795B331009F2FFF /* crypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = crypt.h; path = Utilities/ZipArchive/minizip/crypt.h; sourceTree = "<group>"; };
+		0EB7E4E81795B331009F2FFF /* ioapi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ioapi.c; path = Utilities/ZipArchive/minizip/ioapi.c; sourceTree = "<group>"; };
+		0EB7E4E91795B331009F2FFF /* ioapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ioapi.h; path = Utilities/ZipArchive/minizip/ioapi.h; sourceTree = "<group>"; };
+		0EB7E4EA1795B331009F2FFF /* mztools.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mztools.c; path = Utilities/ZipArchive/minizip/mztools.c; sourceTree = "<group>"; };
+		0EB7E4EB1795B331009F2FFF /* mztools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mztools.h; path = Utilities/ZipArchive/minizip/mztools.h; sourceTree = "<group>"; };
+		0EB7E4EC1795B331009F2FFF /* unzip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = unzip.c; path = Utilities/ZipArchive/minizip/unzip.c; sourceTree = "<group>"; };
+		0EB7E4ED1795B331009F2FFF /* unzip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = unzip.h; path = Utilities/ZipArchive/minizip/unzip.h; sourceTree = "<group>"; };
+		0EB7E4EE1795B331009F2FFF /* zip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip.c; path = Utilities/ZipArchive/minizip/zip.c; sourceTree = "<group>"; };
+		0EB7E4EF1795B331009F2FFF /* zip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = zip.h; path = Utilities/ZipArchive/minizip/zip.h; sourceTree = "<group>"; };
+		0EB7E4F41795B38D009F2FFF /* libz.1.2.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.2.5.dylib; path = usr/lib/libz.1.2.5.dylib; sourceTree = SDKROOT; };
 		0EF8DD8F178DB7A00067522B /* MikuMikuParty.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MikuMikuParty.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0EF8DD92178DB7A00067522B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		0EF8DD94178DB7A00067522B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -172,6 +220,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0EB7E4F51795B38E009F2FFF /* libz.1.2.5.dylib in Frameworks */,
 				0E82C7B9178DBD8F00E9E0A5 /* OpenGLES.framework in Frameworks */,
 				0E82C7B7178DBD8700E9E0A5 /* QuartzCore.framework in Frameworks */,
 				0EF8DD93178DB7A00067522B /* UIKit.framework in Frameworks */,
@@ -196,6 +245,8 @@
 		0E82C74C178DB96800E9E0A5 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				0EB7E4E21795B2E8009F2FFF /* ZipArchive */,
+				0EB7E4DE1795A74F009F2FFF /* MikuMikuDownloader */,
 				0E91688E17912A13001FD3A6 /* WindowLocker */,
 				0E91688317912788001FD3A6 /* MikuMikuConnection */,
 			);
@@ -294,16 +345,6 @@
 			name = vmd;
 			sourceTree = "<group>";
 		};
-		0E91687817912437001FD3A6 /* MMDHub */ = {
-			isa = PBXGroup;
-			children = (
-				0E91687E179124E7001FD3A6 /* MMDHubViewController.h */,
-				0E91687F179124E7001FD3A6 /* MMDHubViewController.m */,
-				0E916880179124E7001FD3A6 /* MMDHubViewController.xib */,
-			);
-			name = MMDHub;
-			sourceTree = "<group>";
-		};
 		0E91688317912788001FD3A6 /* MikuMikuConnection */ = {
 			isa = PBXGroup;
 			children = (
@@ -336,9 +377,111 @@
 			name = WindowLocker;
 			sourceTree = "<group>";
 		};
+		0EB7E4B01792CFCA009F2FFF /* Contents */ = {
+			isa = PBXGroup;
+			children = (
+				0EB7E4B11792CFF8009F2FFF /* MMDHub */,
+				0EB7E4BA1792D005009F2FFF /* Downloads */,
+				0EB7E4C81792D2C1009F2FFF /* Party */,
+			);
+			name = Contents;
+			sourceTree = "<group>";
+		};
+		0EB7E4B11792CFF8009F2FFF /* MMDHub */ = {
+			isa = PBXGroup;
+			children = (
+				0EB7E4D317930C97009F2FFF /* MMDHubItem */,
+				0EB7E4B21792D002009F2FFF /* MMDHubItemTableView.h */,
+				0EB7E4B31792D002009F2FFF /* MMDHubItemTableView.m */,
+				0EB7E4B41792D002009F2FFF /* MMDHubViewController.h */,
+				0EB7E4B51792D002009F2FFF /* MMDHubViewController.m */,
+				0EB7E4B61792D002009F2FFF /* MMDHubViewController.xib */,
+				0EB7E4CE179308D0009F2FFF /* ItemDetailViewController.h */,
+				0EB7E4CF179308D0009F2FFF /* ItemDetailViewController.m */,
+				0EB7E4D0179308D0009F2FFF /* ItemDetailViewController.xib */,
+			);
+			name = MMDHub;
+			sourceTree = "<group>";
+		};
+		0EB7E4BA1792D005009F2FFF /* Downloads */ = {
+			isa = PBXGroup;
+			children = (
+				0EB7E4C31792D2BE009F2FFF /* DownloadsViewController.h */,
+				0EB7E4C41792D2BE009F2FFF /* DownloadsViewController.m */,
+				0EB7E4C51792D2BE009F2FFF /* DownloadsViewController.xib */,
+			);
+			name = Downloads;
+			sourceTree = "<group>";
+		};
+		0EB7E4C81792D2C1009F2FFF /* Party */ = {
+			isa = PBXGroup;
+			children = (
+				0EB7E4C91792D372009F2FFF /* PartyViewController.h */,
+				0EB7E4CA1792D372009F2FFF /* PartyViewController.m */,
+				0EB7E4CB1792D372009F2FFF /* PartyViewController.xib */,
+			);
+			name = Party;
+			sourceTree = "<group>";
+		};
+		0EB7E4D317930C97009F2FFF /* MMDHubItem */ = {
+			isa = PBXGroup;
+			children = (
+				0EB7E4D417930CDC009F2FFF /* MMDHubItem.h */,
+				0EB7E4D517930CDC009F2FFF /* MMDHubItem.m */,
+				0EB7E4D717930CFF009F2FFF /* MMDHubItemCollection.h */,
+				0EB7E4D817930CFF009F2FFF /* MMDHubItemCollection.m */,
+			);
+			name = MMDHubItem;
+			sourceTree = "<group>";
+		};
+		0EB7E4DA1795A0C9009F2FFF /* DownloadController */ = {
+			isa = PBXGroup;
+			children = (
+				0EB7E4DB1795A0EF009F2FFF /* DownloadController.h */,
+				0EB7E4DC1795A0EF009F2FFF /* DownloadController.m */,
+			);
+			name = DownloadController;
+			sourceTree = "<group>";
+		};
+		0EB7E4DE1795A74F009F2FFF /* MikuMikuDownloader */ = {
+			isa = PBXGroup;
+			children = (
+				0EB7E4DF1795A768009F2FFF /* MikuMikuDownloader.h */,
+				0EB7E4E01795A768009F2FFF /* MikuMikuDownloader.m */,
+			);
+			name = MikuMikuDownloader;
+			sourceTree = "<group>";
+		};
+		0EB7E4E21795B2E8009F2FFF /* ZipArchive */ = {
+			isa = PBXGroup;
+			children = (
+				0EB7E4E61795B324009F2FFF /* minizip */,
+				0EB7E4E31795B30E009F2FFF /* ZipArchive.h */,
+				0EB7E4E41795B30E009F2FFF /* ZipArchive.mm */,
+			);
+			name = ZipArchive;
+			sourceTree = "<group>";
+		};
+		0EB7E4E61795B324009F2FFF /* minizip */ = {
+			isa = PBXGroup;
+			children = (
+				0EB7E4E71795B331009F2FFF /* crypt.h */,
+				0EB7E4E81795B331009F2FFF /* ioapi.c */,
+				0EB7E4E91795B331009F2FFF /* ioapi.h */,
+				0EB7E4EA1795B331009F2FFF /* mztools.c */,
+				0EB7E4EB1795B331009F2FFF /* mztools.h */,
+				0EB7E4EC1795B331009F2FFF /* unzip.c */,
+				0EB7E4ED1795B331009F2FFF /* unzip.h */,
+				0EB7E4EE1795B331009F2FFF /* zip.c */,
+				0EB7E4EF1795B331009F2FFF /* zip.h */,
+			);
+			name = minizip;
+			sourceTree = "<group>";
+		};
 		0EF8DD86178DB7A00067522B = {
 			isa = PBXGroup;
 			children = (
+				0EB7E4F41795B38D009F2FFF /* libz.1.2.5.dylib */,
 				0EF8DD98178DB7A00067522B /* MikuMikuParty */,
 				0EF8DDBF178DB7A10067522B /* MikuMikuPartyTests */,
 				0EF8DD91178DB7A00067522B /* Frameworks */,
@@ -371,8 +514,9 @@
 		0EF8DD98178DB7A00067522B /* MikuMikuParty */ = {
 			isa = PBXGroup;
 			children = (
+				0EB7E4DA1795A0C9009F2FFF /* DownloadController */,
+				0EB7E4B01792CFCA009F2FFF /* Contents */,
 				0E82C74C178DB96800E9E0A5 /* Utilities */,
-				0E91687817912437001FD3A6 /* MMDHub */,
 				0E82C79B178DBC0A00E9E0A5 /* vmd */,
 				0E82C797178DBBEA00E9E0A5 /* SGXSkininngEvaluator */,
 				0E82C781178DBBD300E9E0A5 /* PVR */,
@@ -509,9 +653,12 @@
 				0E82C7B3178DBD5800E9E0A5 /* ShaderPlainSkin.vsh in Resources */,
 				0E82C7B4178DBD5800E9E0A5 /* ShaderPlainTex.fsh in Resources */,
 				0E82C7B5178DBD5800E9E0A5 /* ShaderPlainTex.vsh in Resources */,
-				0E916882179124E7001FD3A6 /* MMDHubViewController.xib in Resources */,
 				0EAAC65817914263008EAE4F /* MikuMikuErrorDescriptions.plist in Resources */,
 				0EAAC6621791A133008EAE4F /* MikuMikuConnectionServers.plist in Resources */,
+				0EB7E4B91792D002009F2FFF /* MMDHubViewController.xib in Resources */,
+				0EB7E4C71792D2BE009F2FFF /* DownloadsViewController.xib in Resources */,
+				0EB7E4CD1792D372009F2FFF /* PartyViewController.xib in Resources */,
+				0EB7E4D2179308D0009F2FFF /* ItemDetailViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -565,7 +712,6 @@
 				0E82C7A3178DBC1000E9E0A5 /* vmdMotonProviderIK.mm in Sources */,
 				0E82C7A4178DBC1000E9E0A5 /* vmdMotonProviderSkinAnimation.mm in Sources */,
 				0E82C7A5178DBC1000E9E0A5 /* vmdReader.mm in Sources */,
-				0E916881179124E7001FD3A6 /* MMDHubViewController.m in Sources */,
 				0E91688617912837001FD3A6 /* MikuMikuConnection.m in Sources */,
 				0E91688C17912873001FD3A6 /* MikuMikuRequest.m in Sources */,
 				0E91689117912A48001FD3A6 /* WindowLocker.m in Sources */,
@@ -574,6 +720,20 @@
 				0E91689A17912B66001FD3A6 /* MikuMikuError.m in Sources */,
 				0E91689D17912F43001FD3A6 /* MikuMikuRequestPerformer.m in Sources */,
 				0EAAC65E1791973B008EAE4F /* MikuMikuConnectionServer.m in Sources */,
+				0EB7E4B71792D002009F2FFF /* MMDHubItemTableView.m in Sources */,
+				0EB7E4B81792D002009F2FFF /* MMDHubViewController.m in Sources */,
+				0EB7E4C61792D2BE009F2FFF /* DownloadsViewController.m in Sources */,
+				0EB7E4CC1792D372009F2FFF /* PartyViewController.m in Sources */,
+				0EB7E4D1179308D0009F2FFF /* ItemDetailViewController.m in Sources */,
+				0EB7E4D617930CDC009F2FFF /* MMDHubItem.m in Sources */,
+				0EB7E4D917930CFF009F2FFF /* MMDHubItemCollection.m in Sources */,
+				0EB7E4DD1795A0EF009F2FFF /* DownloadController.m in Sources */,
+				0EB7E4E11795A768009F2FFF /* MikuMikuDownloader.m in Sources */,
+				0EB7E4E51795B30E009F2FFF /* ZipArchive.mm in Sources */,
+				0EB7E4F01795B331009F2FFF /* ioapi.c in Sources */,
+				0EB7E4F11795B331009F2FFF /* mztools.c in Sources */,
+				0EB7E4F21795B331009F2FFF /* unzip.c in Sources */,
+				0EB7E4F31795B331009F2FFF /* zip.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -14,7 +14,9 @@
 {
   self = [super init];
   if (self) {
-    self.responses = jsonDictionary;
+    if ([jsonDictionary.allKeys containsObject:@"args"]) {
+      self.responses = [NSMutableDictionary dictionaryWithDictionary:jsonDictionary[@"args"]];
+    }
     self.request = request;
   }
   return self;
@@ -25,6 +27,16 @@
   self.responses = nil;
   self.request = nil;
   [super dealloc];
+}
+
+- (id)objectForKeyedSubscript:(id)key
+{
+  return [self.responses objectForKey:key];
+}
+
+- (void)setObject:(id)object forKeyedSubscript:(id)key
+{
+  return [self.responses setObject:object forKey:key];
 }
 
 + (id)responseWithJsonDictionary:(NSDictionary*)jsonDictionary request:(MikuMikuRequest*)request

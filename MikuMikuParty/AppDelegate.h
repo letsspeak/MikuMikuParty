@@ -32,7 +32,9 @@
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) ViewController *viewController;
 @property (nonatomic, retain) EAGLView *glView;
+
 @property (nonatomic, assign) UINavigationController *navigationController;
+@property (nonatomic, retain) UITabBarController *tabBarController;
 
 @property (nonatomic, retain) NSMutableArray* motionFiles;
 @property (nonatomic, retain) NSMutableArray* modelFiles;

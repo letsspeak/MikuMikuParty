@@ -22,7 +22,8 @@ typedef enum {
 @property (nonatomic, assign) MikuMikuRequestMethod method;
 @property (nonatomic, retain) NSString *controller;
 @property (nonatomic, retain) NSString *action;
-@property (nonatomic, retain) NSDictionary *parameters;
+@property (nonatomic, retain) NSString *urlPrameterString;
+@property (nonatomic, retain) NSMutableDictionary *parameters;
 
 @property (nonatomic, copy) void(^succeededHandler)(MikuMikuResponse *response);
 @property (nonatomic, copy) void(^failedHandler)(MikuMikuError *error);
@@ -30,6 +31,9 @@ typedef enum {
 
 - (void)performRequestWithSucceededHandler:(void(^)(MikuMikuResponse *response))succeededHandler
                              failedHandler:(void(^)(MikuMikuError *error))failedHandler;
+
+- (id)objectForKeyedSubscript:(id)key;
+- (void)setObject:(id)object forKeyedSubscript:(id)key;
 
 + (id)requestWithController:(NSString*)controller action:(NSString*)action;
 

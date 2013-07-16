@@ -123,8 +123,13 @@ static MikuMikuConnectionServer *_sharedInstance = nil;
   NSString *url = [self generateUriWithUrlFormat:urlFormat controller:controller action:action];
 
   if (request.method == MikuMikuRequestMethodHttpGet) {
+    
+    if (request.urlPrameterString) {
+      url = [url stringByAppendingFormat:@"/%@", request.urlPrameterString];
+    }
+    
     NSString *parameterString = [self urlEncodedParameterStringWithDictionary:request.parameters];
-    if (parameterString) [url stringByAppendingFormat:@"?%@", parameterString];
+    if (parameterString) url = [url stringByAppendingFormat:@"?%@", parameterString];
   }
   
   return url;
