@@ -11,8 +11,6 @@
 #import <OpenGLES/ES2/gl.h>
 #import <OpenGLES/ES2/glext.h>
 
-#import "pmdRenderer.h"
-
 #define USE_MSAA (1)
 #define NUM_MSAASAMPLE (2)
 
@@ -34,11 +32,6 @@
 #endif
 	
     GLuint program;
-	
-	pmdReader _reader;
-	vmdReader _motionreader;
-	pmdRenderer _pmdRenderer;
-	
 }
 
 - (void)render;

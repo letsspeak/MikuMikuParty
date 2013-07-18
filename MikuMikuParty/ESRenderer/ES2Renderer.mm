@@ -8,6 +8,7 @@
 
 #include <sys/time.h>
 #import "ES2Renderer.h"
+#import "pmdRenderer.h"
 
 // uniform index
 enum {
@@ -35,7 +36,12 @@ inline double micro()
 	return now;
 }
 
-@interface ES2Renderer (PrivateMethods)
+@interface ES2Renderer ()
+
+@property (nonatomic, assign) pmdReader reader;
+@property (nonatomic, assign) vmdReader motionreader;
+@property (nonatomic, assign) pmdRenderer pmdRenderer;
+
 - (BOOL)loadShaders;
 - (BOOL)compileShader:(GLuint *)shader type:(GLenum)type file:(NSString *)file;
 - (BOOL)linkProgram:(GLuint)prog;

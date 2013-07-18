@@ -135,15 +135,18 @@ static DownloadController *_sharedInstance = nil;
   NSLog(@"documentPath = %@", documentPath);
   NSString *unzipPath = [documentPath stringByAppendingFormat:@"/Downloads/%@", item.digest];
   
+  NSLog(@"unzip...");
   ZipArchive* za = [[[ZipArchive alloc] init] autorelease];
   if([za UnzipOpenFile:zipPath]) {
     
     BOOL ret = [za UnzipFileTo:unzipPath overWrite:YES];
     if(NO == ret) {
       // エラー処理
+      NSLog(@"unzip error!");
     }
     [za UnzipCloseFile];
   }
+  NSLog(@"unzip completed.");
   
   [[NSFileManager defaultManager] removeItemAtPath:zipPath error:nil];
 }

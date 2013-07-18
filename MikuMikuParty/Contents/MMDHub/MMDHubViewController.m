@@ -45,23 +45,18 @@
      
    }];
   
-  NSString* path=[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
-	path=[path stringByAppendingPathComponent:@"Downloads"];
-  
-  NSString *filename = nil;
-  NSDictionary *attrs = nil;
-  NSDirectoryEnumerator* dirEnum = [[NSFileManager defaultManager] enumeratorAtPath:path];
-  while (filename = [dirEnum nextObject]) {
-    attrs = [dirEnum fileAttributes];
-    NSLog(@"attrs = %@", attrs);
-    NSLog(@"filetype = %@", [attrs objectForKey:NSFileType]);
-    NSLog(@"filename = %@", filename);
-  }
-  
-//  if (TwitterController.defaultTwitterAccount) {
-//    
-//  }else {
-//    [TwitterController getTwitterAccount];
+//  NSString* path=[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
+//	path=[path stringByAppendingPathComponent:@"Downloads"];
+//  
+//  NSString *filename = nil;
+//  NSDictionary *attrs = nil;
+//  NSDirectoryEnumerator* dirEnum = [[NSFileManager defaultManager] enumeratorAtPath:path];
+//  [dirEnum skipDescendants];
+//  while (filename = [dirEnum nextObject]) {
+//    attrs = [dirEnum fileAttributes];
+//    NSLog(@"filename: %@", filename);
+//    NSLog(@"attrs = %@", attrs);
+//
 //  }
 }
 

@@ -8,7 +8,7 @@
 
 #import "EAGLView.h"
 #import "ES2Renderer.h"
-
+#import "AppDelegate.h"
 
 @interface EAGLView ()
 @property (nonatomic, getter=isAnimating) BOOL animating;
@@ -55,6 +55,13 @@
     NSString *currSysVer = [[UIDevice currentDevice] systemVersion];
     if ([currSysVer compare:reqSysVer options:NSNumericSearch] != NSOrderedAscending)
       displayLinkSupported = YES;
+    
+    UIButton *stopButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    stopButton.titleLabel.text = @"x";
+    stopButton.titleLabel.textColor = [UIColor blackColor];
+    stopButton.frame = CGRectMake(4, 24, 30, 30);
+    [stopButton addTarget:self action:@selector(stopButtonDidPush:) forControlEvents:UIControlEventTouchDown];
+    [self addSubview:stopButton];
   }
   
   return self;
@@ -142,6 +149,13 @@
   }
 }
 
+- (void)stopButtonDidPush:(id)sender
+{
+  [self stopAnimation];
+
+  AppDelegate *delegate = (AppDelegate*)[UIApplication sharedApplication].delegate;
+  [delegate.navigationController pushViewController:delegate.tabBarController animated:YES];
+}
 
 
 @end

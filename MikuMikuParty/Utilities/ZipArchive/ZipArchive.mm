@@ -13,6 +13,34 @@
 
 
 
+#pragma mark - for filename encode judgement
+
+// Shift_JIS判定
+int isSJIS(char *inp)
+{
+  int  cnt = 0;
+  
+  while (*inp) {
+    if ((Byte)*inp <= 0x7F) {
+      inp++;      // ASCII
+    } else if ((Byte)*inp>=0x81 && (Byte)*inp<=0x9F &&
+               (((Byte)*(inp+1)>=0x40 && (Byte)*(inp+1)<=0x7E) || ((Byte)*(inp+1)>=0x80 && (Byte)*(inp+1)<=0xFC))) {
+      inp += 2;   // 漢字
+      cnt++;
+    } else if ((Byte)*inp>=0xA1 && (Byte)*inp<=0xDF) {
+      inp++;      // 半角カナ
+      cnt++;
+    } else if ((Byte)*inp>=0xE0 && (Byte)*inp<=0xEF &&
+               (((Byte)*(inp+1)>=0x40 && (Byte)*(inp+1)<=0x7E) || ((Byte)*(inp+1)>=0x80 && (Byte)*(inp+1)<=0xFC))) {
+      inp += 2;   // 漢字
+      cnt++;
+    } else {
+      return 0;
+    }
+  }
+  return cnt; // 日本語文字数
+}
+
 @interface ZipArchive (Private)
 
 -(void) OutputErrorMessage:(NSString*) msg;
@@ -174,6 +202,10 @@
 
 -(BOOL) UnzipFileTo:(NSString*) path overWrite:(BOOL) overwrite
 {
+  NSLog(@"ZipArchive::UnzipFileTo:overWrite:");
+  NSLog(@"path = %@", path);
+  NSLog(@"overWrite = %@", overwrite ? @"YES": @"NO");
+  
 	BOOL success = YES;
 	int ret = unzGoToFirstFile( _unzFile );
 	unsigned char		buffer[4096] = {0};
@@ -210,7 +242,16 @@
 		filename[fileInfo.size_filename] = '\0';
 		
 		// check if it contains directory
-		NSString * strPath = [NSString  stringWithCString:filename encoding:NSUTF8StringEncoding];
+    BOOL sjis = isSJIS(filename);
+    NSLog(@"filename = %s, isSJIS = %@", filename, sjis ? @"YES" : @"NO");
+    
+    NSStringEncoding encoding = NSUTF8StringEncoding;
+    if (sjis) encoding = NSShiftJISStringEncoding;
+    NSString *strPath = [[[NSString alloc] initWithBytes:(const void*)filename
+                                                 length:fileInfo.size_filename + 1
+                                                encoding:encoding] autorelease];
+//    strPath = [NSString stringWithUTF8String:[strPath UTF8String]];
+    
 		BOOL isDirectory = NO;
 		if( filename[fileInfo.size_filename-1]=='/' || filename[fileInfo.size_filename-1]=='\\')
 			isDirectory = YES;
@@ -220,11 +261,18 @@
 			strPath = [strPath stringByReplacingOccurrencesOfString:@"\\" withString:@"/"];
 		}
 		NSString* fullPath = [path stringByAppendingPathComponent:strPath];
-		
+    
+    NSError *error = nil;
 		if( isDirectory )
-			[fman createDirectoryAtPath:fullPath withIntermediateDirectories:YES attributes:nil error:nil];
+			[fman createDirectoryAtPath:fullPath withIntermediateDirectories:YES attributes:nil error:&error];
 		else
-			[fman createDirectoryAtPath:[fullPath stringByDeletingLastPathComponent] withIntermediateDirectories:YES attributes:nil error:nil];
+			[fman createDirectoryAtPath:[fullPath stringByDeletingLastPathComponent] withIntermediateDirectories:YES attributes:nil error:&error];
+    
+    if (error) {
+      NSLog(@"createDirectoryAtPath returns error:");
+      NSLog(@" error %@", error);
+    }
+    
 		if( [fman fileExistsAtPath:fullPath] && !isDirectory && !overwrite )
 		{
 			if( ![self OverWrite:fullPath] )
@@ -307,6 +355,8 @@
 #pragma mark wrapper for delegate
 -(void) OutputErrorMessage:(NSString*) msg
 {
+  NSLog(@"ZipArchive::OutputErrorMessage");
+  NSLog(@"%@", msg);
 	if( _delegate && [_delegate respondsToSelector:@selector(ErrorMessage)] )
 		[_delegate ErrorMessage:msg];
 }
@@ -333,6 +383,7 @@
 	[gregorian release];
 	return date;
 }
+
 
 
 @end

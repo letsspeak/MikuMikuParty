@@ -16,7 +16,6 @@
 - (NSInteger)itemCountWithCategory:(MMDHubItemCategory)category;
 - (MMDHubItem*)itemWithCategory:(MMDHubItemCategory)category order:(NSInteger)order;
 
-
 + (id)collectionWithItemDics:(NSArray*)items;
 
 @end

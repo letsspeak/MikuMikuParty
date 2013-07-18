@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0E82C770178DBBAE00E9E0A5 /* PickerViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E82C76E178DBBAE00E9E0A5 /* PickerViewController.mm */; };
-		0E82C771178DBBAE00E9E0A5 /* PickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E82C76F178DBBAE00E9E0A5 /* PickerViewController.xib */; };
 		0E82C778178DBBC200E9E0A5 /* EAGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E82C774178DBBC200E9E0A5 /* EAGLView.mm */; };
 		0E82C779178DBBC200E9E0A5 /* ES2Renderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E82C776178DBBC200E9E0A5 /* ES2Renderer.mm */; };
 		0E82C77F178DBBCF00E9E0A5 /* pmdReader.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E82C77C178DBBCF00E9E0A5 /* pmdReader.mm */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -63,6 +61,7 @@
 		0EB7E4F21795B331009F2FFF /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = 0EB7E4EC1795B331009F2FFF /* unzip.c */; };
 		0EB7E4F31795B331009F2FFF /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = 0EB7E4EE1795B331009F2FFF /* zip.c */; };
 		0EB7E4F51795B38E009F2FFF /* libz.1.2.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EB7E4F41795B38D009F2FFF /* libz.1.2.5.dylib */; };
+		0EB7E4F8179827C4009F2FFF /* ItemSelectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EB7E4F7179827C4009F2FFF /* ItemSelectViewController.m */; };
 		0EF8DD93178DB7A00067522B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EF8DD92178DB7A00067522B /* UIKit.framework */; };
 		0EF8DD95178DB7A00067522B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EF8DD94178DB7A00067522B /* Foundation.framework */; };
 		0EF8DD97178DB7A00067522B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EF8DD96178DB7A00067522B /* CoreGraphics.framework */; };
@@ -93,9 +92,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0E82C76D178DBBAE00E9E0A5 /* PickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PickerViewController.h; path = App/PickerViewController.h; sourceTree = "<group>"; };
-		0E82C76E178DBBAE00E9E0A5 /* PickerViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PickerViewController.mm; path = App/PickerViewController.mm; sourceTree = "<group>"; };
-		0E82C76F178DBBAE00E9E0A5 /* PickerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PickerViewController.xib; path = App/PickerViewController.xib; sourceTree = "<group>"; };
 		0E82C773178DBBC200E9E0A5 /* EAGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EAGLView.h; path = ESRenderer/EAGLView.h; sourceTree = "<group>"; };
 		0E82C774178DBBC200E9E0A5 /* EAGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = EAGLView.mm; path = ESRenderer/EAGLView.mm; sourceTree = "<group>"; };
 		0E82C775178DBBC200E9E0A5 /* ES2Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ES2Renderer.h; path = ESRenderer/ES2Renderer.h; sourceTree = "<group>"; };
@@ -190,6 +186,8 @@
 		0EB7E4EE1795B331009F2FFF /* zip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip.c; path = Utilities/ZipArchive/minizip/zip.c; sourceTree = "<group>"; };
 		0EB7E4EF1795B331009F2FFF /* zip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = zip.h; path = Utilities/ZipArchive/minizip/zip.h; sourceTree = "<group>"; };
 		0EB7E4F41795B38D009F2FFF /* libz.1.2.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.2.5.dylib; path = usr/lib/libz.1.2.5.dylib; sourceTree = SDKROOT; };
+		0EB7E4F6179827C4009F2FFF /* ItemSelectViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ItemSelectViewController.h; path = Contents/Party/ItemSelectViewController.h; sourceTree = "<group>"; };
+		0EB7E4F7179827C4009F2FFF /* ItemSelectViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ItemSelectViewController.m; path = Contents/Party/ItemSelectViewController.m; sourceTree = "<group>"; };
 		0EF8DD8F178DB7A00067522B /* MikuMikuParty.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MikuMikuParty.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0EF8DD92178DB7A00067522B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		0EF8DD94178DB7A00067522B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -271,9 +269,6 @@
 		0E82C76C178DBB8E00E9E0A5 /* App */ = {
 			isa = PBXGroup;
 			children = (
-				0E82C76D178DBBAE00E9E0A5 /* PickerViewController.h */,
-				0E82C76E178DBBAE00E9E0A5 /* PickerViewController.mm */,
-				0E82C76F178DBBAE00E9E0A5 /* PickerViewController.xib */,
 			);
 			name = App;
 			sourceTree = "<group>";
@@ -419,6 +414,8 @@
 				0EB7E4C91792D372009F2FFF /* PartyViewController.h */,
 				0EB7E4CA1792D372009F2FFF /* PartyViewController.m */,
 				0EB7E4CB1792D372009F2FFF /* PartyViewController.xib */,
+				0EB7E4F6179827C4009F2FFF /* ItemSelectViewController.h */,
+				0EB7E4F7179827C4009F2FFF /* ItemSelectViewController.m */,
 			);
 			name = Party;
 			sourceTree = "<group>";
@@ -644,7 +641,6 @@
 				0EF8DDA9178DB7A00067522B /* Default-568h@2x.png in Resources */,
 				0EF8DDAF178DB7A00067522B /* ViewController_iPhone.xib in Resources */,
 				0EF8DDB2178DB7A00067522B /* ViewController_iPad.xib in Resources */,
-				0E82C771178DBBAE00E9E0A5 /* PickerViewController.xib in Resources */,
 				0E82C7AE178DBD5800E9E0A5 /* Shader.fsh in Resources */,
 				0E82C7AF178DBD5800E9E0A5 /* Shader.vsh in Resources */,
 				0E82C7B0178DBD5800E9E0A5 /* ShaderPlain.fsh in Resources */,
@@ -696,7 +692,6 @@
 				0EF8DD9F178DB7A00067522B /* main.mm in Sources */,
 				0EF8DDA3178DB7A00067522B /* AppDelegate.mm in Sources */,
 				0EF8DDAC178DB7A00067522B /* ViewController.m in Sources */,
-				0E82C770178DBBAE00E9E0A5 /* PickerViewController.mm in Sources */,
 				0E82C778178DBBC200E9E0A5 /* EAGLView.mm in Sources */,
 				0E82C779178DBBC200E9E0A5 /* ES2Renderer.mm in Sources */,
 				0E82C77F178DBBCF00E9E0A5 /* pmdReader.mm in Sources */,
@@ -734,6 +729,7 @@
 				0EB7E4F11795B331009F2FFF /* mztools.c in Sources */,
 				0EB7E4F21795B331009F2FFF /* unzip.c in Sources */,
 				0EB7E4F31795B331009F2FFF /* zip.c in Sources */,
+				0EB7E4F8179827C4009F2FFF /* ItemSelectViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

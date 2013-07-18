@@ -38,14 +38,6 @@
 {
   [super viewDidLoad];
   
-//  @property (nonatomic, assign) IBOutlet UILabel *titleLabel;
-//  @property (nonatomic, assign) IBOutlet UILabel *categoryLabel;
-//  @property (nonatomic, assign) IBOutlet UILabel *filenameLabel;
-//  @property (nonatomic, assign) IBOutlet UILabel *sizeLabel;
-//  @property (nonatomic, assign) IBOutlet UILabel *digestLabel;
-//  @property (nonatomic, assign) IBOutlet UILabel *isPublicLabel;
-//  @property (nonatomic, assign) IBOutlet UIButton *downloadButton;
-  
   self.titleLabel.text = self.item.title;
   self.categoryLabel.text = [MMDHubItem nameWithCategory:self.item.category];
   self.filenameLabel.text = self.item.filename;

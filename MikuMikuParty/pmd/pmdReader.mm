@@ -24,6 +24,7 @@ bool pmdReader::init( NSString* strFileName )
 {
   NSLog(@"pmdReader::init called.");
   NSLog(@"pmdReader::init will call dataWithContentsOfFile");
+  NSLog(@"strFilename = %@", strFileName);
 	_data = [[NSData dataWithContentsOfFile:strFileName options:NSDataReadingUncached error:nil] retain];
 	if( !_data )
   {
