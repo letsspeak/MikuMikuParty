@@ -98,6 +98,7 @@ struct mmd_skin
 
 class pmdReader
 {
+  NSString *_filename;
 	int8_t* _pData;
 	int32_t _iOffset;
 	NSData* _data;
@@ -137,6 +138,8 @@ public:
 	bool init( NSString* strFileName );
 	bool unload();
 	
+  NSString *getRootPath();
+  
 	int32_t getNumVertices() { return _iNumVertices; }
 	mmd_vertex* getVertices() { return _pVertices; }
 	

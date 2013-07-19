@@ -25,6 +25,7 @@ bool pmdReader::init( NSString* strFileName )
   NSLog(@"pmdReader::init called.");
   NSLog(@"pmdReader::init will call dataWithContentsOfFile");
   NSLog(@"strFilename = %@", strFileName);
+  _filename = [strFileName retain];
 	_data = [[NSData dataWithContentsOfFile:strFileName options:NSDataReadingUncached error:nil] retain];
 	if( !_data )
   {
@@ -88,6 +89,11 @@ bool pmdReader::init( NSString* strFileName )
 
 bool pmdReader::unload()
 {
+  if (_filename) {
+    [_filename release];
+    _filename = nil;
+  }
+  
 	if( _data )
 	{
 		[_data release];
@@ -276,3 +282,13 @@ bool pmdReader::verifyHeader()
 	return true;
 }
 
+
+NSString *pmdReader::getRootPath()
+{
+  NSArray *pathComponents = [_filename pathComponents];
+  NSString *rootPath = [NSString string];
+  for (int i = 0; i < [pathComponents count] - 1; i++) {
+    rootPath = [rootPath stringByAppendingPathComponent:pathComponents[i]];
+  }
+  return rootPath;
+}

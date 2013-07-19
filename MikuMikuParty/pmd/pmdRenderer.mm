@@ -7,6 +7,7 @@
 //
 
 #import "pmdRenderer.h"
+#import "NSString+Charset.h"
 
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
@@ -388,7 +389,11 @@ void pmdRenderer::createIndexBuffer( pmdReader* pReader )
 }
 
 void pmdRenderer::loadMaterials( pmdReader* pReader )
-{	
+{
+  NSString *rootPath = pReader->getRootPath();
+  NSLog(@"rootPath = %@", rootPath);
+  
+
 	for( int32_t i = 0; i < pReader->getNumMaterials(); ++i )
 	{
 		_vecMaterials.push_back( pReader->getMaterials()[ i ] );
@@ -396,12 +401,9 @@ void pmdRenderer::loadMaterials( pmdReader* pReader )
 		mmd_material& mat = _vecMaterials[ i ];
 		if( mat.texture_file_name[ 0 ] != 0 )
 		{
-			NSString* strFile = [NSString stringWithUTF8String: mat.texture_file_name];
-			
-			NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-			NSString* doc = [paths objectAtIndex:0];
-			
-			NSString* str = [NSString stringWithFormat:@"%@/%@", doc, strFile];
+			NSString *strFile = [[NSString stringWithCString:(const char*)mat.texture_file_name encoding:NSShiftJISStringEncoding]
+                           trimDisabledCharactersForWindowsFilesystem:20];
+			NSString* str = [NSString stringWithFormat:@"%@/%@", rootPath, strFile];
 			NSLog( @"Texture:%@", str);
 			
 			mat._tex2D = [[Texture2D alloc] initWithImage: [UIImage imageWithContentsOfFile:str]];

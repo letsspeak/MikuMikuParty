@@ -62,6 +62,7 @@
 		0EB7E4F31795B331009F2FFF /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = 0EB7E4EE1795B331009F2FFF /* zip.c */; };
 		0EB7E4F51795B38E009F2FFF /* libz.1.2.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EB7E4F41795B38D009F2FFF /* libz.1.2.5.dylib */; };
 		0EB7E4F8179827C4009F2FFF /* ItemSelectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EB7E4F7179827C4009F2FFF /* ItemSelectViewController.m */; };
+		0EB7E4FC17997D93009F2FFF /* NSString+Charset.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EB7E4FB17997D93009F2FFF /* NSString+Charset.m */; };
 		0EF8DD93178DB7A00067522B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EF8DD92178DB7A00067522B /* UIKit.framework */; };
 		0EF8DD95178DB7A00067522B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EF8DD94178DB7A00067522B /* Foundation.framework */; };
 		0EF8DD97178DB7A00067522B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EF8DD96178DB7A00067522B /* CoreGraphics.framework */; };
@@ -188,6 +189,8 @@
 		0EB7E4F41795B38D009F2FFF /* libz.1.2.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.2.5.dylib; path = usr/lib/libz.1.2.5.dylib; sourceTree = SDKROOT; };
 		0EB7E4F6179827C4009F2FFF /* ItemSelectViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ItemSelectViewController.h; path = Contents/Party/ItemSelectViewController.h; sourceTree = "<group>"; };
 		0EB7E4F7179827C4009F2FFF /* ItemSelectViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ItemSelectViewController.m; path = Contents/Party/ItemSelectViewController.m; sourceTree = "<group>"; };
+		0EB7E4FA17997D93009F2FFF /* NSString+Charset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+Charset.h"; path = "Utilities/NSString+Charset/NSString+Charset.h"; sourceTree = "<group>"; };
+		0EB7E4FB17997D93009F2FFF /* NSString+Charset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+Charset.m"; path = "Utilities/NSString+Charset/NSString+Charset.m"; sourceTree = "<group>"; };
 		0EF8DD8F178DB7A00067522B /* MikuMikuParty.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MikuMikuParty.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0EF8DD92178DB7A00067522B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		0EF8DD94178DB7A00067522B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -243,6 +246,7 @@
 		0E82C74C178DB96800E9E0A5 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				0EB7E4F917997D6E009F2FFF /* NSString+Charset */,
 				0EB7E4E21795B2E8009F2FFF /* ZipArchive */,
 				0EB7E4DE1795A74F009F2FFF /* MikuMikuDownloader */,
 				0E91688E17912A13001FD3A6 /* WindowLocker */,
@@ -473,6 +477,15 @@
 				0EB7E4EF1795B331009F2FFF /* zip.h */,
 			);
 			name = minizip;
+			sourceTree = "<group>";
+		};
+		0EB7E4F917997D6E009F2FFF /* NSString+Charset */ = {
+			isa = PBXGroup;
+			children = (
+				0EB7E4FA17997D93009F2FFF /* NSString+Charset.h */,
+				0EB7E4FB17997D93009F2FFF /* NSString+Charset.m */,
+			);
+			name = "NSString+Charset";
 			sourceTree = "<group>";
 		};
 		0EF8DD86178DB7A00067522B = {
@@ -730,6 +743,7 @@
 				0EB7E4F21795B331009F2FFF /* unzip.c in Sources */,
 				0EB7E4F31795B331009F2FFF /* zip.c in Sources */,
 				0EB7E4F8179827C4009F2FFF /* ItemSelectViewController.m in Sources */,
+				0EB7E4FC17997D93009F2FFF /* NSString+Charset.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
