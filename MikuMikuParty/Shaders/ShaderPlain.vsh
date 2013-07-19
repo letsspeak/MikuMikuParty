@@ -51,7 +51,8 @@ void main(void)
 	highp vec3 worldNormal = vec3(mat3(m0[0].xyz, m0[1].xyz, m0[2].xyz) * myNormal);
 	highp vec3 ecPosition = v.xyz;
 
-	colorDiffuse = dot( worldNormal, normalize(-vLight0+ecPosition) ) * vMaterialDiffuse  + vec4( vMaterialAmbient, 1 );
+//	colorDiffuse = dot( worldNormal, normalize(-vLight0+ecPosition) ) * vMaterialDiffuse  + vec4( vMaterialAmbient, 1 );
+  colorDiffuse = vMaterialDiffuse + vec4( vMaterialAmbient, 1);
 	
 #if USE_PHONG
 	normal = worldNormal;
