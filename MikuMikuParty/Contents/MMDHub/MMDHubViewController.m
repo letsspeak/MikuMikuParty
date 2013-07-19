@@ -18,6 +18,9 @@
   if (self) {
     self.title = @"MMDHub";
 //    self.tabBarItem.image = [UIImage imageNamed:@"first"];
+    UIBarButtonItem *item = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh
+                                                                           target:self action:@selector(refreshButtonDidPush:)] autorelease];
+    self.navigationItem.rightBarButtonItem = item;
   }
   return self;
 }
@@ -28,7 +31,11 @@
   [super viewDidLoad];
   
   self.tableView.parentViewController = self;
-  
+  [self loadUserItems];
+}
+
+- (void)loadUserItems
+{
   MikuMikuRequest *request = [MikuMikuRequest requestWithController:@"items" action:@"user_items"];
   request.method = MikuMikuRequestMethodHttpGet;
   [WindowLocker lockWithRequest:request
@@ -44,20 +51,6 @@
      NSLog(@"items/user_items failed with error:¥n%@", error);
      
    }];
-  
-//  NSString* path=[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
-//	path=[path stringByAppendingPathComponent:@"Downloads"];
-//  
-//  NSString *filename = nil;
-//  NSDictionary *attrs = nil;
-//  NSDirectoryEnumerator* dirEnum = [[NSFileManager defaultManager] enumeratorAtPath:path];
-//  [dirEnum skipDescendants];
-//  while (filename = [dirEnum nextObject]) {
-//    attrs = [dirEnum fileAttributes];
-//    NSLog(@"filename: %@", filename);
-//    NSLog(@"attrs = %@", attrs);
-//
-//  }
 }
 
 - (void)loadItems:(NSArray*)items
@@ -73,5 +66,9 @@
   [super didReceiveMemoryWarning];
 }
 
+- (void)refreshButtonDidPush:(id)sender
+{
+  [self loadUserItems];
+}
 
 @end
