@@ -104,6 +104,12 @@ static NSString *ItemSelectViewControllerCellIdentifier = @"ItemSelectViewContro
              reuseIdentifier:ItemSelectViewControllerCellIdentifier] autorelease];
   }
   
+  // for debug
+  if ([[self.items[indexPath.row] pathExtension] isEqualToString:@"pmx"]) {
+    cell.textLabel.textColor = [UIColor grayColor];
+    cell.userInteractionEnabled = NO;
+  }
+      
   cell.textLabel.text = [[self.items[indexPath.row] lastPathComponent] stringByDeletingPathExtension];
   cell.textLabel.adjustsFontSizeToFitWidth = YES;
 //  cell.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y,

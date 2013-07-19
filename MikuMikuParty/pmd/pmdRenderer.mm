@@ -1161,6 +1161,10 @@ BOOL pmdRenderer::validateProgram(const GLuint prog )
 
 BOOL pmdRenderer::loadShaders( SHADER_PARAMS* params, NSString* strVsh, NSString* strFsh )
 {
+  NSLog(@"pmdRenderer::loadShaders");
+  NSLog(@"vsh = %@", strVsh);
+  NSLog(@"fsh = %@", strFsh);
+  
 	GLuint program;
   GLuint vertShader, fragShader;
   NSString *vertShaderPathname, *fragShaderPathname;
