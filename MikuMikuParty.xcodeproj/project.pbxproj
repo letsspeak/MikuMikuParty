@@ -63,6 +63,7 @@
 		0EB7E4F51795B38E009F2FFF /* libz.1.2.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EB7E4F41795B38D009F2FFF /* libz.1.2.5.dylib */; };
 		0EB7E4F8179827C4009F2FFF /* ItemSelectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EB7E4F7179827C4009F2FFF /* ItemSelectViewController.m */; };
 		0EB7E4FC17997D93009F2FFF /* NSString+Charset.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EB7E4FB17997D93009F2FFF /* NSString+Charset.m */; };
+		0EB7E5001799A99B009F2FFF /* pmxReader.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0EB7E4FE1799A99B009F2FFF /* pmxReader.mm */; };
 		0EF8DD93178DB7A00067522B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EF8DD92178DB7A00067522B /* UIKit.framework */; };
 		0EF8DD95178DB7A00067522B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EF8DD94178DB7A00067522B /* Foundation.framework */; };
 		0EF8DD97178DB7A00067522B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EF8DD96178DB7A00067522B /* CoreGraphics.framework */; };
@@ -191,6 +192,8 @@
 		0EB7E4F7179827C4009F2FFF /* ItemSelectViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ItemSelectViewController.m; path = Contents/Party/ItemSelectViewController.m; sourceTree = "<group>"; };
 		0EB7E4FA17997D93009F2FFF /* NSString+Charset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+Charset.h"; path = "Utilities/NSString+Charset/NSString+Charset.h"; sourceTree = "<group>"; };
 		0EB7E4FB17997D93009F2FFF /* NSString+Charset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+Charset.m"; path = "Utilities/NSString+Charset/NSString+Charset.m"; sourceTree = "<group>"; };
+		0EB7E4FE1799A99B009F2FFF /* pmxReader.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = pmxReader.mm; path = pmx/pmxReader.mm; sourceTree = "<group>"; };
+		0EB7E4FF1799A99B009F2FFF /* pmxReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pmxReader.h; path = pmx/pmxReader.h; sourceTree = "<group>"; };
 		0EF8DD8F178DB7A00067522B /* MikuMikuParty.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MikuMikuParty.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0EF8DD92178DB7A00067522B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		0EF8DD94178DB7A00067522B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -268,13 +271,6 @@
 				0E82C7AD178DBD5800E9E0A5 /* ShaderPlainTex.vsh */,
 			);
 			name = Shaders;
-			sourceTree = "<group>";
-		};
-		0E82C76C178DBB8E00E9E0A5 /* App */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = App;
 			sourceTree = "<group>";
 		};
 		0E82C772178DBBBB00E9E0A5 /* ESRenderer */ = {
@@ -488,6 +484,15 @@
 			name = "NSString+Charset";
 			sourceTree = "<group>";
 		};
+		0EB7E4FD1799A95E009F2FFF /* pmx */ = {
+			isa = PBXGroup;
+			children = (
+				0EB7E4FF1799A99B009F2FFF /* pmxReader.h */,
+				0EB7E4FE1799A99B009F2FFF /* pmxReader.mm */,
+			);
+			name = pmx;
+			sourceTree = "<group>";
+		};
 		0EF8DD86178DB7A00067522B = {
 			isa = PBXGroup;
 			children = (
@@ -530,9 +535,9 @@
 				0E82C79B178DBC0A00E9E0A5 /* vmd */,
 				0E82C797178DBBEA00E9E0A5 /* SGXSkininngEvaluator */,
 				0E82C781178DBBD300E9E0A5 /* PVR */,
+				0EB7E4FD1799A95E009F2FFF /* pmx */,
 				0E82C77A178DBBC700E9E0A5 /* pmd */,
 				0E82C772178DBBBB00E9E0A5 /* ESRenderer */,
-				0E82C76C178DBB8E00E9E0A5 /* App */,
 				0E82C76B178DBB6600E9E0A5 /* Shaders */,
 				0EF8DDA1178DB7A00067522B /* AppDelegate.h */,
 				0EF8DDA2178DB7A00067522B /* AppDelegate.mm */,
@@ -744,6 +749,7 @@
 				0EB7E4F31795B331009F2FFF /* zip.c in Sources */,
 				0EB7E4F8179827C4009F2FFF /* ItemSelectViewController.m in Sources */,
 				0EB7E4FC17997D93009F2FFF /* NSString+Charset.m in Sources */,
+				0EB7E5001799A99B009F2FFF /* pmxReader.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

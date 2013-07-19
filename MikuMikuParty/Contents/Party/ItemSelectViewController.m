@@ -107,7 +107,6 @@ static NSString *ItemSelectViewControllerCellIdentifier = @"ItemSelectViewContro
   // for debug
   if ([[self.items[indexPath.row] pathExtension] isEqualToString:@"pmx"]) {
     cell.textLabel.textColor = [UIColor grayColor];
-    cell.userInteractionEnabled = NO;
   }
       
   cell.textLabel.text = [[self.items[indexPath.row] lastPathComponent] stringByDeletingPathExtension];
