@@ -58,6 +58,11 @@ bool pmxReader::init(NSString *filename)
     return false;
   }
   
+  if (parseIndices() == false) {
+    NSLog(@"Failed to parseIndices()");
+    return false;
+  }
+  
   NSLog(@"finished Loading %@", filename);
   
   return true;
@@ -153,9 +158,7 @@ bool pmxReader::parseHeader()
   NSLog(@"regid_body_index_size: %d", _pHeader->regid_body_index_size);
   
   _iOffset += size;
-  if (_iOffset > [_data length]) return false;
-  
-  return true;
+  return !(_iOffset > [_data length]);
 }
 
 bool pmxReader::parseModelInfo()
@@ -178,6 +181,7 @@ bool pmxReader::parseVertices()
 {
  	int32_t iVertices = getInteger();
 	NSLog( @"Num vertices: %d", iVertices );
+  _iNumVertices = iVertices;
   
   for (int32_t i = 0; i < iVertices; i++) {
 //    NSLog(@"vertex[%d]--------", i);
@@ -204,7 +208,7 @@ bool pmxReader::parseVertex()
   vertex.additional_ux_count = _pHeader->additional_uv_count;
 //  NSLog(@"vertex_additional_ux_count: %d", vertex.additional_ux_count);
   if (vertex.additional_ux_count > 0) {
-    vertex.additional_uv = (pmx_additional_uv*)_pData[ _iOffset ];
+    vertex.additional_uv = (pmx_additional_uv*)&_pData[ _iOffset ];
     _iOffset += sizeof(pmx_additional_uv) * vertex.additional_ux_count;
   }
   
@@ -220,7 +224,7 @@ bool pmxReader::parseVertex()
     {
 //      NSLog(@"BDEF1");
       vertex.bone_count = 1;
-      vertex.bone_num = (void*)_pData[ _iOffset ];
+      vertex.bone_num = (void*)&_pData[ _iOffset ];
       _iOffset += (vertex.bone_index_size * vertex.bone_count);
       vertex.bone_weight_count = 0;
     }
@@ -229,10 +233,10 @@ bool pmxReader::parseVertex()
     {
 //      NSLog(@"BDEF2");
       vertex.bone_count = 2;
-      vertex.bone_num = (void*)_pData[ _iOffset ];
+      vertex.bone_num = (void*)&_pData[ _iOffset ];
       _iOffset += (vertex.bone_index_size * vertex.bone_count);
       vertex.bone_weight_count = 1;
-      vertex.bone_weight = (float*)_pData[ _iOffset ];
+      vertex.bone_weight = (float*)&_pData[ _iOffset ];
       _iOffset += (sizeof(float) * vertex.bone_weight_count);
     }
       break;
@@ -240,10 +244,10 @@ bool pmxReader::parseVertex()
     {
 //      NSLog(@"BDEF4");
       vertex.bone_count = 4;
-      vertex.bone_num = (void*)_pData[ _iOffset ];
+      vertex.bone_num = (void*)&_pData[ _iOffset ];
       _iOffset += (vertex.bone_index_size * vertex.bone_count);
       vertex.bone_weight_count = 4;
-      vertex.bone_weight = (float*)_pData[ _iOffset ];
+      vertex.bone_weight = (float*)&_pData[ _iOffset ];
       _iOffset += (sizeof(float) * vertex.bone_weight_count);
     }
       break;
@@ -251,10 +255,10 @@ bool pmxReader::parseVertex()
     {
 //      NSLog(@"SDEF");
       vertex.bone_count = 2;
-      vertex.bone_num = (void*)_pData[ _iOffset ];
+      vertex.bone_num = (void*)&_pData[ _iOffset ];
       _iOffset += (vertex.bone_index_size * vertex.bone_count);
       vertex.bone_weight_count = 1;
-      vertex.bone_weight = (float*)_pData[ _iOffset ];
+      vertex.bone_weight = (float*)&_pData[ _iOffset ];
       _iOffset += (sizeof(float) * vertex.bone_weight_count);
       getFloat3((float*)&vertex.sdef[0]);
       getFloat3((float*)&vertex.sdef[1]);
@@ -265,10 +269,10 @@ bool pmxReader::parseVertex()
     {
 //      NSLog(@"QDEF");
       vertex.bone_count = 4;
-      vertex.bone_num = (void*)_pData[ _iOffset ];
+      vertex.bone_num = (void*)&_pData[ _iOffset ];
       _iOffset += (vertex.bone_index_size * vertex.bone_count);
       vertex.bone_weight_count = 4;
-      vertex.bone_weight = (float*)_pData[ _iOffset ];
+      vertex.bone_weight = (float*)&_pData[ _iOffset ];
       _iOffset += (sizeof(float) * vertex.bone_weight_count);
     }
       break;
@@ -282,6 +286,17 @@ bool pmxReader::parseVertex()
   
   if (_iOffset > [_data length]) return false;
   return true;
+}
+
+bool pmxReader::parseIndices()
+{
+  int32_t iIndices = getInteger();
+  NSLog(@"Num Indices: %d", iIndices);
+  _iNumIndices = iIndices;
+  _pIndices = (void*)&_pData[ _iOffset ];
+  _iOffset += (iIndices *_pHeader->vertex_index_size);
+  
+  return !(_iOffset > [_data length]);
 }
 
 

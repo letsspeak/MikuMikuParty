@@ -85,6 +85,9 @@ class pmxReader
   int32_t _iNumVertices;
   std::vector< pmx_vertex > _vecVertices;
   
+  int32_t _iNumIndices;
+  void *_pIndices;
+  
 	int32_t getInteger();
 	int16_t getShort();
   int8_t getChar();
@@ -98,6 +101,7 @@ class pmxReader
   bool parseModelInfo();
   bool parseVertices();
   bool parseVertex();
+  bool parseIndices();
   
 public:
   
