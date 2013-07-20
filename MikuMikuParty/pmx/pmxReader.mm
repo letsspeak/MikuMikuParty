@@ -53,6 +53,13 @@ bool pmxReader::init(NSString *filename)
     return false;
   }
   
+  if (parseVertices() == false) {
+    NSLog(@"Failed to parseVertices()");
+    return false;
+  }
+  
+  NSLog(@"finished Loading %@", filename);
+  
   return true;
 }
 
@@ -85,17 +92,28 @@ float pmxReader::getFloat()
 	return f;
 }
 
+bool pmxReader::getFloat2(float *f)
+{
+  memcpy(f, &_pData[ _iOffset ], sizeof(float) * 2);
+	_iOffset += sizeof( float ) * 2;
+  return !(_iOffset > [_data length]);
+}
+
+bool pmxReader::getFloat3(float *f)
+{
+  memcpy(f, &_pData[ _iOffset ], sizeof(float) * 3);
+	_iOffset += sizeof( float ) * 3;
+  return !(_iOffset > [_data length]);
+}
+
 bool pmxReader::getString(pmx_string *pString)
 {
   int32_t size = getInteger();
   pString->bytes = (char*)&_pData[ _iOffset ];
   pString->length = size;
   pString->charset = _pHeader->charset;
-  
   _iOffset += size;
-  if (_iOffset > [_data length]) return false;
-  
-  return true;
+  return !(_iOffset > [_data length]);
 }
 
 bool pmxReader::verifyHeader()
@@ -142,7 +160,6 @@ bool pmxReader::parseHeader()
 
 bool pmxReader::parseModelInfo()
 {
-//  _pModelInfo->name = getString();
   if (getString(&_modelInfo.name) == false) return false;
   if (getString(&_modelInfo.name_en) == false) return false;
   if (getString(&_modelInfo.comment) == false) return false;
@@ -156,4 +173,118 @@ bool pmxReader::parseModelInfo()
   
   return true;
 }
+
+bool pmxReader::parseVertices()
+{
+ 	int32_t iVertices = getInteger();
+	NSLog( @"Num vertices: %d", iVertices );
+  
+  for (int32_t i = 0; i < iVertices; i++) {
+//    NSLog(@"vertex[%d]--------", i);
+    if ( parseVertex() == false) return false;
+  }
+  
+  return true;
+}
+
+bool pmxReader::parseVertex()
+{
+  pmx_vertex vertex;
+
+  // basic data
+  getFloat3(vertex.pos);
+  getFloat3(vertex.normal_vec);
+  getFloat2(vertex.uv);
+  
+//  LogFloat3(@"vertex.pos", vertex.pos);
+//  LogFloat3(@"vertex.normal_vec", vertex.normal_vec);
+//  LogFloat2(@"vertex.uv", vertex.uv);
+  
+  // additional_uv
+  vertex.additional_ux_count = _pHeader->additional_uv_count;
+//  NSLog(@"vertex_additional_ux_count: %d", vertex.additional_ux_count);
+  if (vertex.additional_ux_count > 0) {
+    vertex.additional_uv = (pmx_additional_uv*)_pData[ _iOffset ];
+    _iOffset += sizeof(pmx_additional_uv) * vertex.additional_ux_count;
+  }
+  
+//  for (int i = 0; i < vertex.additional_ux_count; i++){
+//    LogFloat4(([NSString stringWithFormat:@"additional_uv[%d]", i]), vertex.additional_uv[i]);
+//  }
+  
+  vertex.weight_type = getChar();
+  vertex.bone_index_size = _pHeader->bone_index_size;
+  
+  switch (vertex.weight_type) {
+    case 0: // BDEF1
+    {
+//      NSLog(@"BDEF1");
+      vertex.bone_count = 1;
+      vertex.bone_num = (void*)_pData[ _iOffset ];
+      _iOffset += (vertex.bone_index_size * vertex.bone_count);
+      vertex.bone_weight_count = 0;
+    }
+      break;
+    case 1: // BDEF2
+    {
+//      NSLog(@"BDEF2");
+      vertex.bone_count = 2;
+      vertex.bone_num = (void*)_pData[ _iOffset ];
+      _iOffset += (vertex.bone_index_size * vertex.bone_count);
+      vertex.bone_weight_count = 1;
+      vertex.bone_weight = (float*)_pData[ _iOffset ];
+      _iOffset += (sizeof(float) * vertex.bone_weight_count);
+    }
+      break;
+    case 2: // BDEF4
+    {
+//      NSLog(@"BDEF4");
+      vertex.bone_count = 4;
+      vertex.bone_num = (void*)_pData[ _iOffset ];
+      _iOffset += (vertex.bone_index_size * vertex.bone_count);
+      vertex.bone_weight_count = 4;
+      vertex.bone_weight = (float*)_pData[ _iOffset ];
+      _iOffset += (sizeof(float) * vertex.bone_weight_count);
+    }
+      break;
+    case 3: // SDEF
+    {
+//      NSLog(@"SDEF");
+      vertex.bone_count = 2;
+      vertex.bone_num = (void*)_pData[ _iOffset ];
+      _iOffset += (vertex.bone_index_size * vertex.bone_count);
+      vertex.bone_weight_count = 1;
+      vertex.bone_weight = (float*)_pData[ _iOffset ];
+      _iOffset += (sizeof(float) * vertex.bone_weight_count);
+      getFloat3((float*)&vertex.sdef[0]);
+      getFloat3((float*)&vertex.sdef[1]);
+      getFloat3((float*)&vertex.sdef[2]);
+    }
+      break;
+    case 4: // QDEF
+    {
+//      NSLog(@"QDEF");
+      vertex.bone_count = 4;
+      vertex.bone_num = (void*)_pData[ _iOffset ];
+      _iOffset += (vertex.bone_index_size * vertex.bone_count);
+      vertex.bone_weight_count = 4;
+      vertex.bone_weight = (float*)_pData[ _iOffset ];
+      _iOffset += (sizeof(float) * vertex.bone_weight_count);
+    }
+      break;
+    default:
+      NSLog(@"pmxReader::parseVertex() unknown weight type");
+      return false;
+  }
+  
+  vertex.edge_magnification = getFloat();
+  _vecVertices.push_back( vertex );
+  
+  if (_iOffset > [_data length]) return false;
+  return true;
+}
+
+
+
+
 
