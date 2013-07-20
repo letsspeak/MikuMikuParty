@@ -99,6 +99,60 @@ struct pmx_material
   uint32_t face_vert_count;
 };
 
+#define PMX_BONE_FLAG_TAIL_SPECIFY_TYPE_BIT   0x0001
+#define PMX_BONE_FLAG_ROTATABLE_BIT           0x0002
+#define PMX_BONE_FLAG_MOVABLE_BIT             0x0004
+#define PMX_BONE_FLAG_DISPLAY_BIT             0x0008
+#define PMX_BONE_FLAG_OPERABLE_BIT            0x0010
+#define PMX_BONE_FLAG_IK_BIT                  0x0020
+#define PMX_BONE_FLAG_LOCAL_GRANTEES_BIT      0x0080
+#define PMX_BONE_FLAG_ROTATION_GRANT_BIT      0x0100
+#define PMX_BONE_FLAG_MOVE_GRANT_BIT          0x0200
+#define PMX_BONE_FLAG_FIXED_AXIS_BIT          0x0400
+#define PMX_BONE_FLAG_LOCAL_AXIS_BIT          0x0800
+#define PMX_BONE_FLAG_PHYSICS_ORDER_BIT       0x1000
+#define PMX_BONE_FLAG_PARENT_TRANSFORM_BIT    0x2000
+
+struct pmx_ik_link
+{
+  void* bone_index;
+  uint8_t* radian_limitation_flag;
+  float* lower_limit_vector;
+  float* upper_limit_vector;
+};
+
+
+struct pmx_bone
+{
+  pmx_string name;
+  pmx_string name_en;
+  
+  float bone_head_pos[3];
+  void* ik_parent_bone_index;
+  uint32_t transform_level;
+  
+  uint16_t bone_flag;
+  
+  void* tail_pos;
+  
+  void* rot_move_parent_bone_index;
+  float* rot_move_rate;
+  
+  float* fixed_axis_vector;
+  
+  float* x_axis_vector;
+  float* z_axis_vector;
+  
+  uint32_t* parent_transform_key;
+  
+  void* ik_target_bone_index;
+  uint32_t* ik_loop_count;
+  float* ik_radian_limitaion;
+  
+  uint32_t* ik_link_count;
+  std::vector< pmx_ik_link > ik_links;
+};
+
 class pmxReader
 {
   NSString *_filename;
@@ -121,6 +175,9 @@ class pmxReader
   int32_t _iNumMaterials;
   std::vector< pmx_material > _vecMaterials;
   
+  int32_t _iNumBones;
+  std::vector< pmx_bone > _vecBones;
+  
 	int32_t getInteger();
 	int16_t getShort();
   int8_t getChar();
@@ -128,6 +185,7 @@ class pmxReader
 	bool getFloat2(float *f);
 	bool getFloat3(float *f);
   bool getString(pmx_string *pString);
+  void* getPointer(int32_t size);
   
   bool verifyHeader();
   bool parseHeader();
@@ -138,6 +196,8 @@ class pmxReader
   bool parseTextures();
   bool parseMaterials();
   bool parseMaterial();
+  bool parseBones();
+  bool parseBone();
   
 public:
   

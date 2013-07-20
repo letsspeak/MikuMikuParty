@@ -73,6 +73,11 @@ bool pmxReader::init(NSString *filename)
     return false;
   }
   
+  if (parseBones() == false) {
+    NSLog(@"Failed to parseBones()");
+    return false;
+  }
+  
   NSLog(@"finished Loading %@", filename);
   
   return true;
@@ -80,14 +85,16 @@ bool pmxReader::init(NSString *filename)
 
 int32_t pmxReader::getInteger()
 {
-	int32_t i =  *(int32_t*)&_pData[ _iOffset ];
+	int32_t i;
+  memcpy(&i, &_pData[ _iOffset ], sizeof(int32_t));
 	_iOffset += sizeof( int32_t );
 	return i;
 }
 
 int16_t pmxReader::getShort()
 {
-	int16_t i =  *(int16_t*)&_pData[ _iOffset ];
+	int16_t i;
+  memcpy(&i, &_pData[ _iOffset ], sizeof(int16_t));
 	_iOffset += sizeof( int16_t );
 	return i;
 }
@@ -109,15 +116,15 @@ float pmxReader::getFloat()
 
 bool pmxReader::getFloat2(float *f)
 {
-  memcpy(f, &_pData[ _iOffset ], sizeof(float) * 2);
-	_iOffset += sizeof( float ) * 2;
+  f = (float*)&_pData[ _iOffset ];
+  _iOffset += (sizeof(float) * 2);
   return !(_iOffset > [_data length]);
 }
 
 bool pmxReader::getFloat3(float *f)
 {
-  memcpy(f, &_pData[ _iOffset ], sizeof(float) * 3);
-	_iOffset += sizeof( float ) * 3;
+  f = (float*)&_pData[ _iOffset ];
+  _iOffset += (sizeof(float) * 3);
   return !(_iOffset > [_data length]);
 }
 
@@ -129,6 +136,13 @@ bool pmxReader::getString(pmx_string *pString)
   pString->charset = _pHeader->charset;
   _iOffset += size;
   return !(_iOffset > [_data length]);
+}
+
+void* pmxReader::getPointer(int32_t size)
+{
+  void *p = (void*)&_pData[ _iOffset ];
+  _iOffset += (size);
+  return p;
 }
 
 bool pmxReader::verifyHeader()
@@ -154,6 +168,7 @@ bool pmxReader::verifyHeader()
 bool pmxReader::parseHeader()
 {
   int8_t size = getChar();
+  // memo : there is no alignment error here, because above datas are in alignment.
   _pHeader = (pmx_header*)&_pData[ _iOffset ];
   
   // for debug
@@ -411,6 +426,113 @@ bool pmxReader::parseMaterial()
   _vecMaterials.push_back( material );
   
   return !(_iOffset > [_data length]);
+}
+
+bool pmxReader::parseBones()
+{
+  int32_t iBones = getInteger();
+  NSLog(@"Num Bones: %d", iBones);
+  _iNumBones = iBones;
+  
+  for (int i = 0; i < iBones; i++) {
+    NSLog(@"bone[%d]--------", i);
+    if ( parseBone() == false) return false;
+  }
+  
+  return true;
+}
+
+bool pmxReader::parseBone()
+{
+  pmx_bone bone;
+  
+  // name
+  getString(&bone.name);
+  getString(&bone.name_en);
+  
+//  NSLog(@"bone.name: %@", bone.name.string());
+//  NSLog(@"bone.name_en: %@", bone.name_en.string());
+  
+  // basic data
+  getFloat3(bone.bone_head_pos);
+  bone.ik_parent_bone_index = (void*)&_pData[ _iOffset ];
+  _iOffset += _pHeader->bone_index_size;
+  bone.transform_level = getInteger();
+  
+  uint16_t flag = getShort();
+  bone.bone_flag = flag;
+  
+//  NSLog(@"PMX_BONE_FLAG_TAIL_SPECIFY_TYPE_BIT: %d", (int)(flag & PMX_BONE_FLAG_TAIL_SPECIFY_TYPE_BIT));
+//  NSLog(@"PMX_BONE_FLAG_ROTATABLE_BIT: %d", (int)(flag & PMX_BONE_FLAG_ROTATABLE_BIT));
+//  NSLog(@"PMX_BONE_FLAG_MOVABLE_BIT: %d", (int)(flag & PMX_BONE_FLAG_MOVABLE_BIT));
+//  NSLog(@"PMX_BONE_FLAG_DISPLAY_BIT: %d", (int)(flag & PMX_BONE_FLAG_DISPLAY_BIT));
+//  NSLog(@"PMX_BONE_FLAG_OPERABLE_BIT: %d", (int)(flag & PMX_BONE_FLAG_OPERABLE_BIT));
+//  NSLog(@"PMX_BONE_FLAG_IK_BIT: %d", (int)(flag & PMX_BONE_FLAG_IK_BIT));
+//  NSLog(@"PMX_BONE_FLAG_LOCAL_GRANTEES_BIT: %d", (int)(flag & PMX_BONE_FLAG_LOCAL_GRANTEES_BIT));
+//  NSLog(@"PMX_BONE_FLAG_ROTATION_GRANT_BIT: %d", (int)(flag & PMX_BONE_FLAG_ROTATION_GRANT_BIT));
+//  NSLog(@"PMX_BONE_FLAG_MOVE_GRANT_BIT: %d", (int)(flag & PMX_BONE_FLAG_MOVE_GRANT_BIT));
+//  NSLog(@"PMX_BONE_FLAG_FIXED_AXIS_BIT: %d", (int)(flag & PMX_BONE_FLAG_FIXED_AXIS_BIT));
+//  NSLog(@"PMX_BONE_FLAG_LOCAL_AXIS_BIT: %d", (int)(flag & PMX_BONE_FLAG_LOCAL_AXIS_BIT));
+//  NSLog(@"PMX_BONE_FLAG_PHYSICS_ORDER_BIT: %d", (int)(flag & PMX_BONE_FLAG_PHYSICS_ORDER_BIT));
+//  NSLog(@"PMX_BONE_FLAG_PARENT_TRANSFORM_BIT: %d", (int)(flag & PMX_BONE_FLAG_PARENT_TRANSFORM_BIT));
+  
+  // PMX_BONE_FLAG_TAIL_SPECIFY_TYPE_BIT
+  bone.tail_pos = (void*)&_pData[ _iOffset];
+  if (flag & PMX_BONE_FLAG_TAIL_SPECIFY_TYPE_BIT) _iOffset += _pHeader->bone_index_size;
+  else _iOffset += (sizeof(float) * 3);
+  
+  // PMX_BONE_FLAG_ROTATION_GRANT_BIT
+  // PMX_BONE_FLAG_MOVE_GRANT_BIT
+  if ((flag & PMX_BONE_FLAG_ROTATION_GRANT_BIT) || (flag & PMX_BONE_FLAG_MOVE_GRANT_BIT)) {
+    bone.rot_move_parent_bone_index = getPointer(_pHeader->bone_index_size);
+    bone.rot_move_rate = (float*)getPointer(sizeof(float));
+  }
+  
+  // PMX_BONE_FLAG_FIXED_AXIS_BIT
+  if (flag & PMX_BONE_FLAG_FIXED_AXIS_BIT) {
+    getFloat3(bone.fixed_axis_vector);
+  }
+  
+  // PMX_BONE_FLAG_LOCAL_AXIS_BIT
+  if (flag & PMX_BONE_FLAG_LOCAL_AXIS_BIT) {
+    getFloat3(bone.x_axis_vector);
+    getFloat3(bone.z_axis_vector);
+  }
+  
+  // PMX_BONE_FLAG_PARENT_TRANSFORM_BIT
+  if (flag & PMX_BONE_FLAG_PARENT_TRANSFORM_BIT) {
+    bone.parent_transform_key = (uint32_t*)getPointer(sizeof(uint32_t));
+  }
+
+  // PMX_BONE_FLAG_IK_BIT
+  if (flag & PMX_BONE_FLAG_IK_BIT) {
+    
+    bone.ik_target_bone_index = getPointer(_pHeader->bone_index_size);
+    bone.ik_loop_count = (uint32_t*)getPointer(sizeof(uint32_t));
+    bone.ik_radian_limitaion = (float*)getPointer(sizeof(float));
+    
+    bone.ik_link_count = (uint32_t*)getPointer(sizeof(uint32_t));
+    
+    int32_t link_count;
+    memcpy(&link_count, bone.ik_link_count, sizeof(int32_t));
+    for (int i = 0; i < link_count; i++) {
+//      NSLog(@"bone ik link[%d]-------", i);
+      pmx_ik_link link;
+      link.bone_index = getPointer(_pHeader->bone_index_size);
+      link.radian_limitation_flag = (uint8_t*)getPointer(sizeof(uint8_t));
+      
+      if ((bool)(*link.radian_limitation_flag)) {
+        getFloat3(link.lower_limit_vector);
+        getFloat3(link.upper_limit_vector);
+      }
+      
+      bone.ik_links.push_back(link);
+    }
+  }
+  
+  _vecBones.push_back( bone );
+  
+  return true;
 }
 
 
