@@ -68,6 +68,11 @@ bool pmxReader::init(NSString *filename)
     return false;
   }
   
+  if (parseMaterials() == false) {
+    NSLog(@"Failed to parseMaterials()");
+    return false;
+  }
+  
   NSLog(@"finished Loading %@", filename);
   
   return true;
@@ -320,6 +325,92 @@ bool pmxReader::parseTextures()
   return true;
 }
 
+bool pmxReader::parseMaterials()
+{
+  int32_t iMaterials = getInteger();
+  NSLog(@"Num Materials: %d", iMaterials);
+  _iNumMaterials = iMaterials;
+  
+  for (int32_t i = 0; i < iMaterials; i++) {
+//    NSLog(@"material[%d]--------", i);
+    if ( parseMaterial() == false) return false;
+  }
+  
+  return  true;
+}
 
+bool pmxReader::parseMaterial()
+{
+  pmx_material material;
+  
+  // name info
+  getString(&material.name);
+  getString(&material.name_en);
+  
+//  NSLog(@"material.name: %@", material.name.string());
+//  NSLog(@"material.name_en: %@", material.name_en.string());
+  
+  // colors
+  getFloat3(material.diffuse_color);
+  material.diffuse_color_alpha = getFloat();
+  getFloat3(material.specular_color);
+  material.shininess = getFloat();
+  getFloat3(material.ambient_color);
+  
+//  LogFloat3(@"material.diffuse_color", material.diffuse_color);
+//  NSLog(@"material.diffuse_color_alpha: %f", material.diffuse_color_alpha);
+//  LogFloat3(@"material.specular_color", material.specular_color);
+//  NSLog(@"material.shiniess: %f", material.shininess);
+//  LogFloat3(@"material.ambient_color", material.ambient_color);
+  
+  // edge
+  material.edge_flag = getChar();
+  getFloat3(material.edge_color);
+  material.edge_color_alpha = getFloat();
+  material.edge_size = getFloat();
+  
+//  NSLog(@"material.edge_flag: %d", material.edge_flag);
+//  LogFloat3(@"material.edge_color", material.edge_color);
+//  NSLog(@"material.edge_color_alpha: %f", material.edge_color_alpha);
+//  NSLog(@"material.edge_size: %f", material.edge_size);
+  
+  // texture
+  material.normal_texture = (void*)&_pData[ _iOffset ];
+  _iOffset += _pHeader->texture_index_size;
+  material.sphere_texture = (void*)&_pData[ _iOffset ];
+  _iOffset += _pHeader->texture_index_size;
+  material.sphere_mode = getChar();
+  
+//  NSLog(@"material.sphere_mode: %d", material.sphere_mode);
+  
+  // toon
+  material.shared_toon_flag = getChar();
+  material.toon_texture = (void*)&_pData[ _iOffset ];
+//  NSLog(@"material.shared_toon_flag: %d", material.shared_toon_flag);
+  
+  switch (material.shared_toon_flag) {
+    case 0:
+      _iOffset += _pHeader->texture_index_size;
+      break;
+    case 1:
+      _iOffset += sizeof(uint8_t);
+      break;
+    default:
+      NSLog(@"pmxReader::parseMaterial() unknown shared toon flag");
+      return false;
+  }
+  
+  // memo
+  getString(&material.memo);
+//  NSLog(@"material.memo: %@", material.memo.string());
+  
+  // face_vert_count
+  material.face_vert_count = getInteger();
+//  NSLog(@"material.face_vert_count: %d", material.face_vert_count);
+  
+  _vecMaterials.push_back( material );
+  
+  return !(_iOffset > [_data length]);
+}
 
 

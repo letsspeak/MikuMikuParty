@@ -72,6 +72,33 @@ struct pmx_vertex
   float edge_magnification;
 };
 
+struct pmx_material
+{
+  pmx_string name;
+  pmx_string name_en;
+  
+  float diffuse_color[3];
+  float diffuse_color_alpha;
+  float specular_color[3];
+  float shininess;
+  float ambient_color[3];
+  
+  uint8_t edge_flag;
+  float edge_color[3];
+  float edge_color_alpha;
+  float edge_size;
+  
+  void* normal_texture;
+  void* sphere_texture;
+  uint8_t sphere_mode;
+  
+  uint8_t shared_toon_flag;
+  void* toon_texture;
+  
+  pmx_string memo;
+  uint32_t face_vert_count;
+};
+
 class pmxReader
 {
   NSString *_filename;
@@ -89,8 +116,10 @@ class pmxReader
   void *_pIndices;
   
   int32_t _iNumTextures;
-  std::vector< pmx_string> _vecTextures;
+  std::vector< pmx_string > _vecTextures;
   
+  int32_t _iNumMaterials;
+  std::vector< pmx_material > _vecMaterials;
   
 	int32_t getInteger();
 	int16_t getShort();
@@ -107,6 +136,8 @@ class pmxReader
   bool parseVertex();
   bool parseIndices();
   bool parseTextures();
+  bool parseMaterials();
+  bool parseMaterial();
   
 public:
   
