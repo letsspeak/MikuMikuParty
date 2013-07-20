@@ -63,6 +63,11 @@ bool pmxReader::init(NSString *filename)
     return false;
   }
   
+  if (parseTextures() == false) {
+    NSLog(@"Failed to parseTextures()");
+    return false;
+  }
+  
   NSLog(@"finished Loading %@", filename);
   
   return true;
@@ -299,6 +304,21 @@ bool pmxReader::parseIndices()
   return !(_iOffset > [_data length]);
 }
 
+bool pmxReader::parseTextures()
+{
+  int32_t iTextures = getInteger();
+  NSLog(@"Num Textures: %d", iTextures);
+  _iNumTextures = iTextures;
+  
+  for (int i = 0; i < iTextures; i++) {
+    pmx_string string;
+    if (getString(&string) == false) return false;
+    _vecTextures.push_back( string );
+    NSLog(@"_vecTextures[%d] = %@", i, string.string());
+  }
+  
+  return true;
+}
 
 
 

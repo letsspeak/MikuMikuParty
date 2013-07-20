@@ -17,8 +17,8 @@
 
 struct pmx_string
 {
-  void *bytes;
   uint32_t length;
+  void *bytes;
   uint8_t charset;
   NSString *string() {
     NSData *data = [NSData dataWithBytes:bytes length:length];
@@ -88,6 +88,10 @@ class pmxReader
   int32_t _iNumIndices;
   void *_pIndices;
   
+  int32_t _iNumTextures;
+  std::vector< pmx_string> _vecTextures;
+  
+  
 	int32_t getInteger();
 	int16_t getShort();
   int8_t getChar();
@@ -102,6 +106,7 @@ class pmxReader
   bool parseVertices();
   bool parseVertex();
   bool parseIndices();
+  bool parseTextures();
   
 public:
   
