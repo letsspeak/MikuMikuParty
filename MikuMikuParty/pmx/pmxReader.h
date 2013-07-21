@@ -153,6 +153,61 @@ struct pmx_bone
   std::vector< pmx_ik_link > ik_links;
 };
 
+union pmx_morph_data
+{
+  struct vertex_morph
+  {
+    void* vertex_index;
+    float* offset_vector;
+  };
+  
+  struct uv_morph
+  {
+    void* vertex_index;
+    float* offset_vector;
+  };
+  
+  struct bone_morph
+  {
+    void* bone_index;
+    float* movement_vector;
+    float* rotation_vector;
+  };
+  
+  struct material_morph
+  {
+    void* material_index;
+    uint8_t* offset_calculation_type;
+    float* diffuse_color;
+    float* specular_color;
+    float* specular_coefficient;
+    float* ambient_color;
+    float* edge_color;
+    float* edge_size;
+    float* texture_coefficient;
+    float* sphere_texture_coefficient;
+    float* toon_texture_coefficient;
+  };
+  
+  struct group_morph
+  {
+    void* morph_index;
+    float* morph_rate;
+  };
+};
+
+struct pmx_morph
+{
+  pmx_string name;
+  pmx_string name_en;
+  
+  uint8_t operation_panel;
+  uint8_t type;
+  
+  uint32_t offset_count;
+  std::vector< pmx_morph_data > offset_datas;
+};
+
 class pmxReader
 {
   NSString *_filename;
@@ -177,6 +232,9 @@ class pmxReader
   
   int32_t _iNumBones;
   std::vector< pmx_bone > _vecBones;
+  
+  int32_t iNumMorphs;
+  std::vector< pmx_morph > _vecMorphs;
   
 	int32_t getInteger();
 	int16_t getShort();
