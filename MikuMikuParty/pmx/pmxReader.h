@@ -153,26 +153,36 @@ struct pmx_bone
   std::vector< pmx_ik_link > ik_links;
 };
 
+#define PMX_MORPH_TYPE_GROUP              0
+#define PMX_MORPH_TYPE_VERTEX             1
+#define PMX_MORPH_TYPE_BONE               2
+#define PMX_MORPH_TYPE_UV                 3
+#define PMX_MORPH_TYPE_ADDITIONAL_UV_1    4
+#define PMX_MORPH_TYPE_ADDITIONAL_UV_2    5
+#define PMX_MORPH_TYPE_ADDITIONAL_UV_3    6
+#define PMX_MORPH_TYPE_ADDITIONAL_UV_4    7
+#define PMX_MORPH_TYPE_MATERIAL           8
+
 union pmx_morph_data
 {
   struct vertex_morph
   {
     void* vertex_index;
     float* offset_vector;
-  };
+  }vertex_morph;
   
   struct uv_morph
   {
     void* vertex_index;
     float* offset_vector;
-  };
+  }uv_morph;
   
   struct bone_morph
   {
     void* bone_index;
     float* movement_vector;
     float* rotation_vector;
-  };
+  }bone_morph;
   
   struct material_morph
   {
@@ -187,13 +197,13 @@ union pmx_morph_data
     float* texture_coefficient;
     float* sphere_texture_coefficient;
     float* toon_texture_coefficient;
-  };
+  }material_morph;
   
   struct group_morph
   {
     void* morph_index;
     float* morph_rate;
-  };
+  }group_morph;
 };
 
 struct pmx_morph
@@ -233,7 +243,7 @@ class pmxReader
   int32_t _iNumBones;
   std::vector< pmx_bone > _vecBones;
   
-  int32_t iNumMorphs;
+  int32_t _iNumMorphs;
   std::vector< pmx_morph > _vecMorphs;
   
 	int32_t getInteger();
@@ -256,6 +266,8 @@ class pmxReader
   bool parseMaterial();
   bool parseBones();
   bool parseBone();
+  bool parseMorphs();
+  bool parseMorph();
   
 public:
   

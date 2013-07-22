@@ -78,6 +78,11 @@ bool pmxReader::init(NSString *filename)
     return false;
   }
   
+  if (parseMorphs() == false) {
+    NSLog(@"Failed to parseMorphs()");
+    return false;
+  }
+  
   NSLog(@"finished Loading %@", filename);
   
   return true;
@@ -435,7 +440,7 @@ bool pmxReader::parseBones()
   _iNumBones = iBones;
   
   for (int i = 0; i < iBones; i++) {
-    NSLog(@"bone[%d]--------", i);
+//    NSLog(@"bone[%d]--------", i);
     if ( parseBone() == false) return false;
   }
   
@@ -533,6 +538,93 @@ bool pmxReader::parseBone()
   _vecBones.push_back( bone );
   
   return true;
+}
+
+bool pmxReader::parseMorphs()
+{
+  int32_t iMorphs = getInteger();
+  NSLog(@"Num Morphs: %d", iMorphs);
+  _iNumMorphs = iMorphs;
+  
+  for (int i = 0; i < iMorphs; i++) {
+//    NSLog(@"morph[%d]--------", i);
+    if ( parseMorph() == false) return false;
+  }
+  
+  return true;
+}
+
+bool pmxReader::parseMorph()
+{
+  pmx_morph morph;
+  
+  getString(&morph.name);
+  getString(&morph.name_en);
+  
+//  NSLog(@"morph.name: %@", morph.name.string());
+//  NSLog(@"morph.name_en: %@", morph.name_en.string());
+  
+  morph.operation_panel = getChar();
+  morph.type = getChar();
+  
+  uint32_t count = getInteger();
+  morph.offset_count = count;
+  
+//  NSLog(@"morph.type = %d", morph.type);
+  
+  for (int i = 0; i < count; i++) {
+    
+//    NSLog(@"type:%d morph_offset_data[%d]", morph.type, i);
+    
+    pmx_morph_data data;
+    
+    switch (morph.type) {
+      case PMX_MORPH_TYPE_GROUP:
+        data.group_morph.morph_index = getPointer(_pHeader->morph_index_size);
+        data.group_morph.morph_rate = (float*)getPointer(sizeof(float));
+        break;
+      case PMX_MORPH_TYPE_VERTEX:
+        data.vertex_morph.vertex_index = getPointer(_pHeader->vertex_index_size);
+        data.vertex_morph.offset_vector = (float*)getPointer(sizeof(float) * 3);
+        break;
+      case PMX_MORPH_TYPE_BONE:
+        data.bone_morph.bone_index = getPointer(_pHeader->bone_index_size);
+        data.bone_morph.movement_vector = (float*)getPointer(sizeof(float) * 3);
+        data.bone_morph.rotation_vector = (float*)getPointer(sizeof(float) * 4);
+        break;
+      case PMX_MORPH_TYPE_UV:
+      case PMX_MORPH_TYPE_ADDITIONAL_UV_1:
+      case PMX_MORPH_TYPE_ADDITIONAL_UV_2:
+      case PMX_MORPH_TYPE_ADDITIONAL_UV_3:
+      case PMX_MORPH_TYPE_ADDITIONAL_UV_4:
+        data.uv_morph.vertex_index = getPointer(_pHeader->vertex_index_size);
+        data.uv_morph.offset_vector = (float*)getPointer(sizeof(float) * 4);
+        break;
+      case PMX_MORPH_TYPE_MATERIAL:
+        data.material_morph.material_index = getPointer(_pHeader->material_index_size);
+        data.material_morph.offset_calculation_type = (uint8_t*)getPointer(sizeof(uint8_t));
+        data.material_morph.diffuse_color = (float*)getPointer(sizeof(float) * 4);
+        data.material_morph.specular_color = (float*)getPointer(sizeof(float) * 3);
+        data.material_morph.specular_coefficient = (float*)getPointer(sizeof(float));
+        data.material_morph.ambient_color = (float*)getPointer(sizeof(float) * 3);
+        data.material_morph.edge_color = (float*)getPointer(sizeof(float) * 4);
+        data.material_morph.edge_size = (float*)getPointer(sizeof(float));
+        data.material_morph.texture_coefficient = (float*)getPointer(sizeof(float) * 4);
+        data.material_morph.sphere_texture_coefficient = (float*)getPointer(sizeof(float) * 4);
+        data.material_morph.toon_texture_coefficient = (float*)getPointer(sizeof(float) * 4);
+        break;
+      default:
+        NSLog(@"pmxReader::parseMorph() unknown morph type");
+        return false;
+    }
+    
+    morph.offset_datas.push_back( data );
+    
+  }
+  
+  _vecMorphs.push_back( morph );
+
+  return !(_iOffset > [_data length]);
 }
 
 
