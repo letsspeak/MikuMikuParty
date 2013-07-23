@@ -83,6 +83,11 @@ bool pmxReader::init(NSString *filename)
     return false;
   }
   
+  if (parseFrames() == false) {
+    NSLog(@"Failed to parseFrames()");
+    return false;
+  }
+  
   NSLog(@"finished Loading %@", filename);
   
   return true;
@@ -627,4 +632,55 @@ bool pmxReader::parseMorph()
   return !(_iOffset > [_data length]);
 }
 
+bool pmxReader::parseFrames()
+{
+  int32_t iFrames = getInteger();
+  NSLog(@"Num Frames: %d", iFrames);
+  _iNumFrames = iFrames;
+  
+  for (int i = 0; i < iFrames; i++) {
+//    NSLog(@"frame[%d]--------", i);
+    if ( parseFrame() == false) return false;
+  }
+  
+  return true;
+}
+
+bool pmxReader::parseFrame()
+{
+  pmx_frame frame;
+  
+  getString(&frame.name);
+  getString(&frame.name_en);
+  
+//  NSLog(@"frame.name: %@", frame.name.string());
+//  NSLog(@"frame.name_en: %@", frame.name_en.string());
+  
+  frame.special_frame_flag = getChar();
+  frame.frame_element_count = getInteger();
+  
+  for (int i = 0; i < frame.frame_element_count; i++) {
+    
+    pmx_frame_element element;
+    element.target = getChar();
+    
+    switch (element.target) {
+      case 0: // bone index
+        element.index = getPointer(_pHeader->bone_index_size);
+        break;
+      case 1: // morph index
+        element.index = getPointer(_pHeader->morph_index_size);
+        break;
+      default:
+        NSLog(@"pmxReader::parseFrame() unknown frame element target type");
+        return false;
+    }
+    
+    frame.frame_elements.push_back( element );
+  }
+  
+  _vecFrames.push_back( frame );
+  
+  return !(_iOffset > [_data length]);
+}
 

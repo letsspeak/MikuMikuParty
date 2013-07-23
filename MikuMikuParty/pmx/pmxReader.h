@@ -218,6 +218,20 @@ struct pmx_morph
   std::vector< pmx_morph_data > offset_datas;
 };
 
+struct pmx_frame_element {
+  uint8_t target;
+  void* index;
+};
+
+struct pmx_frame
+{
+  pmx_string name;
+  pmx_string name_en;
+  uint8_t special_frame_flag;
+  uint32_t frame_element_count;
+  std::vector< pmx_frame_element > frame_elements;
+};
+
 class pmxReader
 {
   NSString *_filename;
@@ -246,6 +260,9 @@ class pmxReader
   int32_t _iNumMorphs;
   std::vector< pmx_morph > _vecMorphs;
   
+  int32_t _iNumFrames;
+  std::vector< pmx_frame > _vecFrames;
+  
 	int32_t getInteger();
 	int16_t getShort();
   int8_t getChar();
@@ -268,6 +285,8 @@ class pmxReader
   bool parseBone();
   bool parseMorphs();
   bool parseMorph();
+  bool parseFrames();
+  bool parseFrame();
   
 public:
   
