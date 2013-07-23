@@ -88,6 +88,11 @@ bool pmxReader::init(NSString *filename)
     return false;
   }
   
+  if (parseRigids() == false) {
+    NSLog(@"Failed to parseRigids()");
+    return false;
+  }
+  
   NSLog(@"finished Loading %@", filename);
   
   return true;
@@ -124,17 +129,18 @@ float pmxReader::getFloat()
 	return f;
 }
 
-bool pmxReader::getFloat2(float *f)
+bool pmxReader::getFloat2(float f[2])
 {
-  f = (float*)&_pData[ _iOffset ];
-  _iOffset += (sizeof(float) * 2);
+  f[0] = getFloat();
+  f[1] = getFloat();
   return !(_iOffset > [_data length]);
 }
 
-bool pmxReader::getFloat3(float *f)
+bool pmxReader::getFloat3(float f[3])
 {
-  f = (float*)&_pData[ _iOffset ];
-  _iOffset += (sizeof(float) * 3);
+  f[0] = getFloat();
+  f[1] = getFloat();
+  f[2] = getFloat();
   return !(_iOffset > [_data length]);
 }
 
@@ -295,9 +301,9 @@ bool pmxReader::parseVertex()
       vertex.bone_weight_count = 1;
       vertex.bone_weight = (float*)&_pData[ _iOffset ];
       _iOffset += (sizeof(float) * vertex.bone_weight_count);
-      getFloat3((float*)&vertex.sdef[0]);
-      getFloat3((float*)&vertex.sdef[1]);
-      getFloat3((float*)&vertex.sdef[2]);
+      vertex.sdef[0] = (pmx_sdef*)getPointer(sizeof(float) * 3);
+      vertex.sdef[1] = (pmx_sdef*)getPointer(sizeof(float) * 3);
+      vertex.sdef[2] = (pmx_sdef*)getPointer(sizeof(float) * 3);
     }
       break;
     case 4: // QDEF
@@ -500,13 +506,13 @@ bool pmxReader::parseBone()
   
   // PMX_BONE_FLAG_FIXED_AXIS_BIT
   if (flag & PMX_BONE_FLAG_FIXED_AXIS_BIT) {
-    getFloat3(bone.fixed_axis_vector);
+    bone.fixed_axis_vector = (float*)getPointer(sizeof(float) * 3);
   }
   
   // PMX_BONE_FLAG_LOCAL_AXIS_BIT
   if (flag & PMX_BONE_FLAG_LOCAL_AXIS_BIT) {
-    getFloat3(bone.x_axis_vector);
-    getFloat3(bone.z_axis_vector);
+    bone.x_axis_vector = (float*)getPointer(sizeof(float) * 3);
+    bone.z_axis_vector = (float*)getPointer(sizeof(float) * 3);
   }
   
   // PMX_BONE_FLAG_PARENT_TRANSFORM_BIT
@@ -532,8 +538,8 @@ bool pmxReader::parseBone()
       link.radian_limitation_flag = (uint8_t*)getPointer(sizeof(uint8_t));
       
       if ((bool)(*link.radian_limitation_flag)) {
-        getFloat3(link.lower_limit_vector);
-        getFloat3(link.upper_limit_vector);
+        link.lower_limit_vector = (float*)getPointer(sizeof(float) * 3);
+        link.upper_limit_vector = (float*)getPointer(sizeof(float) * 3);
       }
       
       bone.ik_links.push_back(link);
@@ -680,6 +686,54 @@ bool pmxReader::parseFrame()
   }
   
   _vecFrames.push_back( frame );
+  
+  return !(_iOffset > [_data length]);
+}
+
+bool pmxReader::parseRigids()
+{
+  int32_t iRigids = getInteger();
+  NSLog(@"Num Rigids: %d", iRigids);
+  _iNumRigids = iRigids;
+  
+  for (int i = 0; i < iRigids; i++) {
+//    NSLog(@"rigid[%d]--------", i);
+    if ( parseRigid() == false) return false;
+  }
+  
+  return true;
+}
+
+bool pmxReader::parseRigid()
+{
+  pmx_rigid rigid;
+  
+  getString(&rigid.name);
+  getString(&rigid.name_en);
+  
+//  NSLog(@"rigid.name: %@", rigid.name.string());
+//  NSLog(@"rigid.name_en: %@", rigid.name_en.string());
+  
+  rigid.bone_index = getPointer(_pHeader->bone_index_size);
+  
+  rigid.group = getChar();
+  rigid.collision_group_flag = getShort();
+  
+  rigid.shape = getChar();
+  getFloat3(rigid.size);
+  
+  getFloat3(rigid.position);
+  getFloat3(rigid.rotation);
+  
+  rigid.mass = getFloat();
+  rigid.translation_decay = getFloat();
+  rigid.rotation_decay = getFloat();
+  rigid.bounce = getFloat();
+  rigid.friction = getFloat();
+  
+  rigid.calculation_type = getChar();
+  
+  _vecRigids.push_back( rigid );
   
   return !(_iOffset > [_data length]);
 }

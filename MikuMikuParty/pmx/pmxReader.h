@@ -232,6 +232,31 @@ struct pmx_frame
   std::vector< pmx_frame_element > frame_elements;
 };
 
+struct pmx_rigid
+{
+  pmx_string name;
+  pmx_string name_en;
+  
+  void* bone_index;
+  
+  uint8_t group;
+  uint16_t collision_group_flag;
+  
+  uint8_t shape;
+  float size[3];
+  
+  float position[3];
+  float rotation[3];
+  
+  float mass;
+  float translation_decay;
+  float rotation_decay;
+  float bounce;
+  float friction;
+  
+  uint8_t calculation_type;
+};
+
 class pmxReader
 {
   NSString *_filename;
@@ -263,12 +288,15 @@ class pmxReader
   int32_t _iNumFrames;
   std::vector< pmx_frame > _vecFrames;
   
+  int32_t _iNumRigids;
+  std::vector< pmx_rigid > _vecRigids;
+  
 	int32_t getInteger();
 	int16_t getShort();
   int8_t getChar();
 	float getFloat();
-	bool getFloat2(float *f);
-	bool getFloat3(float *f);
+	bool getFloat2(float f[2]);
+	bool getFloat3(float f[3]);
   bool getString(pmx_string *pString);
   void* getPointer(int32_t size);
   
@@ -287,6 +315,8 @@ class pmxReader
   bool parseMorph();
   bool parseFrames();
   bool parseFrame();
+  bool parseRigids();
+  bool parseRigid();
   
 public:
   
