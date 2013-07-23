@@ -37,7 +37,7 @@ struct pmx_header
   uint8_t material_index_size;
   uint8_t bone_index_size;
   uint8_t morph_index_size;
-  uint8_t regid_body_index_size;
+  uint8_t rigid_index_size;
 };
 
 struct pmx_model_info
@@ -257,6 +257,26 @@ struct pmx_rigid
   uint8_t calculation_type;
 };
 
+struct pmx_joint {
+  pmx_string name;
+  pmx_string name_en;
+  uint8_t type;
+  
+  void* rigid_a_index;
+  void* rigid_b_index;
+  
+  float* position;
+  float* rotation;
+  
+  float* lower_translation_limit;
+  float* upper_translation_limit;
+  float* lower_rotation_limit;
+  float* upper_rotation_limit;
+  
+  float* translation_spring_factor;
+  float* rotation_spring_factor;
+};
+
 class pmxReader
 {
   NSString *_filename;
@@ -291,6 +311,9 @@ class pmxReader
   int32_t _iNumRigids;
   std::vector< pmx_rigid > _vecRigids;
   
+  int32_t _iNumJoints;
+  std::vector< pmx_joint > _vecJoints;
+  
 	int32_t getInteger();
 	int16_t getShort();
   int8_t getChar();
@@ -317,6 +340,8 @@ class pmxReader
   bool parseFrame();
   bool parseRigids();
   bool parseRigid();
+  bool parseJoints();
+  bool parseJoint();
   
 public:
   

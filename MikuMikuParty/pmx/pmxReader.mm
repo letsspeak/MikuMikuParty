@@ -196,7 +196,7 @@ bool pmxReader::parseHeader()
   NSLog(@"material_index_size: %d", _pHeader->material_index_size);
   NSLog(@"bone_index_size: %d", _pHeader->bone_index_size);
   NSLog(@"morph_index_size: %d", _pHeader->morph_index_size);
-  NSLog(@"regid_body_index_size: %d", _pHeader->regid_body_index_size);
+  NSLog(@"rigid_index_size: %d", _pHeader->rigid_index_size);
   
   _iOffset += size;
   return !(_iOffset > [_data length]);
@@ -734,6 +734,57 @@ bool pmxReader::parseRigid()
   rigid.calculation_type = getChar();
   
   _vecRigids.push_back( rigid );
+  
+  return !(_iOffset > [_data length]);
+}
+
+bool pmxReader::parseJoints()
+{
+  int32_t iJoints = getInteger();
+  NSLog(@"Num Joints: %d", iJoints);
+  _iNumJoints = iJoints;
+  
+  for (int i = 0; i < iJoints; i++) {
+    NSLog(@"joint[%d]--------", i);
+    if ( parseJoint() == false) return false;
+  }
+  
+  return true;
+}
+
+bool pmxReader::parseJoint()
+{
+  pmx_joint joint;
+  
+  getString(&joint.name);
+  getString(&joint.name_en);
+  
+  NSLog(@"joint.name: %@", joint.name.string());
+  NSLog(@"joint.name_en: %@", joint.name_en.string());
+  
+  joint.type = getChar();
+  
+  switch (joint.type) {
+    case 0: // Spring 6DOF
+    {
+      joint.rigid_a_index = getPointer(_pHeader->rigid_index_size);
+      joint.rigid_b_index = getPointer(_pHeader->rigid_index_size);
+      joint.position = (float*)getPointer(sizeof(float) * 3);
+      joint.rotation = (float*)getPointer(sizeof(float) * 3);
+      joint.lower_translation_limit = (float*)getPointer(sizeof(float) * 3);
+      joint.upper_translation_limit = (float*)getPointer(sizeof(float) * 3);
+      joint.lower_rotation_limit = (float*)getPointer(sizeof(float) * 3);
+      joint.upper_rotation_limit = (float*)getPointer(sizeof(float) * 3);
+      joint.translation_spring_factor = (float*)getPointer(sizeof(float) * 3);
+      joint.rotation_spring_factor = (float*)getPointer(sizeof(float) * 3);
+    }
+      break;
+    default:
+      NSLog(@"pmxReader::parseJoint() unknown joint type");
+      return false;
+  }
+  
+  _vecJoints.push_back( joint );
   
   return !(_iOffset > [_data length]);
 }
