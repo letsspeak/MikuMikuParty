@@ -43,6 +43,9 @@
 		0EAAC65E1791973B008EAE4F /* MikuMikuConnectionServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EAAC65D1791973B008EAE4F /* MikuMikuConnectionServer.m */; };
 		0EAAC6621791A133008EAE4F /* MikuMikuConnectionServers.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0EAAC6611791A132008EAE4F /* MikuMikuConnectionServers.plist */; };
 		0EB5338E17A0052E00A357F1 /* pmxRenderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0EB5338C17A0052E00A357F1 /* pmxRenderer.mm */; };
+		0EB5339217A011B000A357F1 /* vmdMotionProviderPMX.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0EB5339017A011B000A357F1 /* vmdMotionProviderPMX.mm */; };
+		0EB5339417A0127D00A357F1 /* vmdMotionProviderPMXIK.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0EB5339317A0127D00A357F1 /* vmdMotionProviderPMXIK.mm */; };
+		0EB5339617A0129C00A357F1 /* vmdMotionProviderPMXSkinAnimation.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0EB5339517A0129C00A357F1 /* vmdMotionProviderPMXSkinAnimation.mm */; };
 		0EB7E4B71792D002009F2FFF /* MMDHubItemTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EB7E4B31792D002009F2FFF /* MMDHubItemTableView.m */; };
 		0EB7E4B81792D002009F2FFF /* MMDHubViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EB7E4B51792D002009F2FFF /* MMDHubViewController.m */; };
 		0EB7E4B91792D002009F2FFF /* MMDHubViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0EB7E4B61792D002009F2FFF /* MMDHubViewController.xib */; };
@@ -158,6 +161,11 @@
 		0EB5338C17A0052E00A357F1 /* pmxRenderer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = pmxRenderer.mm; path = pmx/pmxRenderer.mm; sourceTree = "<group>"; };
 		0EB5338D17A0052E00A357F1 /* pmxRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pmxRenderer.h; path = pmx/pmxRenderer.h; sourceTree = "<group>"; };
 		0EB5338F17A0080A00A357F1 /* RendererDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = RendererDefine.h; path = ESRenderer/RendererDefine.h; sourceTree = "<group>"; };
+		0EB5339017A011B000A357F1 /* vmdMotionProviderPMX.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = vmdMotionProviderPMX.mm; path = vmd/vmdMotionProviderPMX.mm; sourceTree = "<group>"; };
+		0EB5339117A011B000A357F1 /* vmdMotionProviderPMX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vmdMotionProviderPMX.h; path = vmd/vmdMotionProviderPMX.h; sourceTree = "<group>"; };
+		0EB5339317A0127D00A357F1 /* vmdMotionProviderPMXIK.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = vmdMotionProviderPMXIK.mm; path = vmd/vmdMotionProviderPMXIK.mm; sourceTree = "<group>"; };
+		0EB5339517A0129C00A357F1 /* vmdMotionProviderPMXSkinAnimation.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = vmdMotionProviderPMXSkinAnimation.mm; path = vmd/vmdMotionProviderPMXSkinAnimation.mm; sourceTree = "<group>"; };
+		0EB5339717A0142400A357F1 /* vmdDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = vmdDefine.h; path = vmd/vmdDefine.h; sourceTree = "<group>"; };
 		0EB7E4B21792D002009F2FFF /* MMDHubItemTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMDHubItemTableView.h; path = Contents/MMDHub/MMDHubItemTableView.h; sourceTree = "<group>"; };
 		0EB7E4B31792D002009F2FFF /* MMDHubItemTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMDHubItemTableView.m; path = Contents/MMDHub/MMDHubItemTableView.m; sourceTree = "<group>"; };
 		0EB7E4B41792D002009F2FFF /* MMDHubViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMDHubViewController.h; path = Contents/MMDHub/MMDHubViewController.h; sourceTree = "<group>"; };
@@ -335,12 +343,17 @@
 		0E82C79B178DBC0A00E9E0A5 /* vmd */ = {
 			isa = PBXGroup;
 			children = (
+				0EB5339717A0142400A357F1 /* vmdDefine.h */,
 				0E82C79C178DBC1000E9E0A5 /* vmdMotionProvider.h */,
 				0E82C79D178DBC1000E9E0A5 /* vmdMotionProvider.mm */,
 				0E82C79E178DBC1000E9E0A5 /* vmdMotonProviderIK.mm */,
 				0E82C79F178DBC1000E9E0A5 /* vmdMotonProviderSkinAnimation.mm */,
 				0E82C7A0178DBC1000E9E0A5 /* vmdReader.h */,
 				0E82C7A1178DBC1000E9E0A5 /* vmdReader.mm */,
+				0EB5339117A011B000A357F1 /* vmdMotionProviderPMX.h */,
+				0EB5339017A011B000A357F1 /* vmdMotionProviderPMX.mm */,
+				0EB5339317A0127D00A357F1 /* vmdMotionProviderPMXIK.mm */,
+				0EB5339517A0129C00A357F1 /* vmdMotionProviderPMXSkinAnimation.mm */,
 			);
 			name = vmd;
 			sourceTree = "<group>";
@@ -758,6 +771,9 @@
 				0EB7E4FC17997D93009F2FFF /* NSString+Charset.m in Sources */,
 				0EB7E5001799A99B009F2FFF /* pmxReader.mm in Sources */,
 				0EB5338E17A0052E00A357F1 /* pmxRenderer.mm in Sources */,
+				0EB5339217A011B000A357F1 /* vmdMotionProviderPMX.mm in Sources */,
+				0EB5339417A0127D00A357F1 /* vmdMotionProviderPMXIK.mm in Sources */,
+				0EB5339617A0129C00A357F1 /* vmdMotionProviderPMXSkinAnimation.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

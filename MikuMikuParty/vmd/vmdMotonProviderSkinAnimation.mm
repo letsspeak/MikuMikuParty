@@ -49,7 +49,7 @@ void vmdMotionProvider::updateSkinAnimation()
 	_iCurrentSkinAnimationDataIndex = pCurrentItem->iIndex;
 }	
 
-void vmdMotionProvider::bindSkinAnimationPMD( pmdReader* reader, vmdReader* motion )
+void vmdMotionProvider::bindSkinAnimation( pmdReader* reader, vmdReader* motion )
 {
 	int32_t iNumSkins = reader->getNumSkinAnimations();
 	mmd_skin* pSkin = reader->getSkinAnimations();

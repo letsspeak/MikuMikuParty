@@ -277,7 +277,7 @@ bool pmdRenderer::init( pmdReader* reader, vmdReader* motion )
 	if( motion != NULL )
 	{
 		_motionProvider = new vmdMotionProvider();
-		_motionProvider->bindPMD( reader, motion );
+		_motionProvider->bind( reader, motion );
 		partitionMeshes( reader );
 	}
 	else

@@ -14,7 +14,7 @@
 
 #import "pmxReader.h"
 #import "vmdReader.h"
-#import "vmdMotionProvider.h"
+#import "vmdMotionProviderPMX.h"
 #import "SGXSkininngEvaluator.h"
 #import "PVRTVector.h"
 #import "Texture2D.h"
@@ -22,7 +22,7 @@
 
 class pmxRenderer
 {
-	vmdMotionProvider* _motionProvider;
+	vmdMotionProviderPMX* _motionProvider;
   
 	SHADER_PARAMS _shaders[ NUM_SHADERS ];
   
