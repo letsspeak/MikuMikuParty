@@ -14,6 +14,12 @@
 #define USE_MSAA (1)
 #define NUM_MSAASAMPLE (2)
 
+typedef enum{
+  MMPModelTypeUnknown,
+  MMPModelTypePMD,
+  MMPModelTypePMX,
+}MMPModelType;
+
 @interface ES2Renderer : NSObject <ESRenderer>
 {
 @private

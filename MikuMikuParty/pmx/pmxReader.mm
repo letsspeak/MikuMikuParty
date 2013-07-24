@@ -1,5 +1,5 @@
 //
-//  pmxReader.cpp
+//  pmxReader.mm
 //  MikuMikuParty
 //
 //  Created by letsspeak on 13/07/20.
@@ -789,3 +789,7 @@ bool pmxReader::parseJoint()
   return !(_iOffset > [_data length]);
 }
 
+bool pmxReader::unload()
+{
+  return false;
+}

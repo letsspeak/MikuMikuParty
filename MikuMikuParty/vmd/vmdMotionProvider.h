@@ -10,6 +10,7 @@
 #import <Foundation/Foundation.h>
 #import "vmdReader.h"
 #import "pmdReader.h"
+#import "pmxReader.h"
 #import "PVRTVector.h"
 #import "PVRTQuaternion.h"
 
@@ -72,7 +73,8 @@ class vmdMotionProvider {
 	std::vector<skin_item> _vecSkinAnimations;
 	int32_t _iCurrentSkinAnimationDataIndex;
 	
-	bool checkBones( pmdReader* reader, vmdReader* motion );
+	bool checkBonesPMD( pmdReader* reader, vmdReader* motion );
+  bool checkBonesPMX( pmxReader* reader, vmdReader* motion );
 	void interpolateLinear(float fFrame, motion_item *M0, motion_item *pM1, motion_item *pOut);
 	void slerp(float p[], float q[], float r[], double t);
 	double bazier(const uint8_t* ip, const int ofs, const int size, const float t);
@@ -88,7 +90,8 @@ class vmdMotionProvider {
 	void clearUpdateFlags( int32_t iCurrentBone, int32_t iTargetBone );
 	void makeQuaternion(float* quat, float angle, PVRTVec3 axis );
 	
-	void bindSkinAnimation( pmdReader* reader, vmdReader* motion );
+	void bindSkinAnimationPMD( pmdReader* reader, vmdReader* motion );
+  void bindSkinAnimationPMX( pmxReader* reader, vmdReader* motion );
 	void unbindSkinAnimation();
 	void updateSkinAnimation();
 
@@ -96,7 +99,8 @@ public:
 	vmdMotionProvider();
 	~vmdMotionProvider();
 	
-	bool bind( pmdReader* reader, vmdReader* motion );
+	bool bindPMD( pmdReader* reader, vmdReader* motion );
+  bool bindPMX( pmxReader* reader, vmdReader* motion );
 	bool unbind();
 	
 	bool update( const double dTime );

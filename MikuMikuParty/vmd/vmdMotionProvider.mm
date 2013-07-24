@@ -366,7 +366,7 @@ bool dataSortPredicate(const motion_item& d1, const motion_item& d2)
 	return d1.iFrame < d2.iFrame;
 }
 
-bool vmdMotionProvider::bind( pmdReader* reader, vmdReader* motion )
+bool vmdMotionProvider::bindPMD( pmdReader* reader, vmdReader* motion )
 {
 	if( reader == NULL || motion == NULL )
 		return false;
@@ -528,9 +528,14 @@ bool vmdMotionProvider::bind( pmdReader* reader, vmdReader* motion )
 	//
 	//bind skin
 	//
-	bindSkinAnimation(reader, motion);
+	bindSkinAnimationPMD(reader, motion);
 	
 	return true;
+}
+
+bool vmdMotionProvider::bindPMX( pmxReader* reader, vmdReader* motion )
+{
+  return false;
 }
 
 bool vmdMotionProvider::unbind()

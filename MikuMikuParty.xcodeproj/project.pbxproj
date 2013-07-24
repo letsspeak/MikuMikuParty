@@ -42,6 +42,7 @@
 		0EAAC65817914263008EAE4F /* MikuMikuErrorDescriptions.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0EAAC65717914263008EAE4F /* MikuMikuErrorDescriptions.plist */; };
 		0EAAC65E1791973B008EAE4F /* MikuMikuConnectionServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EAAC65D1791973B008EAE4F /* MikuMikuConnectionServer.m */; };
 		0EAAC6621791A133008EAE4F /* MikuMikuConnectionServers.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0EAAC6611791A132008EAE4F /* MikuMikuConnectionServers.plist */; };
+		0EB5338E17A0052E00A357F1 /* pmxRenderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0EB5338C17A0052E00A357F1 /* pmxRenderer.mm */; };
 		0EB7E4B71792D002009F2FFF /* MMDHubItemTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EB7E4B31792D002009F2FFF /* MMDHubItemTableView.m */; };
 		0EB7E4B81792D002009F2FFF /* MMDHubViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EB7E4B51792D002009F2FFF /* MMDHubViewController.m */; };
 		0EB7E4B91792D002009F2FFF /* MMDHubViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0EB7E4B61792D002009F2FFF /* MMDHubViewController.xib */; };
@@ -154,6 +155,9 @@
 		0EAAC65C1791973B008EAE4F /* MikuMikuConnectionServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MikuMikuConnectionServer.h; path = Utilities/MikuMikuConnection/MikuMikuConnectionServer.h; sourceTree = "<group>"; };
 		0EAAC65D1791973B008EAE4F /* MikuMikuConnectionServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MikuMikuConnectionServer.m; path = Utilities/MikuMikuConnection/MikuMikuConnectionServer.m; sourceTree = "<group>"; };
 		0EAAC6611791A132008EAE4F /* MikuMikuConnectionServers.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = MikuMikuConnectionServers.plist; path = Utilities/MikuMikuConnection/MikuMikuConnectionServers.plist; sourceTree = "<group>"; };
+		0EB5338C17A0052E00A357F1 /* pmxRenderer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = pmxRenderer.mm; path = pmx/pmxRenderer.mm; sourceTree = "<group>"; };
+		0EB5338D17A0052E00A357F1 /* pmxRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pmxRenderer.h; path = pmx/pmxRenderer.h; sourceTree = "<group>"; };
+		0EB5338F17A0080A00A357F1 /* RendererDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = RendererDefine.h; path = ESRenderer/RendererDefine.h; sourceTree = "<group>"; };
 		0EB7E4B21792D002009F2FFF /* MMDHubItemTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMDHubItemTableView.h; path = Contents/MMDHub/MMDHubItemTableView.h; sourceTree = "<group>"; };
 		0EB7E4B31792D002009F2FFF /* MMDHubItemTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMDHubItemTableView.m; path = Contents/MMDHub/MMDHubItemTableView.m; sourceTree = "<group>"; };
 		0EB7E4B41792D002009F2FFF /* MMDHubViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMDHubViewController.h; path = Contents/MMDHub/MMDHubViewController.h; sourceTree = "<group>"; };
@@ -281,6 +285,7 @@
 				0E82C775178DBBC200E9E0A5 /* ES2Renderer.h */,
 				0E82C776178DBBC200E9E0A5 /* ES2Renderer.mm */,
 				0E82C777178DBBC200E9E0A5 /* ESRenderer.h */,
+				0EB5338F17A0080A00A357F1 /* RendererDefine.h */,
 			);
 			name = ESRenderer;
 			sourceTree = "<group>";
@@ -489,6 +494,8 @@
 			children = (
 				0EB7E4FF1799A99B009F2FFF /* pmxReader.h */,
 				0EB7E4FE1799A99B009F2FFF /* pmxReader.mm */,
+				0EB5338D17A0052E00A357F1 /* pmxRenderer.h */,
+				0EB5338C17A0052E00A357F1 /* pmxRenderer.mm */,
 			);
 			name = pmx;
 			sourceTree = "<group>";
@@ -750,6 +757,7 @@
 				0EB7E4F8179827C4009F2FFF /* ItemSelectViewController.m in Sources */,
 				0EB7E4FC17997D93009F2FFF /* NSString+Charset.m in Sources */,
 				0EB7E5001799A99B009F2FFF /* pmxReader.mm in Sources */,
+				0EB5338E17A0052E00A357F1 /* pmxRenderer.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -9,7 +9,7 @@
 #include <sys/time.h>
 #import "ES2Renderer.h"
 #import "pmdRenderer.h"
-#import "pmxReader.h"
+#import "pmxRenderer.h"
 
 // uniform index
 enum {
@@ -39,10 +39,13 @@ inline double micro()
 
 @interface ES2Renderer ()
 
+@property (nonatomic, assign) MMPModelType modelType;
 @property (nonatomic, assign) pmdReader pmdReader;
-@property (nonatomic, assign) pmxReader pmxReader;
 @property (nonatomic, assign) vmdReader motionreader;
 @property (nonatomic, assign) pmdRenderer pmdRenderer;
+
+@property (nonatomic, assign) pmxReader pmxReader;
+@property (nonatomic, assign) pmxRenderer pmxRenderer;
 
 - (BOOL)loadShaders;
 - (BOOL)compileShader:(GLuint *)shader type:(GLenum)type file:(NSString *)file;
@@ -96,87 +99,121 @@ inline double micro()
     return self;
 }
 
-- (bool)load:(NSString*)strModel motion:(NSString*)strMotion
+- (bool)load:(NSString*)modelFilename motion:(NSString*)motionFilename
 {
   NSLog(@"ES2Renderer load called.");
   
-	if( strModel == nil )
+	if( modelFilename == nil )
 		return false;
+  
 	_pmdRenderer.unload();
   
-  if ([[strModel pathExtension] isEqualToString:@"pmd"] ){
-
-    bool b = _pmdReader.init( strModel );
-    if( b == false )
-      return b;
-    
-    if( strMotion == nil )
-    {
-      _pmdRenderer.init( &_pmdReader, NULL );
-    }
-    else
-    {
-      _motionreader.init( strMotion );
-      _pmdRenderer.init( &_pmdReader, &_motionreader );
-    }
-    
-    _pmdReader.unload();
-    _motionreader.unload();
-    
-  } else if ([[strModel pathExtension] isEqualToString:@"pmx"]) {
-    
-    bool b = _pmxReader.init( strModel );
-    if (b == false)
+  self.modelType = [self modelTypeWithFilename:modelFilename];
+  
+  switch (self.modelType) {
+    case MMPModelTypePMD:
+      return [self loadPMD:modelFilename motion:motionFilename];
+    case MMPModelTypePMX:
+      return [self loadPMX:modelFilename motion:motionFilename];
+    default:
+      NSLog(@"unkown model type : %@", modelFilename);
       return false;
-    
-    return false;
   }
+  
+  return true;
+}
+
+- (bool)loadPMD:(NSString*)modelFilename motion:(NSString*)motionFilename
+{
+  bool b = _pmdReader.init( modelFilename );
+  if( b == false )
+    return b;
+  
+  if( motionFilename == nil )
+  {
+    _pmdRenderer.init( &_pmdReader, NULL );
+  }
+  else
+  {
+    _motionreader.init( motionFilename );
+    _pmdRenderer.init( &_pmdReader, &_motionreader );
+  }
+  
+  _pmdReader.unload();
+  _motionreader.unload();
+  
+  return true;
+}
+
+- (bool)loadPMX:(NSString*)modelFilename motion:(NSString*)motionFilename
+{
+  bool b = _pmxReader.init( modelFilename );
+  if( b == false )
+    return b;
+  
+  if( motionFilename == nil )
+  {
+    _pmxRenderer.init( &_pmxReader, NULL );
+  }
+  else
+  {
+    _motionreader.init( motionFilename );
+    _pmxRenderer.init( &_pmxReader, &_motionreader );
+  }
+  
+  _pmxReader.unload();
+  _motionreader.unload();
   
   return true;
 }
 
 - (void)render
 {
-    // This application only creates a single context which is already set current at this point.
-    // This call is redundant, but needed if dealing with multiple contexts.
-    [EAGLContext setCurrentContext:context];
-
+  // This application only creates a single context which is already set current at this point.
+  // This call is redundant, but needed if dealing with multiple contexts.
+  [EAGLContext setCurrentContext:context];
+  
 #ifdef USE_MSAA
 	glBindFramebuffer(GL_FRAMEBUFFER, msaaFramebuffer);
 	glBindRenderbuffer(GL_RENDERBUFFER, msaaRenderBuffer);
 #endif
-
-    glViewport(0, 0, backingWidth, backingHeight);
-
-    glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+  
+  glViewport(0, 0, backingWidth, backingHeight);
+  
+  glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    // Draw
-	_pmdRenderer.update(micro());
-	_pmdRenderer.render();
-
+  
+  // Draw
+  if (_modelType == MMPModelTypePMD) {
+    _pmdRenderer.update(micro());
+    _pmdRenderer.render();
+  }else if (_modelType == MMPModelTypePMX) {
+    _pmxRenderer.update(micro());
+    _pmxRenderer.render();
+  }
+  
 #ifdef USE_MSAA
 	//Discard buffer
 	GLenum attachments[] = {GL_DEPTH_ATTACHMENT};
-	glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE, 1, attachments);   
-    
+	glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE, 1, attachments);
+  
 	//Bind both MSAA and View FrameBuffers.
 	glBindFramebuffer(GL_READ_FRAMEBUFFER_APPLE, msaaFramebuffer);
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER_APPLE, defaultFramebuffer); 
-
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER_APPLE, defaultFramebuffer);
+  
 	// Call a resolve to combine both buffers
-	glResolveMultisampleFramebufferAPPLE();   
+	glResolveMultisampleFramebufferAPPLE();
 #else
 	//Discard buffer
 	GLenum attachments[] = {GL_DEPTH_ATTACHMENT};
-	glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE, 1, attachments);   
-    
-    glBindFramebuffer(GL_FRAMEBUFFER, defaultFramebuffer);
-#endif	
-    // This application only creates a single color renderbuffer which is already bound at this point.
-    // This call is redundant, but needed if dealing with multiple renderbuffers.
-    glBindRenderbuffer(GL_RENDERBUFFER, colorRenderbuffer);
-    [context presentRenderbuffer:GL_RENDERBUFFER];
+	glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE, 1, attachments);
+  
+  glBindFramebuffer(GL_FRAMEBUFFER, defaultFramebuffer);
+#endif
+  // This application only creates a single color renderbuffer which is already bound at this point.
+  // This call is redundant, but needed if dealing with multiple renderbuffers.
+  glBindRenderbuffer(GL_RENDERBUFFER, colorRenderbuffer);
+  [context presentRenderbuffer:GL_RENDERBUFFER];
 }
 
 - (BOOL)compileShader:(GLuint *)shader type:(GLenum)type file:(NSString *)file
@@ -419,6 +456,14 @@ inline double micro()
     context = nil;
 
     [super dealloc];
+}
+
+- (MMPModelType)modelTypeWithFilename:(NSString*)filename
+{
+  NSString *pathExtension = [filename pathExtension];
+  if ([pathExtension isEqualToString:@"pmd"]) return MMPModelTypePMD;
+  if ([pathExtension isEqualToString:@"pmx"]) return MMPModelTypePMX;
+  return MMPModelTypeUnknown;
 }
 
 @end
