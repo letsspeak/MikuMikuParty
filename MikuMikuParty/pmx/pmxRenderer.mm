@@ -242,8 +242,11 @@ void pmxRenderer::render()
 			{
 				if( vec[ iPaletteIndex ] != -1 )
 				{
-					glUniformMatrix4fv( _shaders[iShaderIndex]._uiMatrixPalette + iPaletteIndex * 4, 1, GL_FALSE,
-                             (*matrixPalette)[ vec[ iPaletteIndex ] ].mat.ptr());
+          // TODO : invalid value of vec[ iPaletteIndex ]...
+          if ( vec[ iPaletteIndex] < (*matrixPalette).size() ){
+            glUniformMatrix4fv( _shaders[iShaderIndex]._uiMatrixPalette + iPaletteIndex * 4, 1, GL_FALSE,
+                               (*matrixPalette)[ vec[ iPaletteIndex ] ].mat.ptr());
+          }
 				}
         
 			}
@@ -256,10 +259,16 @@ void pmxRenderer::render()
 			glUniform3f( _shaders[iShaderIndex]._uiLight0, 0.f, 10.f, 1.f );
 		}
 		lastProgram = currentProgram;
-		
-		glDrawElements(GL_TRIANGLES, iNumIndices,
-                   GL_UNSIGNED_SHORT, BUFFER_OFFSET(iOffset * sizeof(uint16_t) ));
-		iOffset += iNumIndices;
+    
+    if ( _vertexIndexSize == 1) {
+      glDrawElements(GL_TRIANGLES, iNumIndices, GL_UNSIGNED_BYTE, BUFFER_OFFSET(iOffset * sizeof(uint8_t) ));
+    } else if ( _vertexIndexSize == 2) {
+      glDrawElements(GL_TRIANGLES, iNumIndices, GL_UNSIGNED_SHORT, BUFFER_OFFSET(iOffset * sizeof(uint16_t) ));
+    } else if (_vertexIndexSize == 4) {
+      glDrawElements(GL_TRIANGLES, iNumIndices, GL_UNSIGNED_INT, BUFFER_OFFSET(iOffset * sizeof(uint32_t) ));
+//                   GL_UNSIGNED_SHORT, BUFFER_OFFSET(iOffset * sizeof(uint16_t) ));
+    }
+    iOffset += iNumIndices;
 	}
 	
 }
@@ -272,6 +281,8 @@ bool pmxRenderer::init( pmxReader* reader, vmdReader* motion )
 	
 	_bPerformSkinmeshAnimation = true;
 //	_bPerformSkinmeshAnimation = false;
+  
+  _vertexIndexSize = reader->vertexIndexSize();
   
 	if( motion != NULL )
 	{
@@ -331,7 +342,7 @@ void pmxRenderer::createVbo( pmxReader* pReader )
 	glBindBuffer(GL_ARRAY_BUFFER, _vboRender);
 	
 	int32_t iNum = pReader->getNumVertices();
-  std::vector< pmx_vertex > vecVertices= pReader->getVertices();
+  std::vector< pmx_vertex > vecVertices = pReader->getVertices();
 	std::vector< renderer_vertex > vec;
 	renderer_vertex vertex;
 	for( int32_t iVertexIndex = 0; iVertexIndex < iNum; ++iVertexIndex )
@@ -363,7 +374,7 @@ void pmxRenderer::createVbo( pmxReader* pReader )
 
 void pmxRenderer::createIndexBuffer( pmxReader* pReader )
 {
-  int32_t iStride = pReader->vertexIndexSize(); //sizeof( uint16_t );
+  int32_t iStride = (int32_t)pReader->vertexIndexSize(); //sizeof( uint16_t );
 	glGenBuffers(1, &_vboIndex);
 	
 	// Bind the VBO
@@ -408,6 +419,9 @@ void pmxRenderer::loadMaterials( pmxReader* pReader )
     
     if (mat.shared_toon_flag == 0) {
       
+      if (mat.toon_texture_index == -1) continue;
+      
+//      NSLog(@"mat.toon_texture_index = %d", mat.toon_texture_index);
       NSString *textureFilename = vecTexture[mat.toon_texture_index].string();
       
       if( textureFilename )
@@ -453,11 +467,11 @@ bool pmxRenderer::partitioning( pmxReader* reader, SkinningEvaluator* eval, int3
 		NSMutableDictionary* triangleStats = [[[NSMutableDictionary alloc] init] autorelease];
 		for( int32_t j = 0; j < 3; ++j )
 		{
-			int32_t iMatrix0 = vecVertex[ vecIndices[i * 3 + j] ].getBoneIndex( 0 );
+			int32_t iMatrix0 = vecVertex[ vecIndices[i * 3 + j + iStart]].getBoneIndex( 0 );
 			NSNumber* n0 = [NSNumber numberWithInt:iMatrix0];
 			[triangleStats setObject:n0 forKey:n0];
       
-			int32_t iMatrix1 = vecVertex[ vecIndices[i * 3 + j] ].getBoneIndex( 1 );
+			int32_t iMatrix1 = vecVertex[ vecIndices[i * 3 + j + iStart]].getBoneIndex( 1 );
 			if( iMatrix1 != -1 )
 			{
 				NSNumber* n1 = [NSNumber numberWithInt:iMatrix1];
@@ -476,7 +490,7 @@ bool pmxRenderer::partitioning( pmxReader* reader, SkinningEvaluator* eval, int3
 			iKey |= [n intValue];
 			if( [n intValue] > 255 )
 			{
-				NSLog( @"Invalid bone #, assuming # bones less than 255" );
+//				NSLog( @"Invalid bone #, assuming # bones less than 255" );
 			}
 		}
 		
@@ -619,7 +633,7 @@ bool pmxRenderer::createMatrixMapping( NSArray* sortedKeys, NSDictionary* dicMat
 	return true;
 }
 
-int32_t pmxRenderer::getMappedVertices( mmd_vertex* pVertices,
+int32_t pmxRenderer::getMappedVertices(std::vector<pmx_vertex> vecVertex,
                                        const int32_t iVertexIndex,
                                        const uint32_t iVertexKey,
                                        const bool bSkinning )
@@ -635,26 +649,27 @@ int32_t pmxRenderer::getMappedVertices( mmd_vertex* pVertices,
 	_mapVertexMapping[ iVertexIndex ][ iVertexKey ] = iNewIndex;
 	
 	renderer_vertex vertex;
-	vertex.pos[ 0 ] = pVertices[ iVertexIndex ].pos[ 0 ];
-	vertex.pos[ 1 ] = pVertices[ iVertexIndex ].pos[ 1 ];
-	vertex.pos[ 2 ] = pVertices[ iVertexIndex ].pos[ 2 ];
-	vertex.normal_vec[ 0 ] = pVertices[ iVertexIndex ].normal_vec[ 0 ];
-	vertex.normal_vec[ 1 ] = pVertices[ iVertexIndex ].normal_vec[ 1 ];
-	vertex.normal_vec[ 2 ] = pVertices[ iVertexIndex ].normal_vec[ 2 ];
-	vertex.uv[ 0 ] = pVertices[ iVertexIndex ].uv[ 0 ];
-	vertex.uv[ 1 ] = pVertices[ iVertexIndex ].uv[ 1 ];
+	vertex.pos[ 0 ] = vecVertex[ iVertexIndex ].pos[ 0 ];
+	vertex.pos[ 1 ] = vecVertex[ iVertexIndex ].pos[ 1 ];
+	vertex.pos[ 2 ] = vecVertex[ iVertexIndex ].pos[ 2 ];
+	vertex.normal_vec[ 0 ] = vecVertex[ iVertexIndex ].normal_vec[ 0 ];
+	vertex.normal_vec[ 1 ] = vecVertex[ iVertexIndex ].normal_vec[ 1 ];
+	vertex.normal_vec[ 2 ] = vecVertex[ iVertexIndex ].normal_vec[ 2 ];
+	vertex.uv[ 0 ] = vecVertex[ iVertexIndex ].uv[ 0 ];
+	vertex.uv[ 1 ] = vecVertex[ iVertexIndex ].uv[ 1 ];
 	vertex.bone[ 0 ] = uint8_t(iVertexKey >> 16);
 	vertex.bone[ 1 ] = uint8_t(iVertexKey & 0xffff);
 	vertex.bone[ 2 ] = bSkinning;
   // memo : ayashii
-	vertex.bone[ 3 ] = uint8_t( float(pVertices[ iVertexIndex ].bone_weight) / 100.f * 255.f);
+	vertex.bone[ 3 ] = uint8_t( float(vecVertex[ iVertexIndex ].bone_weight[0]) * 255.f);
+//	vertex.bone[ 3 ] = uint8_t( float(vecVertex[ iVertexIndex ].bone_weight[0]) / 100.f * 255.f);
 	_vecMappedVertex.push_back( vertex );
 	
 	//NSLog( @"vertex %d, weight %d bone0 %d, bone1 %d", iNewIndex, vertex.bone[ 3 ], vertex.bone[ 0 ], vertex.bone[ 1 ] );
 	return iNewIndex;
 }
 
-int16_t pmxRenderer::getMappedBone( std::vector< int32_t >*pVec, const int32_t iBone )
+int32_t pmxRenderer::getMappedBone( std::vector< int32_t >*pVec, const int32_t iBone )
 {
 	//
 	//Get the bone index in current matrix palette skinning entries
@@ -681,405 +696,410 @@ int16_t pmxRenderer::getMappedBone( std::vector< int32_t >*pVec, const int32_t i
 //
 bool pmxRenderer::partitionMeshes( pmxReader* reader )
 {
-//	SGXSkinningEvaluator* eval = new SGXSkinningEvaluator();
-//	int32_t iMaterials = reader->getNumMaterials();
-//	mmd_material* pMaterial = reader->getMaterials();
-//	int32_t iOffset = 0;
-//	
-//	mmd_vertex* pVertices = reader->getVertices();
-//	uint16_t* pIndices = reader->getIndices();
-//	
-//	int32_t iNumMatrix = eval->getNumBoneMatrixPalette();
-//	int32_t MAX_BONES = 255;
-//	if( iNumMatrix > MAX_BONES )
-//	{
-//		return false;
-//	}
-//	
-//	NSMutableDictionary* dicMatrixRefCount = [[NSMutableDictionary alloc] init];
-//	NSMutableDictionary* dicMatrixRefArray = [[NSMutableDictionary alloc] init];
-//  
-//	std::vector< int16_t > vecIndices;
-//	int32_t iBatchIndex = 0;
-//	
-//	//
-//	//1. Check bone ussage stats and perform pertitioning if necessary
-//	//
-//	
-//	for( int32_t i = 0; i < iMaterials; ++i )
-//	{
-//		NSMutableDictionary* dic = [[NSMutableDictionary alloc] init];
-//		int32_t iNumIndices = pMaterial[ i ].face_vert_count;
-//		
-//		bool bPartitioned = false;
-//    
-//		for( int32_t j = 0; j < iNumIndices; ++j )
-//		{
-//			int32_t iIndex = pIndices[ iOffset + j ];
-//			int32_t iBone0 = pVertices[ iIndex ].getBoneIndex( 0 );
-//			NSNumber* num0 = [NSNumber numberWithInt:iBone0];
-//			[dic setObject:num0 forKey:num0];
-//			
-//			int32_t iBone1 = pVertices[ iIndex ].getBoneIndex( 1 );
-//			if( iBone1 != -1 )
-//			{
-//				NSNumber* num1 = [NSNumber numberWithInt:iBone1];
-//				[dic setObject:num1 forKey:num1];
-//			}
-//			
-//			if( [dic count] > iNumMatrix )
-//			{
-//				bPartitioned = true;
-//				//Need to partition mesh
-//				NSLog( @"Partitioning..." );
-//				partitioning( reader, eval, iOffset, iNumIndices );
-//				break;
-//			}
-//			
-//		}
-//		
-//		//Create index list
-//		if( bPartitioned )
-//		{
-//      //			NSLog( @"Partitioning..." );
-//      //			partitioning( reader, eval, iOffset, iNumIndices );
-//      
-//			NSArray* arrayPartitions = eval->getResult();
-//      
-//			for( NSArray* indices in arrayPartitions )
-//			{
-//				NSNumber* numBatch = [NSNumber numberWithInt:iBatchIndex];
-//				
-//				for( NSNumber* index in indices )
-//				{
-//					int16_t iIndex = [index shortValue];
-//					vecIndices.push_back( iIndex );
-//					
-//					//Count matrix usage for matrix palette index mapping
-//					for( int32_t iBoneIndex = 0; iBoneIndex < 2; ++iBoneIndex )
-//					{
-//						int32_t iBone = pVertices[ iIndex ].getBoneIndex( iBoneIndex );
-//						NSNumber* num = [NSNumber numberWithInt:iBone];
-//						
-//						NSNumber* numCount = [dicMatrixRefCount objectForKey:num];
-//						if( numCount == nil )
-//							[dicMatrixRefCount setObject:[NSNumber numberWithInt:1]  forKey:num];
-//						else
-//							[dicMatrixRefCount setObject:[NSNumber numberWithInt:[numCount intValue] + 1]  forKey:num];
-//						
-//						NSMutableDictionary* dicMatrix = [dicMatrixRefArray objectForKey:num];
-//						if( dicMatrix == nil )
-//							dicMatrix = [[[NSMutableDictionary alloc] init] autorelease];
-//						
-//						[dicMatrix setObject:numBatch forKey:numBatch];
-//						[dicMatrixRefArray setObject:dicMatrix forKey:num];
-//            
-//						if( pVertices[ iIndex ].getBoneIndex( iBoneIndex + 1 ) == -1 )
-//							break;
-//					}
-//          
-//				}
-//        
-//				DRAW_LIST list = { 0 };
-//				list.iMaterialIndex = i;
-//				list.iNumIndices = [indices count];
-//				_vecDrawList.push_back( list );
-//				
-//				iBatchIndex++;
-//			}
-//			
-//			eval->clearResult();
-//		}
-//		else
-//		{
-//			NSNumber* numBatch = [NSNumber numberWithInt:iBatchIndex];
-//      
-//			//Push indices to index list
-//			for( int32_t j = 0; j < iNumIndices; ++j )
-//			{
-//				int32_t iIndex = pIndices[ iOffset + j ];
-//				vecIndices.push_back( iIndex );
-//        
-//				//Count matrix usage for matrix palette index mapping
-//				for( int32_t iBoneIndex = 0; iBoneIndex < 2; ++iBoneIndex )
-//				{
-//					int32_t iBone = pVertices[ iIndex ].getBoneIndex( iBoneIndex );
-//					NSNumber* num = [NSNumber numberWithInt:iBone];
-//					
-//					NSNumber* numCount = [dicMatrixRefCount objectForKey:num];
-//					if( numCount == nil )
-//						[dicMatrixRefCount setObject:[NSNumber numberWithInt:1]  forKey:num];
-//					else
-//						[dicMatrixRefCount setObject:[NSNumber numberWithInt:[numCount intValue] + 1]  forKey:num];
-//					
-//					NSMutableDictionary* dicMatrix = [dicMatrixRefArray objectForKey:num];
-//					if( dicMatrix == nil )
-//						dicMatrix = [[[NSMutableDictionary alloc] init] autorelease];
-//					
-//					[dicMatrix setObject:numBatch forKey:numBatch];
-//					[dicMatrixRefArray setObject:dicMatrix forKey:num];
-//					
-//					if( pVertices[ iIndex ].getBoneIndex( iBoneIndex + 1 ) == -1 )
-//						break;
-//				}
-//			}
-//			
-//			DRAW_LIST list = { 0 };
-//			list.iMaterialIndex = i;
-//			list.iNumIndices = iNumIndices;
-//			_vecDrawList.push_back( list );
-//      
-//			iBatchIndex++;
-//		}
-//		
-//#ifdef DUMP_PARTITIONS
-//		NSLog( @"Bones in material %d: %d, %@", i, [dic count], [dic description]);
-//#endif
-//		[dic release];
-//		
-//		iOffset += iNumIndices;
-//	}
-//	
-//	//NSLog( @"matrix dic:%@", [dicMatrixRefArray description] );
-//	
-//	//
-//	//Now we have index list
-//	//
-//  
-//	//
-//	//2. Crete matrix mapping for vs constant array
-//	//
-//	
-//	//dicMatrixRefCount
-//	//bone0 - nsnumber: # reference count
-//	//bone1 - nsnumber: # reference count.
-//	
-//	//dicMatrixRefArray
-//	//bone0 - dic { batch using the bone }
-//	//bone1 - dic { batch using the bone }
-//	
-//	//Sort bones by ref count
-//	NSArray *keys = [dicMatrixRefCount allKeys];
-//	NSArray *sortedKeys = [keys sortedArrayUsingFunction:(NSInteger (*)(id, id, void *))compare context:dicMatrixRefCount];
-//	//NSLog( @"%@", [sortedKeys description] );
-//	//NSLog( @"%@", [dicMatrixRefCount description] );
-//	
-//	createMatrixMapping( sortedKeys, dicMatrixRefArray );
-//	
-//	//Go through index buffer & duplicate vertex if necessary
-//	int32_t iIndex = 0;
-//  
-//	_vecMappedVertex.clear();
-//	_mapVertexMapping.clear();
-//  
-//	
-//	//
-//	//3. Create skin mesh mapping
-//	//
-//	NSMutableDictionary* dicSkinmeshVertices = [[NSMutableDictionary alloc] init];
-//	NSMutableDictionary* dicSkinmeshVerticesReverse = [[NSMutableDictionary alloc] init];
-//	if( _bPerformSkinmeshAnimation )
-//	{
-//		//
-//		//Note:
-//		//now only support 1 base mesh
-//		//
-//		
-//		int32_t iNumSkinAnimations = reader->getNumSkinAnimations();
-//		mmd_skin* pSkin = reader->getSkinAnimations();
-//		for( int32_t i = 0; i < iNumSkinAnimations; ++i )
-//		{
-//			if( pSkin->skin_type == 0 )	//if base skin data
-//			{
-//				for( int32_t j = 0; j < pSkin->skin_vert_count; ++j )
-//				{
-//					[dicSkinmeshVertices setObject:[NSNumber numberWithBool:true]
-//                                  forKey:[NSNumber numberWithInt:pSkin->skin_vert_data[ j ].vert_index] ];
-//					[dicSkinmeshVerticesReverse setObject:[NSNumber numberWithInt:pSkin->skin_vert_data[ j ].vert_index]
-//                                         forKey:[NSNumber numberWithInt:j]];
-//				}
-//			}
-//      
-//			pSkin = (mmd_skin*)((uint8_t*)pSkin + sizeof( mmd_skin ) + pSkin->skin_vert_count * sizeof( mmd_skin_vertex ) );
-//		}
-//		
-//		_iNumSkinAnimations = iNumSkinAnimations;
-//	}
-//	
-//	//
-//	//4. vbo, index buffer registrations
-//	//
-//	
-//	//now it takes 2 passes
-//	//first pass: regsiter vertices with skinning animation
-//	//2nd pass: register vertices without skinning animation
-//	
-//	std::vector< DRAW_LIST >::iterator itBegin = _vecDrawList.begin();
-//	std::vector< DRAW_LIST >::iterator itEnd = _vecDrawList.end();
-//	std::vector< uint16_t > vecMappedIndices;
-//	if( _bPerformSkinmeshAnimation )
-//	{
-//		NSMutableDictionary* dicSkinningVertexMap = [[[NSMutableDictionary alloc] init] autorelease];
-//		
-//		for( ;itBegin != itEnd; ++itBegin )
-//		{
-//			int32_t iNumIndices = itBegin->iNumIndices;
-//			NSLog( @"Batch material:%d # indices:%d", itBegin->iMaterialIndex, iNumIndices );
-//			std::vector< int32_t >* pVec = &itBegin->vecMatrixPalette;
-//			for( int32_t i = 0; i < iNumIndices; ++i )
-//			{
-//				int32_t iCurrentIndex = vecIndices[ iIndex ];
-//				if( [dicSkinmeshVertices objectForKey:[NSNumber numberWithInt:iCurrentIndex] ] != nil )
-//				{
-//					itBegin->bSkinMesh = true;
-//					
-//					int16_t iBone0 = pVertices[ iCurrentIndex ].getBoneIndex( 0 );
-//					int16_t iMappedBone0 = getMappedBone( pVec, iBone0 );
-//					
-//					int16_t iBone1 = pVertices[ iCurrentIndex ].getBoneIndex( 1 );
-//					int16_t iMappedBone1 = -1;
-//					int32_t iMappedVertexIndex;
-//					if( iBone1 != -1 )
-//					{
-//						iMappedBone1 = getMappedBone( pVec, iBone1 );
-//						uint32_t iKey = iMappedBone0 << 16 | iMappedBone1;
-//						iMappedVertexIndex = getMappedVertices( pVertices, iCurrentIndex, iKey, true );
-//					}
-//					else
-//					{
-//						uint32_t iKey = iMappedBone0 << 16;
-//						iMappedVertexIndex = getMappedVertices( pVertices, iCurrentIndex, iKey, true );
-//					}
-//					
-//					NSNumber* num = [NSNumber numberWithInt:iCurrentIndex];
-//					NSMutableDictionary* dic = [dicSkinningVertexMap objectForKey:num];
-//					if( dic == nil )
-//						dic = [[[NSMutableDictionary alloc] init] autorelease];
-//					[dic setObject:num forKey:[NSNumber numberWithInt:iMappedVertexIndex]];
-//					[dicSkinningVertexMap setObject:dic forKey:num];
-//				}
-//				iIndex++;
-//			}
-//		}
-//    
-//		_iSizeSkinanimatinVertices = _vecMappedVertex.size();
-//		NSLog( @"# of skinanimation vertices: %d", _iSizeSkinanimatinVertices );
-//		
-//		//
-//		//dicSkinmeshVertices: dic[ vertex -> bool ];
-//		//dicSkinmeshVerticesReverse: dic[ base index -> vertex index in vbo ];
-//		//
-//    
-//		
-//		//Create skin data arrayVBOs
-//		mmd_skin* pSkin = reader->getSkinAnimations();
-//		
-//		for( int32_t i = 0; i< _iNumSkinAnimations; ++i )
-//		{
-//			skinanimation_vertex* pVertices = new skinanimation_vertex[ _iSizeSkinanimatinVertices ];
-//			//Clear
-//			for( int32_t j = 0; j < _iSizeSkinanimatinVertices; ++j )
-//			{
-//				pVertices[ j ].pos[ 0 ] = pVertices[ j ].pos[ 1 ] = pVertices[ j ].pos[ 2 ] = 0.f;
-//			}
-//			
+	SGXSkinningEvaluator* eval = new SGXSkinningEvaluator();
+	int32_t iMaterials = reader->getNumMaterials();
+  std::vector<pmx_material> vecMaterial = reader->getMaterials();
+	int32_t iOffset = 0;
+	
+  std::vector<pmx_vertex> vecVerices = reader->getVertices();
+  std::vector<int32_t> readerIndices = reader->getVecIndices();
+	
+	int32_t iNumMatrix = eval->getNumBoneMatrixPalette();
+	int32_t MAX_BONES = 255;
+	if( iNumMatrix > MAX_BONES )
+	{
+		return false;
+	}
+	
+	NSMutableDictionary* dicMatrixRefCount = [[NSMutableDictionary alloc] init];
+	NSMutableDictionary* dicMatrixRefArray = [[NSMutableDictionary alloc] init];
+  
+	std::vector< int32_t > vecIndices;
+	int32_t iBatchIndex = 0;
+	
+	//
+	//1. Check bone ussage stats and perform pertitioning if necessary
+	//
+	
+	for( int32_t i = 0; i < iMaterials; ++i )
+	{
+		NSMutableDictionary* dic = [[NSMutableDictionary alloc] init];
+		int32_t iNumIndices = vecMaterial[ i ].face_vert_count;
+		
+		bool bPartitioned = false;
+    
+		for( int32_t j = 0; j < iNumIndices; ++j )
+		{
+			int32_t iIndex = readerIndices[ iOffset + j ];
+			int32_t iBone0 = vecVerices[ iIndex ].getBoneIndex( 0 );
+			NSNumber* num0 = [NSNumber numberWithInt:iBone0];
+			[dic setObject:num0 forKey:num0];
+			
+			int32_t iBone1 = vecVerices[ iIndex ].getBoneIndex( 1 );
+			if( iBone1 != -1 )
+			{
+				NSNumber* num1 = [NSNumber numberWithInt:iBone1];
+				[dic setObject:num1 forKey:num1];
+			}
+			
+			if( [dic count] > iNumMatrix )
+			{
+				bPartitioned = true;
+				//Need to partition mesh
+				NSLog( @"Partitioning..." );
+				partitioning( reader, eval, iOffset, iNumIndices );
+				break;
+			}
+			
+		}
+		
+		//Create index list
+		if( bPartitioned )
+		{
+      //			NSLog( @"Partitioning..." );
+      //			partitioning( reader, eval, iOffset, iNumIndices );
+      
+			NSArray* arrayPartitions = eval->getResult();
+      
+			for( NSArray* indices in arrayPartitions )
+			{
+				NSNumber* numBatch = [NSNumber numberWithInt:iBatchIndex];
+				
+				for( NSNumber* index in indices )
+				{
+					int32_t iIndex = [index integerValue];
+					vecIndices.push_back( iIndex );
+					
+					//Count matrix usage for matrix palette index mapping
+					for( int32_t iBoneIndex = 0; iBoneIndex < 2; ++iBoneIndex )
+					{
+						int32_t iBone = vecVerices[ iIndex ].getBoneIndex( iBoneIndex );
+						NSNumber* num = [NSNumber numberWithInt:iBone];
+						
+						NSNumber* numCount = [dicMatrixRefCount objectForKey:num];
+						if( numCount == nil )
+							[dicMatrixRefCount setObject:[NSNumber numberWithInt:1]  forKey:num];
+						else
+							[dicMatrixRefCount setObject:[NSNumber numberWithInt:[numCount intValue] + 1]  forKey:num];
+						
+						NSMutableDictionary* dicMatrix = [dicMatrixRefArray objectForKey:num];
+						if( dicMatrix == nil )
+							dicMatrix = [[[NSMutableDictionary alloc] init] autorelease];
+						
+						[dicMatrix setObject:numBatch forKey:numBatch];
+						[dicMatrixRefArray setObject:dicMatrix forKey:num];
+            
+						if( vecVerices[ iIndex ].getBoneIndex( iBoneIndex + 1 ) == -1 )
+							break;
+					}
+          
+				}
+        
+				DRAW_LIST list = { 0 };
+				list.iMaterialIndex = i;
+				list.iNumIndices = [indices count];
+				_vecDrawList.push_back( list );
+				
+				iBatchIndex++;
+			}
+			
+			eval->clearResult();
+		}
+		else
+		{
+			NSNumber* numBatch = [NSNumber numberWithInt:iBatchIndex];
+      
+			//Push indices to index list
+			for( int32_t j = 0; j < iNumIndices; ++j )
+			{
+				int32_t iIndex = readerIndices[ iOffset + j ];
+				vecIndices.push_back( iIndex );
+        
+				//Count matrix usage for matrix palette index mapping
+				for( int32_t iBoneIndex = 0; iBoneIndex < 2; ++iBoneIndex )
+				{
+					int32_t iBone = vecVerices[ iIndex ].getBoneIndex( iBoneIndex );
+					NSNumber* num = [NSNumber numberWithInt:iBone];
+					
+					NSNumber* numCount = [dicMatrixRefCount objectForKey:num];
+					if( numCount == nil )
+						[dicMatrixRefCount setObject:[NSNumber numberWithInt:1]  forKey:num];
+					else
+						[dicMatrixRefCount setObject:[NSNumber numberWithInt:[numCount intValue] + 1]  forKey:num];
+					
+					NSMutableDictionary* dicMatrix = [dicMatrixRefArray objectForKey:num];
+					if( dicMatrix == nil )
+						dicMatrix = [[[NSMutableDictionary alloc] init] autorelease];
+					
+					[dicMatrix setObject:numBatch forKey:numBatch];
+					[dicMatrixRefArray setObject:dicMatrix forKey:num];
+					
+					if( vecVerices[ iIndex ].getBoneIndex( iBoneIndex + 1 ) == -1 )
+						break;
+				}
+			}
+			
+			DRAW_LIST list = { 0 };
+			list.iMaterialIndex = i;
+			list.iNumIndices = iNumIndices;
+			_vecDrawList.push_back( list );
+      
+			iBatchIndex++;
+		}
+		
+#ifdef DUMP_PARTITIONS
+		NSLog( @"Bones in material %d: %d, %@", i, [dic count], [dic description]);
+#endif
+		[dic release];
+		
+		iOffset += iNumIndices;
+	}
+	
+	//NSLog( @"matrix dic:%@", [dicMatrixRefArray description] );
+	
+	//
+	//Now we have index list
+	//
+  
+	//
+	//2. Crete matrix mapping for vs constant array
+	//
+	
+	//dicMatrixRefCount
+	//bone0 - nsnumber: # reference count
+	//bone1 - nsnumber: # reference count.
+	
+	//dicMatrixRefArray
+	//bone0 - dic { batch using the bone }
+	//bone1 - dic { batch using the bone }
+	
+	//Sort bones by ref count
+	NSArray *keys = [dicMatrixRefCount allKeys];
+	NSArray *sortedKeys = [keys sortedArrayUsingFunction:(NSInteger (*)(id, id, void *))compare context:dicMatrixRefCount];
+	//NSLog( @"%@", [sortedKeys description] );
+	//NSLog( @"%@", [dicMatrixRefCount description] );
+	
+	createMatrixMapping( sortedKeys, dicMatrixRefArray );
+	
+	//Go through index buffer & duplicate vertex if necessary
+	int32_t iIndex = 0;
+  
+	_vecMappedVertex.clear();
+	_mapVertexMapping.clear();
+  
+	
+	//
+	//3. Create skin mesh mapping
+	//
+	NSMutableDictionary* dicSkinmeshVertices = [[NSMutableDictionary alloc] init];
+	NSMutableDictionary* dicSkinmeshVerticesReverse = [[NSMutableDictionary alloc] init];
+	if( _bPerformSkinmeshAnimation )
+	{
+		//
+		//Note:
+		//now only support 1 base mesh
+		//
+		
+    std::vector< pmx_morph > vecMorphs = reader->getMorphs();
+		for( int32_t i = 0; i < vecMorphs.size(); ++i )
+		{
+      
+      // TODO : ???
+//			if( vecMorphs[i].type == 0 )	//if base skin data
+      if ( vecMorphs[i].operation_panel == 0) { // ???
+        if( vecMorphs[i].type == 1 )	//if vertex morph ?
+        {
+          for( int32_t j = 0; j < vecMorphs[i].offset_count; ++j )
+          {
+            
+            [dicSkinmeshVertices setObject:[NSNumber numberWithBool:true]
+                                    forKey:[NSNumber numberWithInt:vecMorphs[i].offset_datas[j].vertex_morph.vertex_index] ];
+            [dicSkinmeshVerticesReverse setObject:[NSNumber numberWithInt:vecMorphs[i].offset_datas[j].vertex_morph.vertex_index]
+                                           forKey:[NSNumber numberWithInt:j]];
+          }
+        }
+      }
+		}
+		
+		_iNumSkinAnimations = vecMorphs.size();
+	}
+	
+	//
+	//4. vbo, index buffer registrations
+	//
+	
+	//now it takes 2 passes
+	//first pass: regsiter vertices with skinning animation
+	//2nd pass: register vertices without skinning animation
+	
+	std::vector< DRAW_LIST >::iterator itBegin = _vecDrawList.begin();
+	std::vector< DRAW_LIST >::iterator itEnd = _vecDrawList.end();
+	std::vector< int32_t > vecMappedIndices;
+	if( _bPerformSkinmeshAnimation )
+	{
+		NSMutableDictionary* dicSkinningVertexMap = [[[NSMutableDictionary alloc] init] autorelease];
+		
+		for( ;itBegin != itEnd; ++itBegin )
+		{
+			int32_t iNumIndices = itBegin->iNumIndices;
+			NSLog( @"Batch material:%d # indices:%d", itBegin->iMaterialIndex, iNumIndices );
+			std::vector< int32_t >* pVec = &itBegin->vecMatrixPalette;
+			for( int32_t i = 0; i < iNumIndices; ++i )
+			{
+				int32_t iCurrentIndex = vecIndices[ iIndex ];
+				if( [dicSkinmeshVertices objectForKey:[NSNumber numberWithInt:iCurrentIndex] ] != nil )
+				{
+					itBegin->bSkinMesh = true;
+					
+					int32_t iBone0 = vecVerices[ iCurrentIndex ].getBoneIndex( 0 );
+					int32_t iMappedBone0 = getMappedBone( pVec, iBone0 );
+					
+					int32_t iBone1 = vecVerices[ iCurrentIndex ].getBoneIndex( 1 );
+					int32_t iMappedBone1 = -1;
+					int32_t iMappedVertexIndex;
+					if( iBone1 != -1 )
+					{
+						iMappedBone1 = getMappedBone( pVec, iBone1 );
+						uint32_t iKey = iMappedBone0 << 16 | iMappedBone1;
+						iMappedVertexIndex = getMappedVertices( vecVerices, iCurrentIndex, iKey, true );
+					}
+					else
+					{
+						uint32_t iKey = iMappedBone0 << 16;
+						iMappedVertexIndex = getMappedVertices( vecVerices, iCurrentIndex, iKey, true );
+					}
+					
+					NSNumber* num = [NSNumber numberWithInt:iCurrentIndex];
+					NSMutableDictionary* dic = [dicSkinningVertexMap objectForKey:num];
+					if( dic == nil )
+						dic = [[[NSMutableDictionary alloc] init] autorelease];
+					[dic setObject:num forKey:[NSNumber numberWithInt:iMappedVertexIndex]];
+					[dicSkinningVertexMap setObject:dic forKey:num];
+				}
+				iIndex++;
+			}
+		}
+    
+		_iSizeSkinanimatinVertices = _vecMappedVertex.size();
+		NSLog( @"# of skinanimation vertices: %d", _iSizeSkinanimatinVertices );
+		
+		//
+		//dicSkinmeshVertices: dic[ vertex -> bool ];
+		//dicSkinmeshVerticesReverse: dic[ base index -> vertex index in vbo ];
+		//
+    
+		
+		//Create skin data arrayVBOs
+    std::vector< pmx_morph > vecMorphs = reader->getMorphs();
+		
+		for( int32_t i = 0; i < vecMorphs.size(); ++i )
+		{
+			skinanimation_vertex* pVertices = new skinanimation_vertex[ _iSizeSkinanimatinVertices ];
+			//Clear
+			for( int32_t j = 0; j < _iSizeSkinanimatinVertices; ++j )
+			{
+				pVertices[ j ].pos[ 0 ] = pVertices[ j ].pos[ 1 ] = pVertices[ j ].pos[ 2 ] = 0.f;
+			}
+			
+      // TODO : ???
 //			if( pSkin->skin_type != 0 )
-//			{
-//				for( int32_t j = 0; j < pSkin->skin_vert_count; ++j )
-//				{
-//					
-//					NSNumber* num = [dicSkinmeshVerticesReverse objectForKey:[NSNumber numberWithInt:pSkin->skin_vert_data[ j ].vert_index]];
-//					NSDictionary* dic = [dicSkinningVertexMap objectForKey:num];
-//					for( NSNumber* n in dic )
-//					{
-//						int32_t iIndex = [n intValue];
-//						pVertices[ iIndex ].pos[ 0 ] = pSkin->skin_vert_data[ j ].pos[ 0 ];
-//						pVertices[ iIndex ].pos[ 1 ] = pSkin->skin_vert_data[ j ].pos[ 1 ];
-//						pVertices[ iIndex ].pos[ 2 ] = pSkin->skin_vert_data[ j ].pos[ 2 ];
-//					}
-//				}
-//				_vecSkinAnimation.push_back( pVertices );
-//			}
-//      
-//			pSkin = (mmd_skin*)((uint8_t*)pSkin + sizeof( mmd_skin ) + pSkin->skin_vert_count * sizeof( mmd_skin_vertex ) );
-//		}
-//	}
-//  
-//	//2nd pass
-//	itBegin = _vecDrawList.begin();
-//	itEnd = _vecDrawList.end();
-//	iIndex = 0;
-//	
-//	for( ;itBegin != itEnd; ++itBegin )
-//	{
-//		int32_t iNumIndices = itBegin->iNumIndices;
-//		NSLog( @"Batch material:%d # indices:%d", itBegin->iMaterialIndex, iNumIndices );
-//		std::vector< int32_t >* pVec = &itBegin->vecMatrixPalette;
-//		for( int32_t i = 0; i < iNumIndices; ++i )
-//		{
-//			int32_t iCurrentIndex = vecIndices[ iIndex ];
-//			int16_t iBone0 = pVertices[ iCurrentIndex ].getBoneIndex( 0 );
-//			int16_t iMappedBone0 = getMappedBone( pVec, iBone0 );
-//			
-//			int16_t iBone1 = pVertices[ iCurrentIndex ].getBoneIndex( 1 );
-//			int16_t iMappedBone1 = -1;
-//			if( iBone1 != -1 )
-//			{
-//				iMappedBone1 = getMappedBone( pVec, iBone1 );
-//				uint32_t iKey = iMappedBone0 << 16 | iMappedBone1;
-//				int32_t iMappedIndex = getMappedVertices( pVertices, iCurrentIndex, iKey, false );
-//				vecMappedIndices.push_back( iMappedIndex );
-//			}
-//			else
-//			{
-//				uint32_t iKey = iMappedBone0 << 16;
-//				int32_t iMappedIndex = getMappedVertices( pVertices, iCurrentIndex, iKey, false );
-//				vecMappedIndices.push_back( iMappedIndex );
-//			}
-//			iIndex++;
-//		}
-//	}
-//	
-//	//
-//	//5. create buffers
-//	//
-//	
-//	//Create Index buffer
-//	glGenBuffers(1, &_vboIndex);
-//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _vboIndex);
-//	glBufferData(GL_ELEMENT_ARRAY_BUFFER, vecMappedIndices.size() * sizeof( uint16_t ), &vecMappedIndices[ 0 ], GL_STATIC_DRAW);
-//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-//	
-//	//Create VBO
-//  int32_t iStride = sizeof( renderer_vertex );
-//	glGenBuffers(1, &_vboRender);
-//	glBindBuffer(GL_ARRAY_BUFFER, _vboRender);
-//	glBufferData(GL_ARRAY_BUFFER, iStride * _vecMappedVertex.size(), &_vecMappedVertex[ 0 ], GL_STATIC_DRAW);
-//	glBindBuffer(GL_ARRAY_BUFFER, 0);
-//	
-//	if( _bPerformSkinmeshAnimation )
-//	{
-//		iStride = sizeof( skinanimation_vertex );
-//		glGenBuffers(1, &_vboSkinAnimation);
-//		glBindBuffer(GL_ARRAY_BUFFER, _vboSkinAnimation);
-//		
-//		//Fill with Dummy data
-//		skinanimation_vertex* pVertices = new skinanimation_vertex[_vecMappedVertex.size()];
-//		glBufferData(GL_ARRAY_BUFFER, iStride * _vecMappedVertex.size(), pVertices, GL_STATIC_DRAW);
-//    
-//		delete []pVertices;
-//		glBindBuffer(GL_ARRAY_BUFFER, 0);
-//	}
-//	
-//	NSLog( @"Duplicated vertices:%ld", _vecMappedVertex.size() - reader->getNumVertices() );
-//  
-//	_vecMappedVertex.clear();
-//	_mapVertexMapping.clear();
-//	[dicMatrixRefCount release];
-//	[dicMatrixRefArray release];
-//	[dicSkinmeshVertices release];
-//	[dicSkinmeshVerticesReverse release];
-//	delete eval;
+      if ( vecMorphs[i].operation_panel != 0) { // ??
+        if ( vecMorphs[i].type == 1) {
+          for( int32_t j = 0; j < vecMorphs[i].offset_count; ++j )
+          {
+            
+            NSNumber* num = [dicSkinmeshVerticesReverse objectForKey:[NSNumber numberWithInt:vecMorphs[i].offset_datas[j].vertex_morph.vertex_index]];
+            NSDictionary* dic = [dicSkinningVertexMap objectForKey:num];
+            for( NSNumber* n in dic )
+            {
+              int32_t iIndex = [n intValue];
+              pVertices[ iIndex ].pos[ 0 ] = vecMorphs[i].offset_datas[j].vertex_morph.offset_vector[0];
+              pVertices[ iIndex ].pos[ 1 ] = vecMorphs[i].offset_datas[j].vertex_morph.offset_vector[1];
+              pVertices[ iIndex ].pos[ 2 ] = vecMorphs[i].offset_datas[j].vertex_morph.offset_vector[2];
+            }
+          }
+          _vecSkinAnimation.push_back( pVertices );
+          
+        }
+      }
+		}
+	}
+  
+	//2nd pass
+	itBegin = _vecDrawList.begin();
+	itEnd = _vecDrawList.end();
+	iIndex = 0;
+	
+	for( ;itBegin != itEnd; ++itBegin )
+	{
+		int32_t iNumIndices = itBegin->iNumIndices;
+		NSLog( @"Batch material:%d # indices:%d", itBegin->iMaterialIndex, iNumIndices );
+		std::vector< int32_t >* pVec = &itBegin->vecMatrixPalette;
+		for( int32_t i = 0; i < iNumIndices; ++i )
+		{
+			int32_t iCurrentIndex = vecIndices[ iIndex ];
+			int32_t iBone0 = vecVerices[ iCurrentIndex ].getBoneIndex( 0 );
+			int32_t iMappedBone0 = getMappedBone( pVec, iBone0 );
+			
+			int32_t iBone1 = vecVerices[ iCurrentIndex ].getBoneIndex( 1 );
+			int32_t iMappedBone1 = -1;
+			if( iBone1 != -1 )
+			{
+				iMappedBone1 = getMappedBone( pVec, iBone1 );
+				uint32_t iKey = iMappedBone0 << 16 | iMappedBone1;
+				int32_t iMappedIndex = getMappedVertices( vecVerices, iCurrentIndex, iKey, false );
+				vecMappedIndices.push_back( iMappedIndex );
+			}
+			else
+			{
+				uint32_t iKey = iMappedBone0 << 16;
+				int32_t iMappedIndex = getMappedVertices( vecVerices, iCurrentIndex, iKey, false );
+				vecMappedIndices.push_back( iMappedIndex );
+			}
+			iIndex++;
+		}
+	}
+	
+	//
+	//5. create buffers
+	//
+	
+	//Create Index buffer
+	glGenBuffers(1, &_vboIndex);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _vboIndex);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, vecMappedIndices.size() * sizeof( uint32_t ), &vecMappedIndices[ 0 ], GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	
+	//Create VBO
+  int32_t iStride = sizeof( renderer_vertex );
+	glGenBuffers(1, &_vboRender);
+	glBindBuffer(GL_ARRAY_BUFFER, _vboRender);
+	glBufferData(GL_ARRAY_BUFFER, iStride * _vecMappedVertex.size(), &_vecMappedVertex[ 0 ], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	
+	if( _bPerformSkinmeshAnimation )
+	{
+		iStride = sizeof( skinanimation_vertex );
+		glGenBuffers(1, &_vboSkinAnimation);
+		glBindBuffer(GL_ARRAY_BUFFER, _vboSkinAnimation);
+		
+		//Fill with Dummy data
+		skinanimation_vertex* pVertices = new skinanimation_vertex[_vecMappedVertex.size()];
+		glBufferData(GL_ARRAY_BUFFER, iStride * _vecMappedVertex.size(), pVertices, GL_STATIC_DRAW);
+    
+		delete []pVertices;
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+	
+	NSLog( @"Duplicated vertices:%ld", _vecMappedVertex.size() - reader->getNumVertices() );
+  
+	_vecMappedVertex.clear();
+	_mapVertexMapping.clear();
+	[dicMatrixRefCount release];
+	[dicMatrixRefArray release];
+	[dicSkinmeshVertices release];
+	[dicSkinmeshVerticesReverse release];
+	delete eval;
 	return true;
 }
 

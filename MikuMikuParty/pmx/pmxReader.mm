@@ -175,8 +175,8 @@ int32_t pmxReader::getVertexIndex(uint8_t size)
     memcpy(&i, p, sizeof(uint16_t));
     return (int32_t)i;
   } else if (size == 4) {
-    int32_t i;
-    memcpy(&i, p, sizeof(int32_t));
+    uint32_t i;
+    memcpy(&i, p, sizeof(uint32_t));
     return (int32_t)i;
   }
   return 0;
@@ -641,8 +641,10 @@ bool pmxReader::parseMorph()
         data.group_morph.morph_rate = (float*)getPointer(sizeof(float));
         break;
       case PMX_MORPH_TYPE_VERTEX:
-        data.vertex_morph.vertex_index = getPointer(_pHeader->vertex_index_size);
-        data.vertex_morph.offset_vector = (float*)getPointer(sizeof(float) * 3);
+        data.vertex_morph.vertex_index = getIndex(_pHeader->vertex_index_size);
+        data.vertex_morph.offset_vector[0] = getFloat();
+        data.vertex_morph.offset_vector[1] = getFloat();
+        data.vertex_morph.offset_vector[2] = getFloat();
         break;
       case PMX_MORPH_TYPE_BONE:
         data.bone_morph.bone_index = getPointer(_pHeader->bone_index_size);

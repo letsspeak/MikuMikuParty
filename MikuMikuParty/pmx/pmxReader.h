@@ -65,13 +65,13 @@ struct pmx_vertex
   
   uint8_t bone_count;
   
-  uint32_t bone_num[4];
+  int32_t bone_num[4];
   uint8_t bone_weight_count;
   float bone_weight[4];
   pmx_sdef* sdef[3];
   float edge_magnification;
   
-  uint32_t	getBoneIndex( const int32_t i )
+  int32_t	getBoneIndex( const int32_t i )
 	{
 		switch( i )
 		{
@@ -187,8 +187,8 @@ union pmx_morph_data
 {
   struct vertex_morph
   {
-    void* vertex_index;
-    float* offset_vector;
+    int32_t vertex_index;
+    float offset_vector[3];
   }vertex_morph;
   
   struct uv_morph
