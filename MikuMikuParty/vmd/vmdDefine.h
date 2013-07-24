@@ -18,12 +18,12 @@ enum JOINT_TYPE {
 };
 
 struct ik_item {
-	uint16_t ik_bone_index;
-	uint16_t ik_target_bone_index;
-	uint8_t ik_chain_length;
-	uint16_t iterations;
+	int32_t ik_bone_index;
+	int32_t ik_target_bone_index;
+	int32_t ik_chain_length;
+	int32_t iterations;
 	float control_weight;
-	std::vector<uint16_t> _vec_ik_child_bone_index;
+	std::vector<int32_t> _vec_ik_child_bone_index;
 };
 
 struct motion_item {

@@ -41,7 +41,7 @@ void vmdMotionProviderPMX::makeQuaternion(float* quat, float angle, PVRTVec3 axi
 void vmdMotionProviderPMX::getCurrentPosition( PVRTVec3& vec, int32_t iIndex)
 {
 	updateBoneMatrix(iIndex);
-	mmd_bone& b = _vecBones[ iIndex ];
+	pmx_bone& b = _vecBones[ iIndex ];
   
 	PVRTMat4 mat;
 	PVRTMatrixTranslationF( mat,
@@ -62,9 +62,9 @@ void vmdMotionProviderPMX::clearUpdateFlags( int32_t iCurrentBone, int32_t iTarg
 	while( iCurrentBone != iTargetBone )
 	{
 		_vecMotionsWork[ iTargetBone ].bUpdated = false;
-		if( _vecBones[ iTargetBone ].parent_bone_index != 0xffff )
+		if( _vecBones[ iTargetBone ].ik_parent_bone_index != -1 )
 		{
-			iTargetBone = _vecBones[ iTargetBone ].parent_bone_index;
+			iTargetBone = _vecBones[ iTargetBone ].ik_parent_bone_index;
 		}
 		else
 		{

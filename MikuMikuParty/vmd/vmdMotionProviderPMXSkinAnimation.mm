@@ -51,44 +51,43 @@ void vmdMotionProviderPMX::updateSkinAnimation()
 
 void vmdMotionProviderPMX::bindSkinAnimation( pmxReader* reader, vmdReader* motion )
 {
-//	int32_t iNumSkins = reader->getNumSkinAnimations();
-//	mmd_skin* pSkin = reader->getSkinAnimations();
-//	NSMutableDictionary* dicSkinName = [[NSMutableDictionary alloc] init];
-//  
-//	for( int32_t i = 0; i < iNumSkins; ++i )
-//	{
-//		NSString* strSkinName = [NSString stringWithCString:pSkin->skin_name encoding:NSShiftJISStringEncoding];
-//		
-//		if( strSkinName )
-//		{
-//			[dicSkinName setObject:[NSNumber numberWithInteger:i] forKey:strSkinName];
-//			NSLog( @"Skin: %@", strSkinName );
-//		}
-//		pSkin = (mmd_skin*)(((uint8_t*)pSkin) + sizeof( mmd_skin ) + pSkin->skin_vert_count * sizeof( mmd_skin_vertex ));
-//	}
-//  
-//	int32_t iNumAnimations = motion->getNumSkins();
-//	vmd_skin* pAnimation = motion->getSkins();
-//  
-//	_vecSkinAnimations.clear();
-//	for( int32_t i = 0; i < iNumAnimations; ++i )
-//	{
-//		NSString* strSkinName = [NSString stringWithCString:pAnimation[ i ].SkinName encoding:NSShiftJISStringEncoding];
-//		
-//		NSNumber* num = [dicSkinName objectForKey:strSkinName];
-//		if( num != nil )
-//		{
-//			skin_item item;
-//			item.iIndex = [num intValue];
-//			item.Weight = pAnimation[ i ].Weight;
-//			item.iFrame = pAnimation[ i ].FlameNo;
-//			
-//			_vecSkinAnimations.push_back( item );
-//		}
-//	}
-//	
-//	_iCurrentSkinAnimationIndex = 0;
-//	[dicSkinName release];
+	int32_t iNumMorphs = reader->getNumMorphs();
+  std::vector< pmx_morph > vecMorph = reader->getMorphs();
+	NSMutableDictionary* dicSkinName = [[NSMutableDictionary alloc] init];
+  
+	for( int32_t i = 0; i < iNumMorphs; ++i )
+	{
+		NSString* strSkinName = vecMorph[i].name.string();
+		
+		if( strSkinName )
+		{
+			[dicSkinName setObject:[NSNumber numberWithInteger:i] forKey:strSkinName];
+			NSLog( @"Skin: %@", strSkinName );
+		}
+	}
+  
+	int32_t iNumAnimations = motion->getNumSkins();
+	vmd_skin* pAnimation = motion->getSkins();
+  
+	_vecSkinAnimations.clear();
+	for( int32_t i = 0; i < iNumAnimations; ++i )
+	{
+		NSString* strSkinName = [NSString stringWithCString:pAnimation[ i ].SkinName encoding:NSShiftJISStringEncoding];
+		
+		NSNumber* num = [dicSkinName objectForKey:strSkinName];
+		if( num != nil )
+		{
+			skin_item item;
+			item.iIndex = [num intValue];
+			item.Weight = pAnimation[ i ].Weight;
+			item.iFrame = pAnimation[ i ].FlameNo;
+			
+			_vecSkinAnimations.push_back( item );
+		}
+	}
+	
+	_iCurrentSkinAnimationIndex = 0;
+	[dicSkinName release];
 }
 
 void vmdMotionProviderPMX::unbindSkinAnimation()

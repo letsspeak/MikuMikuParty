@@ -15,6 +15,7 @@
 #define LogFloat4(s, f)   NSLog(@"%@: (%f, %f, %f, %f)", s, f[0], f[1], f[2], f[3])
 
 
+
 struct pmx_string
 {
   uint32_t length;
@@ -115,7 +116,7 @@ struct pmx_material
 
 struct pmx_ik_link
 {
-  void* bone_index;
+  int32_t bone_index;
   uint8_t* radian_limitation_flag;
   float* lower_limit_vector;
   float* upper_limit_vector;
@@ -128,14 +129,14 @@ struct pmx_bone
   pmx_string name_en;
   
   float bone_head_pos[3];
-  void* ik_parent_bone_index;
+  int32_t ik_parent_bone_index;
   uint32_t transform_level;
   
   uint16_t bone_flag;
   
   void* tail_pos;
   
-  void* rot_move_parent_bone_index;
+  int32_t rot_move_parent_bone_index;
   float* rot_move_rate;
   
   float* fixed_axis_vector;
@@ -145,11 +146,11 @@ struct pmx_bone
   
   uint32_t* parent_transform_key;
   
-  void* ik_target_bone_index;
-  uint32_t* ik_loop_count;
+  int32_t ik_target_bone_index;
+  uint32_t ik_loop_count;
   float* ik_radian_limitaion;
   
-  uint32_t* ik_link_count;
+  uint32_t ik_link_count;
   std::vector< pmx_ik_link > ik_links;
 };
 
@@ -322,6 +323,8 @@ class pmxReader
 	bool getFloat3(float f[3]);
   bool getString(pmx_string *pString);
   void* getPointer(int32_t size);
+  int32_t getVertexIndex(uint8_t size);
+  int32_t getIndex(uint8_t size);
   
   bool verifyHeader();
   bool parseHeader();
@@ -350,4 +353,9 @@ public:
   bool init ( NSString* filename );
   bool unload();
   
+  int32_t getNumBones() { return _iNumBones; }
+  std::vector< pmx_bone > getBones() { return _vecBones; }
+  
+  int32_t getNumMorphs() { return _iNumMorphs; }
+  std::vector< pmx_morph > getMorphs() { return _vecMorphs; }
 };

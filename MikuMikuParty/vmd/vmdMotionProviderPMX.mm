@@ -208,9 +208,9 @@ void vmdMotionProviderPMX::updateBoneMatrix( const int32_t i )
 {
 	if( _vecMotionsWork[ i ].bUpdated == false )
 	{
-		if (_vecBones[ i ].parent_bone_index != 0xffff)
+		if (_vecBones[ i ].ik_parent_bone_index != -1)
 		{
-			int32_t p = _vecBones[ i ].parent_bone_index;
+			int32_t p = _vecBones[ i ].ik_parent_bone_index;
 			
 			//Update parent
 			updateBoneMatrix(p);
@@ -305,7 +305,7 @@ bool vmdMotionProviderPMX::update( const double dTime )
 		//
 		quaternionToMatrix(_vecMotionsWork[ i ].matCurrent.f, m.fRotation);
 		
-		if (_vecBones[ i ].parent_bone_index == 0xffff)
+		if (_vecBones[ i ].ik_parent_bone_index == -1)
 		{
 			_vecMotionsWork[ i ].matCurrent.f[12] = m.fPos[0] + _vecBones[ i ].bone_head_pos[0];
 			_vecMotionsWork[ i ].matCurrent.f[13] = m.fPos[1] + _vecBones[ i ].bone_head_pos[1];
@@ -313,7 +313,7 @@ bool vmdMotionProviderPMX::update( const double dTime )
 		}
 		else
 		{
-			mmd_bone* p = &_vecBones[ _vecBones[ i ].parent_bone_index ];
+			pmx_bone* p = &_vecBones[ _vecBones[ i ].ik_parent_bone_index ];
 			_vecMotionsWork[ i ].matCurrent.f[12] = m.fPos[0] + _vecBones[ i ].bone_head_pos[0] - p->bone_head_pos[ 0 ];
 			_vecMotionsWork[ i ].matCurrent.f[13] = m.fPos[1] + _vecBones[ i ].bone_head_pos[1] - p->bone_head_pos[ 1 ];
 			_vecMotionsWork[ i ].matCurrent.f[14] = m.fPos[2] + _vecBones[ i ].bone_head_pos[2] - p->bone_head_pos[ 2 ];
@@ -368,165 +368,167 @@ bool vmdMotionProviderPMX::bind( pmxReader* reader, vmdReader* motion )
 	if( reader == NULL || motion == NULL )
 		return false;
   
-//	//
-//	//Create bone dictionary
-//	//
-//	_dicBones = [[NSMutableDictionary alloc] init];
-//	int32_t iNumBones = reader->getNumBones();
-//	mmd_bone* pBone = reader->getBones();
-//	
-//	//Initialize motion array
-//	motion_item defaultMotion;
-//	defaultMotion.iFrame = 0;
-//	defaultMotion.fPos[ 0 ] = 0.f;
-//	defaultMotion.fPos[ 1 ] = 0.f;
-//	defaultMotion.fPos[ 2 ] = 0.f;
-//	defaultMotion.fRotation[ 0 ] = 0.f;
-//	defaultMotion.fRotation[ 1 ] = 0.f;
-//	defaultMotion.fRotation[ 2 ] = 0.f;
-//	defaultMotion.fRotation[ 3 ] = 1.f;
-//	for( int32_t i = 0; i < 16; ++i )
-//		defaultMotion.cInterpolation[ i ] = 0;
-//	
-//	bone_stats stats = { 0 };
-//  
-//	for( int32_t i = 0; i < iNumBones; ++i )
-//	{
-//		NSString* strBoneName = [NSString stringWithCString:pBone[ i ].bone_name encoding:NSShiftJISStringEncoding];
-//#ifdef DUMP_BONES
-//		NSLog( @"Bone %d: %@ parent:%d (%f, %f, %f)", i, strBoneName,
-//          pBone[ i ].parent_bone_index,
-//          pBone[ i ].bone_head_pos[0],
-//          pBone[ i ].bone_head_pos[1],
-//          pBone[ i ].bone_head_pos[2]
-//          );
-//#endif
-//		if( strBoneName )
-//		{
-//			[_dicBones setObject:[NSNumber numberWithInteger:i] forKey:strBoneName];
-//			stats.iJointType = JOINT_TYPE_NORMAL;
-//			if( [strBoneName rangeOfString: STR_IK_KNEE].length > 0 )
-//				stats.iJointType = JOINT_TYPE_KNEE;
-//			else
-//				stats.iJointType = JOINT_TYPE_NORMAL;
-//		}
-//		
-//		std::vector<motion_item>* vec = new std::vector<motion_item>();
-//		vec->push_back( defaultMotion );
-//		_vecMotions.push_back( vec );
-//		
-//		_vecMotionsWork.push_back( stats );
-//	}
-//  
-//	int32_t iNumFrameData = motion->getNumMotions();
-//	vmd_motion* vmdMotion = motion->getMotions();
-//	
-//	for( int32_t i = 0; i < iNumFrameData; ++i )
-//	{
-//		NSData* strBoneName = [NSString stringWithCString:vmdMotion[ i ].BoneName encoding:NSShiftJISStringEncoding];
-//		if( strBoneName )
-//		{
-//			NSNumber* numIndex = [_dicBones objectForKey:strBoneName ];
-//			if( numIndex != nil )
-//			{
-//				//Found bone
-//				int32_t iIndex = [numIndex intValue];
-//				motion_item m;
-//				m.iFrame = vmdMotion[ i ].FlameNo;
-//				m.fPos[ 0 ] = vmdMotion[ i ].Location[ 0 ];
-//				m.fPos[ 1 ] = vmdMotion[ i ].Location[ 1 ];
-//				m.fPos[ 2 ] = vmdMotion[ i ].Location[ 2 ];
-//				m.fRotation[ 0 ] = vmdMotion[ i ].Rotatation[ 0 ];
-//				m.fRotation[ 1 ] = vmdMotion[ i ].Rotatation[ 1 ];
-//				m.fRotation[ 2 ] = vmdMotion[ i ].Rotatation[ 2 ];
-//				m.fRotation[ 3 ] = vmdMotion[ i ].Rotatation[ 3 ];
-//				for( int32_t j = 0; j < 16; ++j )
-//					m.cInterpolation[ j ] = vmdMotion[ i ].Interpolation[ j ];
-//				
-//				_vecMotions[ iIndex ]->push_back( m );
-//				_uiMaxFrame = std::max( _uiMaxFrame, vmdMotion[ i ].FlameNo );
-//			}
-//			else
-//			{
-//				NSLog( @"Bone not found %@", strBoneName );
-//			}
-//		}
-//	}
-//  
-//	//
-//	//Sort them all!!
-//	//
-//	for( int32_t i = 0; i < iNumBones; ++i )
-//	{
-//		if( _vecMotions[ i ]->size() == 1 )
-//		{
-//			//Need at least 2 entries
-//			_vecMotions[ i ]->push_back( defaultMotion );
-//		}
-//		
-//		std::sort(_vecMotions[ i ]->begin(), _vecMotions[ i ]->end(), dataSortPredicate);
-//	}
-//	
-//#if 0
-//	int32_t iBone = 91;
-//	for( int32_t i = 0; i < _vecMotions[ iBone ]->size(); ++i )
-//		NSLog( @"Motion %d, (%f,%f,%f), (%f,%f,%f,%f)", _vecMotions[ iBone ]->at( i ).iFrame,
-//          _vecMotions[ iBone ]->at( i ).fPos[0],
-//          _vecMotions[ iBone ]->at( i ).fPos[1],
-//          _vecMotions[ iBone ]->at( i ).fPos[2],
-//          _vecMotions[ iBone ]->at( i ).fRotation[ 0 ],
-//          _vecMotions[ iBone ]->at( i ).fRotation[ 1 ],
-//          _vecMotions[ iBone ]->at( i ).fRotation[ 2 ],
-//          _vecMotions[ iBone ]->at( i ).fRotation[ 3 ]
-//          );
-//  
-//#endif
-//#if 0
-//	//verify
-//	for( int32_t i = 0; i < iNumBones; ++i )
-//	{
-//		NSLog( @"Size: %d %d", i, _vecMotions[ i ]->size() );
-//	}
-//#endif
-//  
-//	NSLog( @"Max frame: %d", _uiMaxFrame );
-//	
-//	[_dicBones release];
-//	_dicBones = nil;
-//  
-//	//Keep reference
-//	_fCurrentFrame = -1.f;
-//	for( int32_t i = 0; i < reader->getNumBones(); ++i )
-//	{
-//		_vecBones.push_back( reader->getBones()[ i ] );
-//	}
-//  
-//  
+	//
+	//Create bone dictionary
+	//
+	_dicBones = [[NSMutableDictionary alloc] init];
+	int32_t iNumBones = reader->getNumBones();
+  std::vector< pmx_bone > vecBone = reader->getBones();
+	
+	//Initialize motion array
+	motion_item defaultMotion;
+	defaultMotion.iFrame = 0;
+	defaultMotion.fPos[ 0 ] = 0.f;
+	defaultMotion.fPos[ 1 ] = 0.f;
+	defaultMotion.fPos[ 2 ] = 0.f;
+	defaultMotion.fRotation[ 0 ] = 0.f;
+	defaultMotion.fRotation[ 1 ] = 0.f;
+	defaultMotion.fRotation[ 2 ] = 0.f;
+	defaultMotion.fRotation[ 3 ] = 1.f;
+	for( int32_t i = 0; i < 16; ++i )
+		defaultMotion.cInterpolation[ i ] = 0;
+	
+	bone_stats stats = { 0 };
+  
+	for( int32_t i = 0; i < iNumBones; ++i )
+	{
+		NSString* strBoneName = vecBone[ i ].name.string();
+#ifdef DUMP_BONES
+		NSLog( @"Bone %d: %@ parent:%d (%f, %f, %f)", i, strBoneName,
+          pBone[ i ].parent_bone_index,
+          pBone[ i ].bone_head_pos[0],
+          pBone[ i ].bone_head_pos[1],
+          pBone[ i ].bone_head_pos[2]
+          );
+#endif
+		if( strBoneName )
+		{
+			[_dicBones setObject:[NSNumber numberWithInteger:i] forKey:strBoneName];
+			stats.iJointType = JOINT_TYPE_NORMAL;
+			if( [strBoneName rangeOfString: STR_IK_KNEE].length > 0 )
+				stats.iJointType = JOINT_TYPE_KNEE;
+			else
+				stats.iJointType = JOINT_TYPE_NORMAL;
+		}
+		
+		std::vector<motion_item>* vec = new std::vector<motion_item>();
+		vec->push_back( defaultMotion );
+		_vecMotions.push_back( vec );
+		
+		_vecMotionsWork.push_back( stats );
+	}
+  
+	int32_t iNumFrameData = motion->getNumMotions();
+	vmd_motion* vmdMotion = motion->getMotions();
+	
+	for( int32_t i = 0; i < iNumFrameData; ++i )
+	{
+		NSData* strBoneName = [NSString stringWithCString:vmdMotion[ i ].BoneName encoding:NSShiftJISStringEncoding];
+		if( strBoneName )
+		{
+			NSNumber* numIndex = [_dicBones objectForKey:strBoneName ];
+			if( numIndex != nil )
+			{
+				//Found bone
+				int32_t iIndex = [numIndex intValue];
+				motion_item m;
+				m.iFrame = vmdMotion[ i ].FlameNo;
+				m.fPos[ 0 ] = vmdMotion[ i ].Location[ 0 ];
+				m.fPos[ 1 ] = vmdMotion[ i ].Location[ 1 ];
+				m.fPos[ 2 ] = vmdMotion[ i ].Location[ 2 ];
+				m.fRotation[ 0 ] = vmdMotion[ i ].Rotatation[ 0 ];
+				m.fRotation[ 1 ] = vmdMotion[ i ].Rotatation[ 1 ];
+				m.fRotation[ 2 ] = vmdMotion[ i ].Rotatation[ 2 ];
+				m.fRotation[ 3 ] = vmdMotion[ i ].Rotatation[ 3 ];
+				for( int32_t j = 0; j < 16; ++j )
+					m.cInterpolation[ j ] = vmdMotion[ i ].Interpolation[ j ];
+				
+				_vecMotions[ iIndex ]->push_back( m );
+				_uiMaxFrame = std::max( _uiMaxFrame, vmdMotion[ i ].FlameNo );
+			}
+			else
+			{
+				NSLog( @"Bone not found %@", strBoneName );
+			}
+		}
+	}
+  
+	//
+	//Sort them all!!
+	//
+	for( int32_t i = 0; i < iNumBones; ++i )
+	{
+		if( _vecMotions[ i ]->size() == 1 )
+		{
+			//Need at least 2 entries
+			_vecMotions[ i ]->push_back( defaultMotion );
+		}
+		
+		std::sort(_vecMotions[ i ]->begin(), _vecMotions[ i ]->end(), dataSortPredicate);
+	}
+	
+#if 0
+	int32_t iBone = 91;
+	for( int32_t i = 0; i < _vecMotions[ iBone ]->size(); ++i )
+		NSLog( @"Motion %d, (%f,%f,%f), (%f,%f,%f,%f)", _vecMotions[ iBone ]->at( i ).iFrame,
+          _vecMotions[ iBone ]->at( i ).fPos[0],
+          _vecMotions[ iBone ]->at( i ).fPos[1],
+          _vecMotions[ iBone ]->at( i ).fPos[2],
+          _vecMotions[ iBone ]->at( i ).fRotation[ 0 ],
+          _vecMotions[ iBone ]->at( i ).fRotation[ 1 ],
+          _vecMotions[ iBone ]->at( i ).fRotation[ 2 ],
+          _vecMotions[ iBone ]->at( i ).fRotation[ 3 ]
+          );
+  
+#endif
+#if 0
+	//verify
+	for( int32_t i = 0; i < iNumBones; ++i )
+	{
+		NSLog( @"Size: %d %d", i, _vecMotions[ i ]->size() );
+	}
+#endif
+  
+	NSLog( @"Max frame: %d", _uiMaxFrame );
+	
+	[_dicBones release];
+	_dicBones = nil;
+  
+	//Keep reference
+	_fCurrentFrame = -1.f;
+	for( int32_t i = 0; i < reader->getNumBones(); ++i )
+	{
+		_vecBones.push_back( reader->getBones()[ i ] );
+	}
+  
+  
 //	int32_t iNumIKs = reader->getNumIKs();
 //	mmd_ik* pIK = reader->getIKs();
-//	for( int32_t i = 0; i < iNumIKs; ++i )
-//	{
-//		ik_item ik = {0};
-//		ik.ik_bone_index = pIK->ik_bone_index;
-//		ik.ik_target_bone_index = pIK->ik_target_bone_index;
-//		ik.ik_chain_length = pIK->ik_chain_length;
-//		ik.iterations = pIK->iterations;
-//		ik.control_weight = pIK->control_weight;
-//    
-//		for( int32_t j = 0; j < pIK->ik_chain_length; ++j )
-//			ik._vec_ik_child_bone_index.push_back( pIK->ik_child_bone_index[ j ] );
-//		
-//		_vecIKs.push_back( ik );
-//    
-//		int32_t iChains = pIK->ik_chain_length;
-//		pIK = (mmd_ik*)((uint8_t*)pIK + sizeof( mmd_ik ) + iChains * sizeof( uint16_t ));
-//	}
-//  
-//	//
-//	//bind skin
-//	//
-//	bindSkinAnimationPMD(reader, motion);
-//	
+	for( int32_t i = 0; i < iNumBones; ++i )
+	{
+    if (!(_vecBones[i].bone_flag & PMX_BONE_FLAG_IK_BIT)) continue;
+    
+		ik_item ik = {0};
+		ik.ik_bone_index = i;
+		ik.ik_target_bone_index = _vecBones[i].ik_target_bone_index;
+		ik.ik_chain_length = _vecBones[i].ik_links.size();
+		ik.iterations = _vecBones[i].ik_loop_count;
+    
+    // TODO : set control_weight
+    float control_weight = 0;
+		ik.control_weight = control_weight;
+    
+		for( int32_t j = 0; j < ik.ik_chain_length; ++j )
+			ik._vec_ik_child_bone_index.push_back( _vecBones[i].ik_links[j].bone_index);
+		
+		_vecIKs.push_back( ik );
+	}
+  
+	//
+	//bind skin
+	//
+	bindSkinAnimation(reader, motion);
+
 	return true;
 }
 

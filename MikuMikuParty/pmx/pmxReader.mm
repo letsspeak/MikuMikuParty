@@ -161,6 +161,47 @@ void* pmxReader::getPointer(int32_t size)
   return p;
 }
 
+
+int32_t pmxReader::getVertexIndex(uint8_t size)
+{
+  void *p = (void*)&_pData[ _iOffset ];
+  _iOffset += (size);
+  if (size == 1) {
+    uint8_t i;
+    memcpy(&i, p, sizeof(uint8_t));
+    return (int32_t)i;
+  } else if (size == 2) {
+    uint16_t i;
+    memcpy(&i, p, sizeof(uint16_t));
+    return (int32_t)i;
+  } else if (size == 4) {
+    int32_t i;
+    memcpy(&i, p, sizeof(int32_t));
+    return (int32_t)i;
+  }
+  return 0;
+}
+
+int32_t pmxReader::getIndex(uint8_t size)
+{
+  void *p = (void*)&_pData[ _iOffset ];
+  _iOffset += (size);
+  if (size == 1) {
+    int8_t i;
+    memcpy(&i, p, sizeof(int8_t));
+    return (int32_t)i;
+  } else if (size == 2) {
+    int16_t i;
+    memcpy(&i, p, sizeof(int16_t));
+    return (int32_t)i;
+  } else if (size == 4) {
+    int32_t i;
+    memcpy(&i, p, sizeof(int32_t));
+    return (int32_t)i;
+  }
+  return 0;
+}
+
 bool pmxReader::verifyHeader()
 {
   NSLog(@"pmxReader::veryfiHeader()");
@@ -471,8 +512,7 @@ bool pmxReader::parseBone()
   
   // basic data
   getFloat3(bone.bone_head_pos);
-  bone.ik_parent_bone_index = (void*)&_pData[ _iOffset ];
-  _iOffset += _pHeader->bone_index_size;
+  bone.ik_parent_bone_index = getIndex(_pHeader->bone_index_size);
   bone.transform_level = getInteger();
   
   uint16_t flag = getShort();
@@ -500,7 +540,7 @@ bool pmxReader::parseBone()
   // PMX_BONE_FLAG_ROTATION_GRANT_BIT
   // PMX_BONE_FLAG_MOVE_GRANT_BIT
   if ((flag & PMX_BONE_FLAG_ROTATION_GRANT_BIT) || (flag & PMX_BONE_FLAG_MOVE_GRANT_BIT)) {
-    bone.rot_move_parent_bone_index = getPointer(_pHeader->bone_index_size);
+    bone.rot_move_parent_bone_index = getIndex(_pHeader->bone_index_size);
     bone.rot_move_rate = (float*)getPointer(sizeof(float));
   }
   
@@ -523,18 +563,16 @@ bool pmxReader::parseBone()
   // PMX_BONE_FLAG_IK_BIT
   if (flag & PMX_BONE_FLAG_IK_BIT) {
     
-    bone.ik_target_bone_index = getPointer(_pHeader->bone_index_size);
-    bone.ik_loop_count = (uint32_t*)getPointer(sizeof(uint32_t));
+    bone.ik_target_bone_index = getIndex(_pHeader->bone_index_size);
+    bone.ik_loop_count = getInteger();
     bone.ik_radian_limitaion = (float*)getPointer(sizeof(float));
     
-    bone.ik_link_count = (uint32_t*)getPointer(sizeof(uint32_t));
+    bone.ik_link_count = getInteger();
     
-    int32_t link_count;
-    memcpy(&link_count, bone.ik_link_count, sizeof(int32_t));
-    for (int i = 0; i < link_count; i++) {
+    for (int i = 0; i < bone.ik_link_count; i++) {
 //      NSLog(@"bone ik link[%d]-------", i);
       pmx_ik_link link;
-      link.bone_index = getPointer(_pHeader->bone_index_size);
+      link.bone_index = getIndex(_pHeader->bone_index_size);
       link.radian_limitation_flag = (uint8_t*)getPointer(sizeof(uint8_t));
       
       if ((bool)(*link.radian_limitation_flag)) {

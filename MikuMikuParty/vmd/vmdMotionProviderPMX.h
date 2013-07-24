@@ -34,7 +34,7 @@ class vmdMotionProviderPMX {
 	uint32_t _uiMaxFrame;
 	std::vector<std::vector<motion_item>*> _vecMotions;
 	std::vector<bone_stats> _vecMotionsWork;
-	std::vector<mmd_bone> _vecBones;
+	std::vector<pmx_bone> _vecBones;
 	std::vector<ik_item> _vecIKs;
   
 	int32_t	_iCurrentSkinAnimationIndex;
