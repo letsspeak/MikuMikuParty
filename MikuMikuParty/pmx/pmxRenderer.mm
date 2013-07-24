@@ -347,7 +347,8 @@ void pmxRenderer::createVbo( pmxReader* pReader )
 		vertex.bone[ 0 ] = 0;
 		vertex.bone[ 1 ] = 0;
 		vertex.bone[ 2 ] = 0;
-		vertex.bone[ 3 ] = vecVertices[ iVertexIndex ].bone_weight;
+//		vertex.bone[ 3 ] = vecVertices[ iVertexIndex ].bone_weight;
+		vertex.bone[ 3 ] = (uint8_t)(vecVertices[ iVertexIndex ].bone_weight[0] * 100.0f);
 		vec.push_back( vertex );
 	}
 	
@@ -430,103 +431,106 @@ void pmxRenderer::loadMaterials( pmxReader* pReader )
 #pragma mark partitioning
 bool pmxRenderer::partitioning( pmxReader* reader, SkinningEvaluator* eval, int32_t iStart, int32_t iNumIndices )
 {
-//	if( iNumIndices % 3 )
-//		return false;
-//  
-//	if( reader == NULL || eval == NULL )
-//	{
-//		return false;
-//	}
-//  
-//	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-//	mmd_vertex* pVertices = reader->getVertices();
-//	uint16_t* pIndices = reader->getIndices() + iStart;
-//	
-//	NSMutableDictionary* meshStats = [[[NSMutableDictionary alloc] init] autorelease];
-//	for( int32_t i = 0; i < iNumIndices/3; ++i )
-//	{
-//		//Triangle stats array
-//		NSMutableDictionary* triangleStats = [[[NSMutableDictionary alloc] init] autorelease];
-//		for( int32_t j = 0; j < 3; ++j )
-//		{
-//			int32_t iMatrix0 = pVertices[ pIndices[i * 3 + j] ].getBoneIndex( 0 );
-//			NSNumber* n0 = [NSNumber numberWithInt:iMatrix0];
-//			[triangleStats setObject:n0 forKey:n0];
-//      
-//			int32_t iMatrix1 = pVertices[ pIndices[i * 3 + j] ].getBoneIndex( 1 );
-//			if( iMatrix1 != -1 )
-//			{
-//				NSNumber* n1 = [NSNumber numberWithInt:iMatrix1];
-//				[triangleStats setObject:n1 forKey:n1];
-//			}
-//		}
-//    
-//		//Sort matrix used in the mesh
-//		NSArray *keys = [triangleStats allKeys];
-//		NSArray *sortedKeys = [keys sortedArrayUsingSelector:@selector(compare:)];
-//		
-//		int64_t iKey = 0;
-//		for( NSNumber* n in sortedKeys )
-//		{
-//			iKey <<= 8;
-//			iKey |= [n intValue];
-//			if( [n intValue] > 255 )
-//			{
-//				NSLog( @"Invalid bone #, assuming # bones less than 255" );
-//			}
-//		}
-//		
-//		NSNumber* numKey = [NSNumber numberWithLongLong:iKey];
-//		if( [meshStats objectForKey:numKey] == nil )
-//		{
-//			[meshStats setObject:[[[NSMutableArray alloc] init] autorelease]
-//                    forKey:numKey];
-//		}
-//		[[meshStats objectForKey:numKey] addObject:[NSNumber numberWithInt:pIndices[i * 3]]];
-//		[[meshStats objectForKey:numKey] addObject:[NSNumber numberWithInt:pIndices[i * 3 + 1]]];
-//		[[meshStats objectForKey:numKey] addObject:[NSNumber numberWithInt:pIndices[i * 3 + 2]]];
-//	}
-//	
-//	//
-//	//meshStats[key][triangle index]
-//	NSArray *keys = [meshStats allKeys];
-//	NSMutableArray *sortedMeshStats = [NSMutableArray arrayWithArray:[keys sortedArrayUsingSelector:@selector(compare:)]];
-//	NSLog( @"Num keys:%d", [sortedMeshStats count] );
-//  //	NSLog( @"keys:%@", [sortedMeshStats description] );
-//	
-//	//Start.
-//	//Add 1st item
-//	eval->addItem([sortedMeshStats objectAtIndex:0],
-//                [meshStats objectForKey:[sortedMeshStats objectAtIndex:0]],
-//                0);
-//	[sortedMeshStats removeObjectAtIndex:0];
-//	
-//	while( [sortedMeshStats count] )
-//	{
-//		int32_t iLeastScore = INT_MAX;
-//		int32_t iLeastIndex = INT_MAX;
-//		int32_t iLeastScoreSlot;
-//		int32_t iSlot;
-//		
-//		int32_t iCount = [sortedMeshStats count];
-//		for( int32_t iIndex = 0; iIndex < iCount; ++iIndex )
-//		{
-//			//Get least score
-//			int32_t iScore = eval->getScore( [[sortedMeshStats objectAtIndex:iIndex] longLongValue], iSlot);
-//			if( iScore < iLeastScore )
-//			{
-//				iLeastScore = iScore;
-//				iLeastIndex = iIndex;
-//				iLeastScoreSlot = iSlot;
-//			}
-//		}
-//		eval->addItem( [sortedMeshStats objectAtIndex:iLeastIndex], [meshStats objectForKey:[sortedMeshStats objectAtIndex:iLeastIndex]], iLeastScoreSlot);
-//		[sortedMeshStats removeObjectAtIndex:iLeastIndex];
-//	}
-//	
-//	//Done partitioning
-//	
-//	[pool drain];
+	if( iNumIndices % 3 )
+		return false;
+  
+	if( reader == NULL || eval == NULL )
+	{
+		return false;
+	}
+  
+	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+  
+  std::vector <int32_t> vecIndices = reader->getVecIndices();
+  std::vector<pmx_vertex> vecVertex = reader->getVertices();
+//	int32_t* pIndices = (uint16_t*)reader->getIndices() + iStart;
+  
+	
+	NSMutableDictionary* meshStats = [[[NSMutableDictionary alloc] init] autorelease];
+	for( int32_t i = 0; i < iNumIndices/3; ++i )
+	{
+		//Triangle stats array
+		NSMutableDictionary* triangleStats = [[[NSMutableDictionary alloc] init] autorelease];
+		for( int32_t j = 0; j < 3; ++j )
+		{
+			int32_t iMatrix0 = vecVertex[ vecIndices[i * 3 + j] ].getBoneIndex( 0 );
+			NSNumber* n0 = [NSNumber numberWithInt:iMatrix0];
+			[triangleStats setObject:n0 forKey:n0];
+      
+			int32_t iMatrix1 = vecVertex[ vecIndices[i * 3 + j] ].getBoneIndex( 1 );
+			if( iMatrix1 != -1 )
+			{
+				NSNumber* n1 = [NSNumber numberWithInt:iMatrix1];
+				[triangleStats setObject:n1 forKey:n1];
+			}
+		}
+    
+		//Sort matrix used in the mesh
+		NSArray *keys = [triangleStats allKeys];
+		NSArray *sortedKeys = [keys sortedArrayUsingSelector:@selector(compare:)];
+		
+		int64_t iKey = 0;
+		for( NSNumber* n in sortedKeys )
+		{
+			iKey <<= 8;
+			iKey |= [n intValue];
+			if( [n intValue] > 255 )
+			{
+				NSLog( @"Invalid bone #, assuming # bones less than 255" );
+			}
+		}
+		
+		NSNumber* numKey = [NSNumber numberWithLongLong:iKey];
+		if( [meshStats objectForKey:numKey] == nil )
+		{
+			[meshStats setObject:[[[NSMutableArray alloc] init] autorelease]
+                    forKey:numKey];
+		}
+		[[meshStats objectForKey:numKey] addObject:[NSNumber numberWithInt:vecIndices[i * 3]]];
+		[[meshStats objectForKey:numKey] addObject:[NSNumber numberWithInt:vecIndices[i * 3 + 1]]];
+		[[meshStats objectForKey:numKey] addObject:[NSNumber numberWithInt:vecIndices[i * 3 + 2]]];
+	}
+	
+	//
+	//meshStats[key][triangle index]
+	NSArray *keys = [meshStats allKeys];
+	NSMutableArray *sortedMeshStats = [NSMutableArray arrayWithArray:[keys sortedArrayUsingSelector:@selector(compare:)]];
+	NSLog( @"Num keys:%d", [sortedMeshStats count] );
+  //	NSLog( @"keys:%@", [sortedMeshStats description] );
+	
+	//Start.
+	//Add 1st item
+	eval->addItem([sortedMeshStats objectAtIndex:0],
+                [meshStats objectForKey:[sortedMeshStats objectAtIndex:0]],
+                0);
+	[sortedMeshStats removeObjectAtIndex:0];
+	
+	while( [sortedMeshStats count] )
+	{
+		int32_t iLeastScore = INT_MAX;
+		int32_t iLeastIndex = INT_MAX;
+		int32_t iLeastScoreSlot;
+		int32_t iSlot;
+		
+		int32_t iCount = [sortedMeshStats count];
+		for( int32_t iIndex = 0; iIndex < iCount; ++iIndex )
+		{
+			//Get least score
+			int32_t iScore = eval->getScore( [[sortedMeshStats objectAtIndex:iIndex] longLongValue], iSlot);
+			if( iScore < iLeastScore )
+			{
+				iLeastScore = iScore;
+				iLeastIndex = iIndex;
+				iLeastScoreSlot = iSlot;
+			}
+		}
+		eval->addItem( [sortedMeshStats objectAtIndex:iLeastIndex], [meshStats objectForKey:[sortedMeshStats objectAtIndex:iLeastIndex]], iLeastScoreSlot);
+		[sortedMeshStats removeObjectAtIndex:iLeastIndex];
+	}
+	
+	//Done partitioning
+	
+	[pool drain];
 	return true;
 }
 
@@ -642,6 +646,7 @@ int32_t pmxRenderer::getMappedVertices( mmd_vertex* pVertices,
 	vertex.bone[ 0 ] = uint8_t(iVertexKey >> 16);
 	vertex.bone[ 1 ] = uint8_t(iVertexKey & 0xffff);
 	vertex.bone[ 2 ] = bSkinning;
+  // memo : ayashii
 	vertex.bone[ 3 ] = uint8_t( float(pVertices[ iVertexIndex ].bone_weight) / 100.f * 255.f);
 	_vecMappedVertex.push_back( vertex );
 	

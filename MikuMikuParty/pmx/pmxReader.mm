@@ -299,15 +299,13 @@ bool pmxReader::parseVertex()
 //  }
   
   vertex.weight_type = getChar();
-  vertex.bone_index_size = _pHeader->bone_index_size;
   
   switch (vertex.weight_type) {
     case 0: // BDEF1
     {
 //      NSLog(@"BDEF1");
       vertex.bone_count = 1;
-      vertex.bone_num = (void*)&_pData[ _iOffset ];
-      _iOffset += (vertex.bone_index_size * vertex.bone_count);
+      vertex.bone_num[0] = getIndex(_pHeader->bone_index_size);
       vertex.bone_weight_count = 0;
     }
       break;
@@ -315,33 +313,35 @@ bool pmxReader::parseVertex()
     {
 //      NSLog(@"BDEF2");
       vertex.bone_count = 2;
-      vertex.bone_num = (void*)&_pData[ _iOffset ];
-      _iOffset += (vertex.bone_index_size * vertex.bone_count);
+      vertex.bone_num[0] = getIndex(_pHeader->bone_index_size);
+      vertex.bone_num[1] = getIndex(_pHeader->bone_index_size);
       vertex.bone_weight_count = 1;
-      vertex.bone_weight = getFloat();
-      _iOffset += (sizeof(float) * vertex.bone_weight_count);
+      vertex.bone_weight[0] = getFloat();
     }
       break;
     case 2: // BDEF4
     {
 //      NSLog(@"BDEF4");
       vertex.bone_count = 4;
-      vertex.bone_num = (void*)&_pData[ _iOffset ];
-      _iOffset += (vertex.bone_index_size * vertex.bone_count);
+      vertex.bone_num[0] = getIndex(_pHeader->bone_index_size);
+      vertex.bone_num[1] = getIndex(_pHeader->bone_index_size);
+      vertex.bone_num[2] = getIndex(_pHeader->bone_index_size);
+      vertex.bone_num[3] = getIndex(_pHeader->bone_index_size);
       vertex.bone_weight_count = 4;
-      vertex.bone_weight = getFloat();
-      _iOffset += (sizeof(float) * vertex.bone_weight_count);
+      vertex.bone_weight[0] = getFloat();
+      vertex.bone_weight[1] = getFloat();
+      vertex.bone_weight[2] = getFloat();
+      vertex.bone_weight[3] = getFloat();
     }
       break;
     case 3: // SDEF
     {
 //      NSLog(@"SDEF");
       vertex.bone_count = 2;
-      vertex.bone_num = (void*)&_pData[ _iOffset ];
-      _iOffset += (vertex.bone_index_size * vertex.bone_count);
+      vertex.bone_num[0] = getIndex(_pHeader->bone_index_size);
+      vertex.bone_num[1] = getIndex(_pHeader->bone_index_size);
       vertex.bone_weight_count = 1;
-      vertex.bone_weight = getFloat();
-      _iOffset += (sizeof(float) * vertex.bone_weight_count);
+      vertex.bone_weight[0] = getFloat();
       vertex.sdef[0] = (pmx_sdef*)getPointer(sizeof(float) * 3);
       vertex.sdef[1] = (pmx_sdef*)getPointer(sizeof(float) * 3);
       vertex.sdef[2] = (pmx_sdef*)getPointer(sizeof(float) * 3);
@@ -351,11 +351,15 @@ bool pmxReader::parseVertex()
     {
 //      NSLog(@"QDEF");
       vertex.bone_count = 4;
-      vertex.bone_num = (void*)&_pData[ _iOffset ];
-      _iOffset += (vertex.bone_index_size * vertex.bone_count);
+      vertex.bone_num[0] = getIndex(_pHeader->bone_index_size);
+      vertex.bone_num[1] = getIndex(_pHeader->bone_index_size);
+      vertex.bone_num[2] = getIndex(_pHeader->bone_index_size);
+      vertex.bone_num[3] = getIndex(_pHeader->bone_index_size);
       vertex.bone_weight_count = 4;
-      vertex.bone_weight = getFloat();
-      _iOffset += (sizeof(float) * vertex.bone_weight_count);
+      vertex.bone_weight[0] = getFloat();
+      vertex.bone_weight[1] = getFloat();
+      vertex.bone_weight[2] = getFloat();
+      vertex.bone_weight[3] = getFloat();
     }
       break;
     default:
@@ -376,7 +380,11 @@ bool pmxReader::parseIndices()
   NSLog(@"Num Indices: %d", iIndices);
   _iNumIndices = iIndices;
   _pIndices = (void*)&_pData[ _iOffset ];
-  _iOffset += (iIndices *_pHeader->vertex_index_size);
+  
+  for (int i = 0; i < iIndices; i++) {
+    int32_t indice = getIndex(_pHeader->vertex_index_size);
+    _vecIndices.push_back(indice);
+  }
   
   return !(_iOffset > [_data length]);
 }

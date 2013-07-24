@@ -63,14 +63,30 @@ struct pmx_vertex
   
   uint8_t weight_type;
   
-  uint8_t bone_index_size;
   uint8_t bone_count;
-  void* bone_num;
   
+  uint32_t bone_num[4];
   uint8_t bone_weight_count;
-  float bone_weight;
+  float bone_weight[4];
   pmx_sdef* sdef[3];
   float edge_magnification;
+  
+  uint32_t	getBoneIndex( const int32_t i )
+	{
+		switch( i )
+		{
+			case 0:
+				return bone_num[ 0 ];
+			case 1:
+				if( bone_weight[0] < 100 )
+				{
+					return bone_num[ 1 ];
+				}
+				else return -1;
+			default:
+				return -1;
+		}
+	}
 };
 
 struct pmx_material
@@ -295,6 +311,7 @@ class pmxReader
   std::vector< pmx_vertex > _vecVertices;
   
   int32_t _iNumIndices;
+  std::vector< int32_t > _vecIndices;
   void *_pIndices;
   
   int32_t _iNumTextures;
@@ -365,6 +382,7 @@ public:
   
   int32_t getNumIndices() { return _iNumIndices; }
 	void* getIndices() { return _pIndices; }
+  std::vector<int32_t> getVecIndices() { return _vecIndices; }
   
   std::vector<pmx_string> getTextures() { return _vecTextures; }
   
