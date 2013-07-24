@@ -39,7 +39,7 @@ class pmxRenderer
 	std::vector< skinanimation_vertex* > _vecSkinAnimation;
   
 	std::vector< DRAW_LIST > _vecDrawList;
-	std::vector< mmd_material > _vecMaterials;
+	std::vector< pmx_material > _vecMaterials;
 	
 	void createVbo( pmxReader * pReader );
 	void createIndexBuffer( pmxReader* pReader );

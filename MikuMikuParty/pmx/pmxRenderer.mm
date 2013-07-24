@@ -130,18 +130,18 @@ void pmxRenderer::render()
 	{
 		matrixPalette = _motionProvider->getMatrixPalette();
     
-    //		if( _bPerformSkinmeshAnimation )
-    //		{
-    //			int32_t iSkinAnimationIndex = _motionProvider->getSkinAnimationParameters( fWeight );
-    //
-    //			if( iSkinAnimationIndex != _iCurrentSkinAnimationIndex )
-    //			{
-    //				_iCurrentSkinAnimationIndex = iSkinAnimationIndex;
-    //				//Update vbo
-    //				glBindBuffer(GL_ARRAY_BUFFER, _vboSkinAnimation);
-    //				glBufferSubData(GL_ARRAY_BUFFER, 0, _iSizeSkinanimatinVertices * sizeof(skinanimation_vertex), _vecSkinAnimation[ _iCurrentSkinAnimationIndex-1 ] );
-    //			}
-    //		}
+//		if( _bPerformSkinmeshAnimation )
+//		{
+//			int32_t iSkinAnimationIndex = _motionProvider->getSkinAnimationParameters( fWeight );
+//
+//			if( iSkinAnimationIndex != _iCurrentSkinAnimationIndex )
+//			{
+//				_iCurrentSkinAnimationIndex = iSkinAnimationIndex;
+//				//Update vbo
+//				glBindBuffer(GL_ARRAY_BUFFER, _vboSkinAnimation);
+//				glBufferSubData(GL_ARRAY_BUFFER, 0, _iSizeSkinanimatinVertices * sizeof(skinanimation_vertex), _vecSkinAnimation[ _iCurrentSkinAnimationIndex-1 ] );
+//			}
+//		}
 	}
 	
 	std::vector< DRAW_LIST >::iterator itBegin = _vecDrawList.begin();
@@ -271,7 +271,7 @@ bool pmxRenderer::init( pmxReader* reader, vmdReader* motion )
 		return false;
 	
 	_bPerformSkinmeshAnimation = true;
-  //	_bPerformSkinmeshAnimation = false;
+//	_bPerformSkinmeshAnimation = false;
   
 	if( motion != NULL )
 	{
@@ -324,97 +324,107 @@ bool pmxRenderer::init( pmxReader* reader, vmdReader* motion )
 
 void pmxRenderer::createVbo( pmxReader* pReader )
 {
-//  int32_t iStride = sizeof( renderer_vertex );
-//	glGenBuffers(1, &_vboRender);
-//	
-//	// Bind the VBO
-//	glBindBuffer(GL_ARRAY_BUFFER, _vboRender);
-//	
-//	int32_t iNum = pReader->getNumVertices();
-//	mmd_vertex* pVertices = pReader->getVertices();
-//	std::vector< renderer_vertex > vec;
-//	renderer_vertex vertex;
-//	for( int32_t iVertexIndex = 0; iVertexIndex < iNum; ++iVertexIndex )
-//	{
-//		vertex.pos[ 0 ] = pVertices[ iVertexIndex ].pos[ 0 ];
-//		vertex.pos[ 1 ] = pVertices[ iVertexIndex ].pos[ 1 ];
-//		vertex.pos[ 2 ] = pVertices[ iVertexIndex ].pos[ 2 ];
-//		vertex.normal_vec[ 0 ] = pVertices[ iVertexIndex ].normal_vec[ 0 ];
-//		vertex.normal_vec[ 1 ] = pVertices[ iVertexIndex ].normal_vec[ 1 ];
-//		vertex.normal_vec[ 2 ] = pVertices[ iVertexIndex ].normal_vec[ 2 ];
-//		vertex.uv[ 0 ] = pVertices[ iVertexIndex ].uv[ 0 ];
-//		vertex.uv[ 1 ] = pVertices[ iVertexIndex ].uv[ 1 ];
-//		vertex.bone[ 0 ] = 0;
-//		vertex.bone[ 1 ] = 0;
-//		vertex.bone[ 2 ] = 0;
-//		vertex.bone[ 3 ] = pVertices[ iVertexIndex ].bone_weight;
-//		vec.push_back( vertex );
-//	}
-//	
-//	// Set the buffer's data
-//	glBufferData(GL_ARRAY_BUFFER, iStride * vec.size(), &vec[ 0 ], GL_STATIC_DRAW);
-//  
-//	// Unbind the VBO
-//	glBindBuffer(GL_ARRAY_BUFFER, 0);
+  int32_t iStride = sizeof( renderer_vertex );
+	glGenBuffers(1, &_vboRender);
+	
+	// Bind the VBO
+	glBindBuffer(GL_ARRAY_BUFFER, _vboRender);
+	
+	int32_t iNum = pReader->getNumVertices();
+  std::vector< pmx_vertex > vecVertices= pReader->getVertices();
+	std::vector< renderer_vertex > vec;
+	renderer_vertex vertex;
+	for( int32_t iVertexIndex = 0; iVertexIndex < iNum; ++iVertexIndex )
+	{
+		vertex.pos[ 0 ] = vecVertices[ iVertexIndex ].pos[ 0 ];
+		vertex.pos[ 1 ] = vecVertices[ iVertexIndex ].pos[ 1 ];
+		vertex.pos[ 2 ] = vecVertices[ iVertexIndex ].pos[ 2 ];
+		vertex.normal_vec[ 0 ] = vecVertices[ iVertexIndex ].normal_vec[ 0 ];
+		vertex.normal_vec[ 1 ] = vecVertices[ iVertexIndex ].normal_vec[ 1 ];
+		vertex.normal_vec[ 2 ] = vecVertices[ iVertexIndex ].normal_vec[ 2 ];
+		vertex.uv[ 0 ] = vecVertices[ iVertexIndex ].uv[ 0 ];
+		vertex.uv[ 1 ] = vecVertices[ iVertexIndex ].uv[ 1 ];
+		vertex.bone[ 0 ] = 0;
+		vertex.bone[ 1 ] = 0;
+		vertex.bone[ 2 ] = 0;
+		vertex.bone[ 3 ] = vecVertices[ iVertexIndex ].bone_weight;
+		vec.push_back( vertex );
+	}
+	
+	// Set the buffer's data
+	glBufferData(GL_ARRAY_BUFFER, iStride * vec.size(), &vec[ 0 ], GL_STATIC_DRAW);
+  
+	// Unbind the VBO
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
   
 	return;
 }
 
 void pmxRenderer::createIndexBuffer( pmxReader* pReader )
 {
-//  int32_t iStride = sizeof( uint16_t );
-//	glGenBuffers(1, &_vboIndex);
-//	
-//	// Bind the VBO
-//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _vboIndex);
-//	
-//	// Set the buffer's data
-//	glBufferData(GL_ELEMENT_ARRAY_BUFFER, iStride * pReader->getNumIndices(), pReader->getIndices(), GL_STATIC_DRAW);
-//	
-//	// Unbind the VBO
-//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-//  
-//	int32_t iMaterials = pReader->getNumMaterials();
-//	mmd_material* pMaterial = pReader->getMaterials();
-//  
-//	for( int32_t i = 0; i < iMaterials; ++i )
-//	{
-//		DRAW_LIST list;
-//		list.iMaterialIndex = i;
-//		list.iNumIndices = pMaterial[ i ].face_vert_count;
-//		_vecDrawList.push_back( list );
-//	}
+  int32_t iStride = pReader->vertexIndexSize(); //sizeof( uint16_t );
+	glGenBuffers(1, &_vboIndex);
+	
+	// Bind the VBO
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _vboIndex);
+	
+	// Set the buffer's data
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, iStride * pReader->getNumIndices(), pReader->getIndices(), GL_STATIC_DRAW);
+	
+	// Unbind the VBO
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+  
+	int32_t iMaterials = pReader->getNumMaterials();
+  std::vector<pmx_material> vecMaterial = pReader->getMaterials();
+  
+	for( int32_t i = 0; i < iMaterials; ++i )
+	{
+		DRAW_LIST list;
+		list.iMaterialIndex = i;
+		list.iNumIndices = vecMaterial[ i ].face_vert_count;
+		_vecDrawList.push_back( list );
+	}
 	return;
 }
 
 void pmxRenderer::loadMaterials( pmxReader* pReader )
 {
-//  NSString *rootPath = pReader->getRootPath();
-//  NSLog(@"rootPath = %@", rootPath);
-//  
-//  
-//	for( int32_t i = 0; i < pReader->getNumMaterials(); ++i )
-//	{
-//		_vecMaterials.push_back( pReader->getMaterials()[ i ] );
-//		
-//		mmd_material& mat = _vecMaterials[ i ];
-//		if( mat.texture_file_name[ 0 ] != 0 )
-//		{
-//			NSString *strFile = [[NSString stringWithCString:(const char*)mat.texture_file_name encoding:NSShiftJISStringEncoding]
-//                           trimDisabledCharactersForWindowsFilesystem:20];
-//			NSString* str = [NSString stringWithFormat:@"%@/%@", rootPath, strFile];
-//			NSLog( @"Texture:%@", str);
-//			
-//			mat._tex2D = [[Texture2D alloc] initWithImage: [UIImage imageWithContentsOfFile:str]];
-//			mat._tex = mat._tex2D.name;
-//			
-//		}
-//		else
-//		{
-//			mat._tex2D = nil;
-//			mat._tex = 0;
-//		}
-//	}
+  NSString *rootPath = pReader->getRootPath();
+  NSLog(@"rootPath = %@", rootPath);
+  
+  std::vector<pmx_string> vecTexture = pReader->getTextures();
+  
+	for( int32_t i = 0; i < pReader->getNumMaterials(); ++i )
+	{
+		_vecMaterials.push_back( pReader->getMaterials()[ i ] );
+		
+		pmx_material& mat = _vecMaterials[ i ];
+    
+    if (mat.shared_toon_flag == 1) {
+      // TODO : set shared toon
+      continue;
+    }
+    
+    if (mat.shared_toon_flag == 0) {
+      
+      NSString *textureFilename = vecTexture[mat.toon_texture_index].string();
+      
+      if( textureFilename )
+      {
+        NSString* fullPath = [NSString stringWithFormat:@"%@/%@", rootPath, textureFilename];
+        NSLog( @"Texture:%@", fullPath);
+        
+        mat._tex2D = [[Texture2D alloc] initWithImage: [UIImage imageWithContentsOfFile:fullPath]];
+        mat._tex = mat._tex2D.name;
+        
+      }
+      else
+      {
+        mat._tex2D = nil;
+        mat._tex = 0;
+      }
+    }
+	}
 }
 
 #pragma mark partitioning

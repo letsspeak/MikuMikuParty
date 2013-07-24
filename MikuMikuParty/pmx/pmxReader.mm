@@ -318,7 +318,7 @@ bool pmxReader::parseVertex()
       vertex.bone_num = (void*)&_pData[ _iOffset ];
       _iOffset += (vertex.bone_index_size * vertex.bone_count);
       vertex.bone_weight_count = 1;
-      vertex.bone_weight = (float*)&_pData[ _iOffset ];
+      vertex.bone_weight = getFloat();
       _iOffset += (sizeof(float) * vertex.bone_weight_count);
     }
       break;
@@ -329,7 +329,7 @@ bool pmxReader::parseVertex()
       vertex.bone_num = (void*)&_pData[ _iOffset ];
       _iOffset += (vertex.bone_index_size * vertex.bone_count);
       vertex.bone_weight_count = 4;
-      vertex.bone_weight = (float*)&_pData[ _iOffset ];
+      vertex.bone_weight = getFloat();
       _iOffset += (sizeof(float) * vertex.bone_weight_count);
     }
       break;
@@ -340,7 +340,7 @@ bool pmxReader::parseVertex()
       vertex.bone_num = (void*)&_pData[ _iOffset ];
       _iOffset += (vertex.bone_index_size * vertex.bone_count);
       vertex.bone_weight_count = 1;
-      vertex.bone_weight = (float*)&_pData[ _iOffset ];
+      vertex.bone_weight = getFloat();
       _iOffset += (sizeof(float) * vertex.bone_weight_count);
       vertex.sdef[0] = (pmx_sdef*)getPointer(sizeof(float) * 3);
       vertex.sdef[1] = (pmx_sdef*)getPointer(sizeof(float) * 3);
@@ -354,7 +354,7 @@ bool pmxReader::parseVertex()
       vertex.bone_num = (void*)&_pData[ _iOffset ];
       _iOffset += (vertex.bone_index_size * vertex.bone_count);
       vertex.bone_weight_count = 4;
-      vertex.bone_weight = (float*)&_pData[ _iOffset ];
+      vertex.bone_weight = getFloat();
       _iOffset += (sizeof(float) * vertex.bone_weight_count);
     }
       break;
@@ -424,9 +424,9 @@ bool pmxReader::parseMaterial()
   
   // colors
   getFloat3(material.diffuse_color);
-  material.diffuse_color_alpha = getFloat();
+  material.alpha = getFloat();
   getFloat3(material.specular_color);
-  material.shininess = getFloat();
+  material.intensity = getFloat();
   getFloat3(material.ambient_color);
   
 //  LogFloat3(@"material.diffuse_color", material.diffuse_color);
@@ -457,15 +457,15 @@ bool pmxReader::parseMaterial()
   
   // toon
   material.shared_toon_flag = getChar();
-  material.toon_texture = (void*)&_pData[ _iOffset ];
+
 //  NSLog(@"material.shared_toon_flag: %d", material.shared_toon_flag);
   
   switch (material.shared_toon_flag) {
     case 0:
-      _iOffset += _pHeader->texture_index_size;
+      material.toon_texture_index = getIndex(_pHeader->texture_index_size);
       break;
     case 1:
-      _iOffset += sizeof(uint8_t);
+      material.toon_texture_index = getChar();
       break;
     default:
       NSLog(@"pmxReader::parseMaterial() unknown shared toon flag");
@@ -830,4 +830,14 @@ bool pmxReader::parseJoint()
 bool pmxReader::unload()
 {
   return false;
+}
+
+NSString *pmxReader::getRootPath()
+{
+  NSArray *pathComponents = [_filename pathComponents];
+  NSString *rootPath = [NSString string];
+  for (int i = 0; i < [pathComponents count] - 1; i++) {
+    rootPath = [rootPath stringByAppendingPathComponent:pathComponents[i]];
+  }
+  return rootPath;
 }

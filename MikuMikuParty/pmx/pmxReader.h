@@ -68,7 +68,7 @@ struct pmx_vertex
   void* bone_num;
   
   uint8_t bone_weight_count;
-  float* bone_weight;
+  float bone_weight;
   pmx_sdef* sdef[3];
   float edge_magnification;
 };
@@ -79,9 +79,9 @@ struct pmx_material
   pmx_string name_en;
   
   float diffuse_color[3];
-  float diffuse_color_alpha;
+  float alpha;
   float specular_color[3];
-  float shininess;
+  float intensity;
   float ambient_color[3];
   
   uint8_t edge_flag;
@@ -94,10 +94,13 @@ struct pmx_material
   uint8_t sphere_mode;
   
   uint8_t shared_toon_flag;
-  void* toon_texture;
+  int32_t toon_texture_index;
   
   pmx_string memo;
   uint32_t face_vert_count;
+  
+  uint32_t _tex;
+  Texture2D* _tex2D;
 };
 
 #define PMX_BONE_FLAG_TAIL_SPECIFY_TYPE_BIT   0x0001
@@ -352,6 +355,21 @@ public:
   ~pmxReader();
   bool init ( NSString* filename );
   bool unload();
+  
+  NSString *getRootPath();
+  
+  uint8_t vertexIndexSize() { return _pHeader->vertex_index_size; }
+  
+  int32_t getNumVertices() { return _iNumVertices; }
+  std::vector< pmx_vertex > getVertices() { return _vecVertices; }
+  
+  int32_t getNumIndices() { return _iNumIndices; }
+	void* getIndices() { return _pIndices; }
+  
+  std::vector<pmx_string> getTextures() { return _vecTextures; }
+  
+  int32_t getNumMaterials() { return _iNumMaterials; }
+  std::vector< pmx_material > getMaterials() { return _vecMaterials; }
   
   int32_t getNumBones() { return _iNumBones; }
   std::vector< pmx_bone > getBones() { return _vecBones; }
