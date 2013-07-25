@@ -60,7 +60,7 @@ class pmxRenderer
 	std::vector< renderer_vertex > _vecMappedVertex;
 	std::map< int32_t, std::map< int32_t, int32_t> > _mapVertexMapping;
 	
-	int32_t getMappedVertices( std::vector<pmx_vertex> vecVertex, const int32_t iVertexIndex, const uint32_t iVertexKey, const bool bSkining );
+	int32_t getMappedVertices( std::vector<pmx_vertex> vecVertex, const int32_t iVertexIndex, const int32_t iVertex1, const int32_t iVertex2, const bool bSkining );
 	int32_t getMappedBone( std::vector< int32_t >* pVec, const int32_t iBone );
   
 	bool _bPerformSkinmeshAnimation;

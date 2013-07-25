@@ -635,7 +635,8 @@ bool pmxRenderer::createMatrixMapping( NSArray* sortedKeys, NSDictionary* dicMat
 
 int32_t pmxRenderer::getMappedVertices(std::vector<pmx_vertex> vecVertex,
                                        const int32_t iVertexIndex,
-                                       const uint32_t iVertexKey,
+                                       const int32_t iVertex1,
+                                       const int32_t iVertex2,
                                        const bool bSkinning )
 {
 	
@@ -960,12 +961,12 @@ bool pmxRenderer::partitionMeshes( pmxReader* reader )
 					if( iBone1 != -1 )
 					{
 						iMappedBone1 = getMappedBone( pVec, iBone1 );
-						uint32_t iKey = iMappedBone0 << 16 | iMappedBone1;
+						int32_t iKey = iMappedBone0 << 16 | iMappedBone1;
 						iMappedVertexIndex = getMappedVertices( vecVerices, iCurrentIndex, iKey, true );
 					}
 					else
 					{
-						uint32_t iKey = iMappedBone0 << 16;
+						int32_t iKey = iMappedBone0 << 16;
 						iMappedVertexIndex = getMappedVertices( vecVerices, iCurrentIndex, iKey, true );
 					}
 					
@@ -1037,6 +1038,7 @@ bool pmxRenderer::partitionMeshes( pmxReader* reader )
 		std::vector< int32_t >* pVec = &itBegin->vecMatrixPalette;
 		for( int32_t i = 0; i < iNumIndices; ++i )
 		{
+      if (i % 50 == 0) NSLog(@"i = %d", i);
 			int32_t iCurrentIndex = vecIndices[ iIndex ];
 			int32_t iBone0 = vecVerices[ iCurrentIndex ].getBoneIndex( 0 );
 			int32_t iMappedBone0 = getMappedBone( pVec, iBone0 );
@@ -1046,13 +1048,13 @@ bool pmxRenderer::partitionMeshes( pmxReader* reader )
 			if( iBone1 != -1 )
 			{
 				iMappedBone1 = getMappedBone( pVec, iBone1 );
-				uint32_t iKey = iMappedBone0 << 16 | iMappedBone1;
+				int32_t iKey = iMappedBone0 << 16 | iMappedBone1;
 				int32_t iMappedIndex = getMappedVertices( vecVerices, iCurrentIndex, iKey, false );
 				vecMappedIndices.push_back( iMappedIndex );
 			}
 			else
 			{
-				uint32_t iKey = iMappedBone0 << 16;
+				int32_t iKey = iMappedBone0 << 16;
 				int32_t iMappedIndex = getMappedVertices( vecVerices, iCurrentIndex, iKey, false );
 				vecMappedIndices.push_back( iMappedIndex );
 			}
