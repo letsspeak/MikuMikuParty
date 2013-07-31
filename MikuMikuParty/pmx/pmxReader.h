@@ -78,7 +78,7 @@ struct pmx_vertex
 			case 0:
 				return bone_num[ 0 ];
 			case 1:
-				if( bone_weight[0] < 100 )
+				if( bone_weight[0] < 1.0f )
 				{
 					return bone_num[ 1 ];
 				}

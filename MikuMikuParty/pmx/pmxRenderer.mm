@@ -11,6 +11,9 @@
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
+static int getMappedBoneCallCount = 0;
+static int getMappedVerticesCallCount = 0;
+
 //#define DUMP_PARTITIONS (1)
 
 enum {
@@ -96,7 +99,7 @@ void pmxRenderer::render()
   // Bind the VBO
   glBindBuffer(GL_ARRAY_BUFFER, _vboRender);
 	
-  int32_t iStride = sizeof(renderer_vertex);
+  int32_t iStride = sizeof(pmx_renderer_vertex);
   // Pass the vertex data
   glVertexAttribPointer(ATTRIB_VERTEX, 3, GL_FLOAT, GL_FALSE, iStride, BUFFER_OFFSET( 0 ));
   glEnableVertexAttribArray(ATTRIB_VERTEX);
@@ -139,13 +142,13 @@ void pmxRenderer::render()
 //				_iCurrentSkinAnimationIndex = iSkinAnimationIndex;
 //				//Update vbo
 //				glBindBuffer(GL_ARRAY_BUFFER, _vboSkinAnimation);
-//				glBufferSubData(GL_ARRAY_BUFFER, 0, _iSizeSkinanimatinVertices * sizeof(skinanimation_vertex), _vecSkinAnimation[ _iCurrentSkinAnimationIndex-1 ] );
+//				glBufferSubData(GL_ARRAY_BUFFER, 0, _iSizeSkinanimatinVertices * sizeof(pmx_skinanimation_vertex), _vecSkinAnimation[ _iCurrentSkinAnimationIndex-1 ] );
 //			}
 //		}
 	}
 	
-	std::vector< DRAW_LIST >::iterator itBegin = _vecDrawList.begin();
-	std::vector< DRAW_LIST >::iterator itEnd = _vecDrawList.end();
+	std::vector< PMX_DRAW_LIST >::iterator itBegin = _vecDrawList.begin();
+	std::vector< PMX_DRAW_LIST >::iterator itEnd = _vecDrawList.end();
 	for( ;itBegin != itEnd; ++itBegin )
 	{
 		int32_t iNumIndices = itBegin->iNumIndices;
@@ -163,11 +166,11 @@ void pmxRenderer::render()
 			glEnable(GL_CULL_FACE);
 		
 		
-		int32_t iShaderIndex = SHADER_NOTEXTURE;
+		int32_t iShaderIndex = PMX_SHADER_NOTEXTURE;
 		
 		if( _vecMaterials[ i ]._tex )
 		{
-			iShaderIndex = SHADER_TEXTURE;
+			iShaderIndex = PMX_SHADER_TEXTURE;
 			glUseProgram(_shaders[iShaderIndex]._program);
 			glEnable(GL_TEXTURE_2D);
 			glActiveTexture(GL_TEXTURE0);
@@ -183,7 +186,7 @@ void pmxRenderer::render()
 		}
 		else
 		{
-			iShaderIndex = SHADER_NOTEXTURE;
+			iShaderIndex = PMX_SHADER_NOTEXTURE;
 			glUseProgram(_shaders[iShaderIndex]._program);
 			glDisable(GL_TEXTURE_2D);
 			glDisableVertexAttribArray(ATTRIB_UV);
@@ -199,14 +202,14 @@ void pmxRenderer::render()
 			{
 				glBindBuffer(GL_ARRAY_BUFFER, _vboSkinAnimation);
 				
-				iStride = sizeof(skinanimation_vertex);
+				iStride = sizeof(pmx_skinanimation_vertex);
 				glVertexAttribPointer(ATTRIB_SKINANIMATION, 3, GL_FLOAT, GL_FALSE, iStride, BUFFER_OFFSET( 0 ));
 				glEnableVertexAttribArray(ATTRIB_SKINANIMATION);
 				
-				if( iShaderIndex == SHADER_NOTEXTURE )
-					iShaderIndex = SHADER_SKIN;
+				if( iShaderIndex == PMX_SHADER_NOTEXTURE )
+					iShaderIndex = PMX_SHADER_SKIN;
 				else
-					iShaderIndex = SHADER_SKIN_TEXTURE;
+					iShaderIndex = PMX_SHADER_SKIN_TEXTURE;
 				
 				glUseProgram(_shaders[iShaderIndex]._program);
 				currentProgram = _shaders[iShaderIndex]._program;
@@ -301,9 +304,9 @@ bool pmxRenderer::init( pmxReader* reader, vmdReader* motion )
   
 	if( _shaders[ 0 ]._program == 0 )
 	{
-		NSString* strVShaders[NUM_SHADERS] = { @"ShaderPlain", @"ShaderPlainTex", @"ShaderPlainSkin",  @"ShaderPlainSkin" };
-		NSString* strFShaders[NUM_SHADERS] = { @"ShaderPlain", @"ShaderPlainTex", @"ShaderPlainSkin",  @"ShaderPlainTex" };
-		for( int32_t i = 0; i < NUM_SHADERS; ++i )
+		NSString* strVShaders[PMX_NUM_SHADERS] = { @"ShaderPlain", @"ShaderPlainTex", @"ShaderPlainSkin",  @"ShaderPlainSkin" };
+		NSString* strFShaders[PMX_NUM_SHADERS] = { @"ShaderPlain", @"ShaderPlainTex", @"ShaderPlainSkin",  @"ShaderPlainTex" };
+		for( int32_t i = 0; i < PMX_NUM_SHADERS; ++i )
 		{
       NSLog(@"loading sharders %d", i);
 			loadShaders(&_shaders[ i ], strVShaders[ i ], strFShaders[ i ] );
@@ -335,7 +338,7 @@ bool pmxRenderer::init( pmxReader* reader, vmdReader* motion )
 
 void pmxRenderer::createVbo( pmxReader* pReader )
 {
-  int32_t iStride = sizeof( renderer_vertex );
+  int32_t iStride = sizeof( pmx_renderer_vertex );
 	glGenBuffers(1, &_vboRender);
 	
 	// Bind the VBO
@@ -343,8 +346,8 @@ void pmxRenderer::createVbo( pmxReader* pReader )
 	
 	int32_t iNum = pReader->getNumVertices();
   std::vector< pmx_vertex > vecVertices = pReader->getVertices();
-	std::vector< renderer_vertex > vec;
-	renderer_vertex vertex;
+	std::vector< pmx_renderer_vertex > vec;
+	pmx_renderer_vertex vertex;
 	for( int32_t iVertexIndex = 0; iVertexIndex < iNum; ++iVertexIndex )
 	{
 		vertex.pos[ 0 ] = vecVertices[ iVertexIndex ].pos[ 0 ];
@@ -391,7 +394,7 @@ void pmxRenderer::createIndexBuffer( pmxReader* pReader )
   
 	for( int32_t i = 0; i < iMaterials; ++i )
 	{
-		DRAW_LIST list;
+		PMX_DRAW_LIST list;
 		list.iMaterialIndex = i;
 		list.iNumIndices = vecMaterial[ i ].face_vert_count;
 		_vecDrawList.push_back( list );
@@ -567,7 +570,7 @@ bool pmxRenderer::createMatrixMapping( NSArray* sortedKeys, NSDictionary* dicMat
 		_vecDrawList[ i ].vecMatrixPalette.clear();
 		_vecDrawList[ i ].vecMatrixPalette.reserve( BATCH_DIVISION_THRESHOLD );
 		for( int32_t iIndex = 0; iIndex < BATCH_DIVISION_THRESHOLD; ++iIndex )
-			_vecDrawList[ i ].vecMatrixPalette.push_back( MATRIX_UNDEFINED );
+			_vecDrawList[ i ].vecMatrixPalette.push_back( PMX_MATRIX_UNDEFINED );
 	}
 	
   //	NSLog( @"sortedKeys:%@", [sortedKeys description] );
@@ -585,7 +588,7 @@ bool pmxRenderer::createMatrixMapping( NSArray* sortedKeys, NSDictionary* dicMat
 			int32_t iScore = 0;
 			for( NSNumber* numBatch in batches )
 			{
-				if( _vecDrawList[ [numBatch intValue] ].vecMatrixPalette[ iBottom ] != MATRIX_UNDEFINED )
+				if( _vecDrawList[ [numBatch intValue] ].vecMatrixPalette[ iBottom ] != PMX_MATRIX_UNDEFINED )
 				{
 					//Slot is used
 					iScore++;
@@ -605,7 +608,7 @@ bool pmxRenderer::createMatrixMapping( NSArray* sortedKeys, NSDictionary* dicMat
 			int32_t iIndex = 0;
 			for( iIndex = 0; iIndex < BATCH_DIVISION_THRESHOLD; ++iIndex )
 			{
-				if( _vecDrawList[ [numBatch intValue] ].vecMatrixPalette[ (iIndex + iLeastIndex ) % BATCH_DIVISION_THRESHOLD ] == MATRIX_UNDEFINED )
+				if( _vecDrawList[ [numBatch intValue] ].vecMatrixPalette[ (iIndex + iLeastIndex ) % BATCH_DIVISION_THRESHOLD ] == PMX_MATRIX_UNDEFINED )
 				{
 					_vecDrawList[ [numBatch intValue] ].vecMatrixPalette[ (iIndex + iLeastIndex ) % BATCH_DIVISION_THRESHOLD ] = [num intValue];
 					break;
@@ -635,12 +638,12 @@ bool pmxRenderer::createMatrixMapping( NSArray* sortedKeys, NSDictionary* dicMat
 
 int32_t pmxRenderer::getMappedVertices(std::vector<pmx_vertex> vecVertex,
                                        const int32_t iVertexIndex,
-                                       const int32_t iVertex1,
-                                       const int32_t iVertex2,
+                                       const int64_t iVertexKey,
                                        const bool bSkinning )
 {
+  getMappedVerticesCallCount++;
 	
-	std::map< int32_t, int32_t >::iterator it = _mapVertexMapping[ iVertexIndex ].find( iVertexKey );
+	std::map< int32_t, int64_t >::iterator it = _mapVertexMapping[ iVertexIndex ].find( iVertexKey );
 	if( it != _mapVertexMapping[ iVertexIndex ].end() )
 	{
 		return it->second;
@@ -649,7 +652,7 @@ int32_t pmxRenderer::getMappedVertices(std::vector<pmx_vertex> vecVertex,
 	int32_t iNewIndex = _vecMappedVertex.size();
 	_mapVertexMapping[ iVertexIndex ][ iVertexKey ] = iNewIndex;
 	
-	renderer_vertex vertex;
+	pmx_renderer_vertex vertex;
 	vertex.pos[ 0 ] = vecVertex[ iVertexIndex ].pos[ 0 ];
 	vertex.pos[ 1 ] = vecVertex[ iVertexIndex ].pos[ 1 ];
 	vertex.pos[ 2 ] = vecVertex[ iVertexIndex ].pos[ 2 ];
@@ -658,8 +661,8 @@ int32_t pmxRenderer::getMappedVertices(std::vector<pmx_vertex> vecVertex,
 	vertex.normal_vec[ 2 ] = vecVertex[ iVertexIndex ].normal_vec[ 2 ];
 	vertex.uv[ 0 ] = vecVertex[ iVertexIndex ].uv[ 0 ];
 	vertex.uv[ 1 ] = vecVertex[ iVertexIndex ].uv[ 1 ];
-	vertex.bone[ 0 ] = uint8_t(iVertexKey >> 16);
-	vertex.bone[ 1 ] = uint8_t(iVertexKey & 0xffff);
+	vertex.bone[ 0 ] = int32_t(iVertexKey >> 32);
+	vertex.bone[ 1 ] = int32_t(iVertexKey & 0xffffffff);
 	vertex.bone[ 2 ] = bSkinning;
   // memo : ayashii
 	vertex.bone[ 3 ] = uint8_t( float(vecVertex[ iVertexIndex ].bone_weight[0]) * 255.f);
@@ -672,6 +675,7 @@ int32_t pmxRenderer::getMappedVertices(std::vector<pmx_vertex> vecVertex,
 
 int32_t pmxRenderer::getMappedBone( std::vector< int32_t >*pVec, const int32_t iBone )
 {
+  getMappedBoneCallCount++;
 	//
 	//Get the bone index in current matrix palette skinning entries
 	//
@@ -796,7 +800,7 @@ bool pmxRenderer::partitionMeshes( pmxReader* reader )
           
 				}
         
-				DRAW_LIST list = { 0 };
+				PMX_DRAW_LIST list = { 0 };
 				list.iMaterialIndex = i;
 				list.iNumIndices = [indices count];
 				_vecDrawList.push_back( list );
@@ -840,7 +844,7 @@ bool pmxRenderer::partitionMeshes( pmxReader* reader )
 				}
 			}
 			
-			DRAW_LIST list = { 0 };
+			PMX_DRAW_LIST list = { 0 };
 			list.iMaterialIndex = i;
 			list.iNumIndices = iNumIndices;
 			_vecDrawList.push_back( list );
@@ -933,8 +937,8 @@ bool pmxRenderer::partitionMeshes( pmxReader* reader )
 	//first pass: regsiter vertices with skinning animation
 	//2nd pass: register vertices without skinning animation
 	
-	std::vector< DRAW_LIST >::iterator itBegin = _vecDrawList.begin();
-	std::vector< DRAW_LIST >::iterator itEnd = _vecDrawList.end();
+	std::vector< PMX_DRAW_LIST >::iterator itBegin = _vecDrawList.begin();
+	std::vector< PMX_DRAW_LIST >::iterator itEnd = _vecDrawList.end();
 	std::vector< int32_t > vecMappedIndices;
 	if( _bPerformSkinmeshAnimation )
 	{
@@ -944,12 +948,14 @@ bool pmxRenderer::partitionMeshes( pmxReader* reader )
 		{
 			int32_t iNumIndices = itBegin->iNumIndices;
 			NSLog( @"Batch material:%d # indices:%d", itBegin->iMaterialIndex, iNumIndices );
+      NSLog( @"map: %d vertices: %d", getMappedBoneCallCount, getMappedVerticesCallCount);
 			std::vector< int32_t >* pVec = &itBegin->vecMatrixPalette;
 			for( int32_t i = 0; i < iNumIndices; ++i )
 			{
 				int32_t iCurrentIndex = vecIndices[ iIndex ];
 				if( [dicSkinmeshVertices objectForKey:[NSNumber numberWithInt:iCurrentIndex] ] != nil )
 				{
+          NSLog(@"i = %d iCurrentIndex = %d dic found ", i, iCurrentIndex);
 					itBegin->bSkinMesh = true;
 					
 					int32_t iBone0 = vecVerices[ iCurrentIndex ].getBoneIndex( 0 );
@@ -961,12 +967,12 @@ bool pmxRenderer::partitionMeshes( pmxReader* reader )
 					if( iBone1 != -1 )
 					{
 						iMappedBone1 = getMappedBone( pVec, iBone1 );
-						int32_t iKey = iMappedBone0 << 16 | iMappedBone1;
+						int64_t iKey = (int64_t)iMappedBone0 << 32 | iMappedBone1;
 						iMappedVertexIndex = getMappedVertices( vecVerices, iCurrentIndex, iKey, true );
 					}
 					else
 					{
-						int32_t iKey = iMappedBone0 << 16;
+						int64_t iKey = (int64_t)iMappedBone0 << 32;
 						iMappedVertexIndex = getMappedVertices( vecVerices, iCurrentIndex, iKey, true );
 					}
 					
@@ -983,6 +989,7 @@ bool pmxRenderer::partitionMeshes( pmxReader* reader )
     
 		_iSizeSkinanimatinVertices = _vecMappedVertex.size();
 		NSLog( @"# of skinanimation vertices: %d", _iSizeSkinanimatinVertices );
+    NSLog( @"map: %d vertices: %d", getMappedBoneCallCount, getMappedVerticesCallCount);
 		
 		//
 		//dicSkinmeshVertices: dic[ vertex -> bool ];
@@ -995,7 +1002,7 @@ bool pmxRenderer::partitionMeshes( pmxReader* reader )
 		
 		for( int32_t i = 0; i < vecMorphs.size(); ++i )
 		{
-			skinanimation_vertex* pVertices = new skinanimation_vertex[ _iSizeSkinanimatinVertices ];
+			pmx_skinanimation_vertex* pVertices = new pmx_skinanimation_vertex[ _iSizeSkinanimatinVertices ];
 			//Clear
 			for( int32_t j = 0; j < _iSizeSkinanimatinVertices; ++j )
 			{
@@ -1035,10 +1042,13 @@ bool pmxRenderer::partitionMeshes( pmxReader* reader )
 	{
 		int32_t iNumIndices = itBegin->iNumIndices;
 		NSLog( @"Batch material:%d # indices:%d", itBegin->iMaterialIndex, iNumIndices );
+    NSLog( @"map: %d vertices: %d", getMappedBoneCallCount, getMappedVerticesCallCount);
 		std::vector< int32_t >* pVec = &itBegin->vecMatrixPalette;
 		for( int32_t i = 0; i < iNumIndices; ++i )
 		{
-      if (i % 50 == 0) NSLog(@"i = %d", i);
+      bool a = (i % 200 == 0);
+      if (a) NSLog(@"i = %d", i);
+      if (a) NSLog( @"map: %d vertices: %d", getMappedBoneCallCount, getMappedVerticesCallCount);
 			int32_t iCurrentIndex = vecIndices[ iIndex ];
 			int32_t iBone0 = vecVerices[ iCurrentIndex ].getBoneIndex( 0 );
 			int32_t iMappedBone0 = getMappedBone( pVec, iBone0 );
@@ -1047,14 +1057,16 @@ bool pmxRenderer::partitionMeshes( pmxReader* reader )
 			int32_t iMappedBone1 = -1;
 			if( iBone1 != -1 )
 			{
+        if (a) NSLog(@" iBone1 != -1");
 				iMappedBone1 = getMappedBone( pVec, iBone1 );
-				int32_t iKey = iMappedBone0 << 16 | iMappedBone1;
+				int64_t iKey = (int64_t)iMappedBone0 << 32 | iMappedBone1;
 				int32_t iMappedIndex = getMappedVertices( vecVerices, iCurrentIndex, iKey, false );
 				vecMappedIndices.push_back( iMappedIndex );
 			}
 			else
 			{
-				int32_t iKey = iMappedBone0 << 16;
+        if (a) NSLog(@" iBone1 == -1");
+				int64_t iKey = (int64_t)iMappedBone0 << 32;
 				int32_t iMappedIndex = getMappedVertices( vecVerices, iCurrentIndex, iKey, false );
 				vecMappedIndices.push_back( iMappedIndex );
 			}
@@ -1073,7 +1085,7 @@ bool pmxRenderer::partitionMeshes( pmxReader* reader )
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	
 	//Create VBO
-  int32_t iStride = sizeof( renderer_vertex );
+  int32_t iStride = sizeof( pmx_renderer_vertex );
 	glGenBuffers(1, &_vboRender);
 	glBindBuffer(GL_ARRAY_BUFFER, _vboRender);
 	glBufferData(GL_ARRAY_BUFFER, iStride * _vecMappedVertex.size(), &_vecMappedVertex[ 0 ], GL_STATIC_DRAW);
@@ -1081,12 +1093,12 @@ bool pmxRenderer::partitionMeshes( pmxReader* reader )
 	
 	if( _bPerformSkinmeshAnimation )
 	{
-		iStride = sizeof( skinanimation_vertex );
+		iStride = sizeof( pmx_skinanimation_vertex );
 		glGenBuffers(1, &_vboSkinAnimation);
 		glBindBuffer(GL_ARRAY_BUFFER, _vboSkinAnimation);
 		
 		//Fill with Dummy data
-		skinanimation_vertex* pVertices = new skinanimation_vertex[_vecMappedVertex.size()];
+		pmx_skinanimation_vertex* pVertices = new pmx_skinanimation_vertex[_vecMappedVertex.size()];
 		glBufferData(GL_ARRAY_BUFFER, iStride * _vecMappedVertex.size(), pVertices, GL_STATIC_DRAW);
     
 		delete []pVertices;
@@ -1193,7 +1205,7 @@ BOOL pmxRenderer::validateProgram(const GLuint prog )
   return TRUE;
 }
 
-BOOL pmxRenderer::loadShaders( SHADER_PARAMS* params, NSString* strVsh, NSString* strFsh )
+BOOL pmxRenderer::loadShaders( PMX_SHADER_PARAMS* params, NSString* strVsh, NSString* strFsh )
 {
   NSLog(@"pmxRenderer::loadShaders");
   NSLog(@"vsh = %@", strVsh);

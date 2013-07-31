@@ -307,6 +307,7 @@ bool pmxReader::parseVertex()
       vertex.bone_count = 1;
       vertex.bone_num[0] = getIndex(_pHeader->bone_index_size);
       vertex.bone_weight_count = 0;
+      vertex.bone_weight[0] = 1.0f;
     }
       break;
     case 1: // BDEF2
@@ -317,6 +318,7 @@ bool pmxReader::parseVertex()
       vertex.bone_num[1] = getIndex(_pHeader->bone_index_size);
       vertex.bone_weight_count = 1;
       vertex.bone_weight[0] = getFloat();
+      vertex.bone_weight[1] = 1.0f - vertex.bone_weight[0];
     }
       break;
     case 2: // BDEF4
@@ -342,6 +344,7 @@ bool pmxReader::parseVertex()
       vertex.bone_num[1] = getIndex(_pHeader->bone_index_size);
       vertex.bone_weight_count = 1;
       vertex.bone_weight[0] = getFloat();
+      vertex.bone_weight[1] = 1.0f - vertex.bone_weight[0];
       vertex.sdef[0] = (pmx_sdef*)getPointer(sizeof(float) * 3);
       vertex.sdef[1] = (pmx_sdef*)getPointer(sizeof(float) * 3);
       vertex.sdef[2] = (pmx_sdef*)getPointer(sizeof(float) * 3);
@@ -369,6 +372,8 @@ bool pmxReader::parseVertex()
   
   vertex.edge_magnification = getFloat();
   _vecVertices.push_back( vertex );
+  
+//  NSLog(@"vertex %d bone_weight[0] = %f", (int)(_vecVertices.size() - 1), vertex.bone_weight[0]);
   
   if (_iOffset > [_data length]) return false;
   return true;

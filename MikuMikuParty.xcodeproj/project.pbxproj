@@ -160,7 +160,6 @@
 		0EAAC6611791A132008EAE4F /* MikuMikuConnectionServers.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = MikuMikuConnectionServers.plist; path = Utilities/MikuMikuConnection/MikuMikuConnectionServers.plist; sourceTree = "<group>"; };
 		0EB5338C17A0052E00A357F1 /* pmxRenderer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = pmxRenderer.mm; path = pmx/pmxRenderer.mm; sourceTree = "<group>"; };
 		0EB5338D17A0052E00A357F1 /* pmxRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pmxRenderer.h; path = pmx/pmxRenderer.h; sourceTree = "<group>"; };
-		0EB5338F17A0080A00A357F1 /* RendererDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = RendererDefine.h; path = ESRenderer/RendererDefine.h; sourceTree = "<group>"; };
 		0EB5339017A011B000A357F1 /* vmdMotionProviderPMX.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = vmdMotionProviderPMX.mm; path = vmd/vmdMotionProviderPMX.mm; sourceTree = "<group>"; };
 		0EB5339117A011B000A357F1 /* vmdMotionProviderPMX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vmdMotionProviderPMX.h; path = vmd/vmdMotionProviderPMX.h; sourceTree = "<group>"; };
 		0EB5339317A0127D00A357F1 /* vmdMotionProviderPMXIK.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = vmdMotionProviderPMXIK.mm; path = vmd/vmdMotionProviderPMXIK.mm; sourceTree = "<group>"; };
@@ -293,7 +292,6 @@
 				0E82C775178DBBC200E9E0A5 /* ES2Renderer.h */,
 				0E82C776178DBBC200E9E0A5 /* ES2Renderer.mm */,
 				0E82C777178DBBC200E9E0A5 /* ESRenderer.h */,
-				0EB5338F17A0080A00A357F1 /* RendererDefine.h */,
 			);
 			name = ESRenderer;
 			sourceTree = "<group>";

@@ -448,7 +448,7 @@ bool vmdMotionProviderPMX::bind( pmxReader* reader, vmdReader* motion )
 			}
 			else
 			{
-				NSLog( @"Bone not found %@", strBoneName );
+//				NSLog( @"Bone not found %@", strBoneName );
 			}
 		}
 	}
