@@ -103,10 +103,10 @@ void pmxRenderer::render()
   // Pass the vertex data
   glVertexAttribPointer(ATTRIB_VERTEX, 3, GL_FLOAT, GL_FALSE, iStride, BUFFER_OFFSET( 0 ));
   glEnableVertexAttribArray(ATTRIB_VERTEX);
-  
+
   glVertexAttribPointer(ATTRIB_NORMAL, 3, GL_FLOAT, GL_FALSE, iStride, BUFFER_OFFSET( 3 * sizeof(GLfloat) ));
   glEnableVertexAttribArray(ATTRIB_NORMAL);
-  
+
   glVertexAttribPointer(ATTRIB_BONE, 4, GL_UNSIGNED_BYTE, GL_FALSE, iStride, BUFFER_OFFSET( 8 * sizeof(GLfloat) ));
   glEnableVertexAttribArray(ATTRIB_BONE);
 	
@@ -133,24 +133,25 @@ void pmxRenderer::render()
 	{
 		matrixPalette = _motionProvider->getMatrixPalette();
     
-//		if( _bPerformSkinmeshAnimation )
-//		{
-//			int32_t iSkinAnimationIndex = _motionProvider->getSkinAnimationParameters( fWeight );
-//
-//			if( iSkinAnimationIndex != _iCurrentSkinAnimationIndex )
-//			{
-//				_iCurrentSkinAnimationIndex = iSkinAnimationIndex;
-//				//Update vbo
-//				glBindBuffer(GL_ARRAY_BUFFER, _vboSkinAnimation);
-//				glBufferSubData(GL_ARRAY_BUFFER, 0, _iSizeSkinanimatinVertices * sizeof(pmx_skinanimation_vertex), _vecSkinAnimation[ _iCurrentSkinAnimationIndex-1 ] );
-//			}
-//		}
+		if( _bPerformSkinmeshAnimation )
+		{
+			int32_t iSkinAnimationIndex = _motionProvider->getSkinAnimationParameters( fWeight );
+
+			if( iSkinAnimationIndex != _iCurrentSkinAnimationIndex )
+			{
+				_iCurrentSkinAnimationIndex = iSkinAnimationIndex;
+				//Update vbo
+				glBindBuffer(GL_ARRAY_BUFFER, _vboSkinAnimation);
+				glBufferSubData(GL_ARRAY_BUFFER, 0, _iSizeSkinanimatinVertices * sizeof(pmx_skinanimation_vertex), _vecSkinAnimation[ _iCurrentSkinAnimationIndex-1 ] );
+			}
+		}
 	}
 	
 	std::vector< PMX_DRAW_LIST >::iterator itBegin = _vecDrawList.begin();
 	std::vector< PMX_DRAW_LIST >::iterator itEnd = _vecDrawList.end();
 	for( ;itBegin != itEnd; ++itBegin )
 	{
+//  int32_t iNumIndices = 1; //_iNumIndices;
 		int32_t iNumIndices = itBegin->iNumIndices;
 		int32_t i = itBegin->iMaterialIndex;
 		
@@ -160,10 +161,10 @@ void pmxRenderer::render()
 		else
 			glDisable(GL_BLEND);
 		
-//		if( _vecMaterials[ i ].edge_flag )
+		if( _vecMaterials[ i ].edge_flag )
 			glDisable(GL_CULL_FACE);
-//		else
-//			glEnable(GL_CULL_FACE);
+		else
+			glEnable(GL_CULL_FACE);
 		
 		
 		int32_t iShaderIndex = PMX_SHADER_NOTEXTURE;
@@ -193,9 +194,9 @@ void pmxRenderer::render()
 			currentProgram = _shaders[iShaderIndex]._program;
 		}
 		
-//		//
-//		//
-//		//Bind skin animation
+		//
+		//
+		//Bind skin animation
 //		if( _bPerformSkinmeshAnimation )
 //		{
 //			if( itBegin->bSkinMesh )
@@ -224,37 +225,41 @@ void pmxRenderer::render()
 //      
 //		}
 		
-		glUniform4f( _shaders[iShaderIndex]._uiMaterialDiffuse, _vecMaterials[ i ].diffuse_color[ 0 ],
+		glUniform4f( _shaders[iShaderIndex]._uiMaterialDiffuse,
+//                0.0f, 0.0f, 1.0f, 1.0f);
+                _vecMaterials[ i ].diffuse_color[ 0 ],
                 _vecMaterials[ i ].diffuse_color[ 1 ],
                 _vecMaterials[ i ].diffuse_color[ 2 ],
                 _vecMaterials[ i ].alpha );
-		glUniform4f( _shaders[iShaderIndex]._uiMaterialSpecular, _vecMaterials[ i ].specular_color[ 0 ],
+		glUniform4f( _shaders[iShaderIndex]._uiMaterialSpecular,
+//                0.0f, 0.0f, 1.0f, 1.0f);
+                _vecMaterials[ i ].specular_color[ 0 ],
                 _vecMaterials[ i ].specular_color[ 1 ],
                 _vecMaterials[ i ].specular_color[ 2 ],
                 _vecMaterials[ i ].intensity );
 		
-		glUniform3fv( _shaders[iShaderIndex]._uiMaterialAmbient, 1, _vecMaterials[ i ].ambient_color );
+    glUniform3fv( _shaders[iShaderIndex]._uiMaterialAmbient, 1, _vecMaterials[ i ].ambient_color );
 		
-//		//
-//		//Set up matrix palette
-//		//
-//		if( _motionProvider )
-//		{
-//			std::vector< int32_t >& vec = itBegin->vecMatrixPalette;
-//			for( int32_t iPaletteIndex = 0; iPaletteIndex < BATCH_DIVISION_THRESHOLD; ++iPaletteIndex )
-//			{
-//				if( vec[ iPaletteIndex ] != -1 )
-//				{
-//          // TODO : invalid value of vec[ iPaletteIndex ]...
-//          if ( vec[ iPaletteIndex] < (*matrixPalette).size() ){
-//            glUniformMatrix4fv( _shaders[iShaderIndex]._uiMatrixPalette + iPaletteIndex * 4, 1, GL_FALSE,
-//                               (*matrixPalette)[ vec[ iPaletteIndex ] ].mat.ptr());
-//          }
-//				}
-//        
-//			}
-//      
-//		}
+		//
+		//Set up matrix palette
+		//
+		if( _motionProvider )
+		{
+			std::vector< int32_t >& vec = itBegin->vecMatrixPalette;
+			for( int32_t iPaletteIndex = 0; iPaletteIndex < BATCH_DIVISION_THRESHOLD; ++iPaletteIndex )
+			{
+				if( vec[ iPaletteIndex ] != -1 )
+				{
+          // TODO : invalid value of vec[ iPaletteIndex ]...
+          if ( vec[ iPaletteIndex] < (*matrixPalette).size() ){
+            glUniformMatrix4fv( _shaders[iShaderIndex]._uiMatrixPalette + iPaletteIndex * 4, 1, GL_FALSE,
+                               (*matrixPalette)[ vec[ iPaletteIndex ] ].mat.ptr());
+          }
+				}
+        
+			}
+      
+		}
     
 		if( currentProgram != lastProgram )
 		{
@@ -269,7 +274,6 @@ void pmxRenderer::render()
       glDrawElements(GL_TRIANGLES, iNumIndices, GL_UNSIGNED_SHORT, BUFFER_OFFSET(iOffset * sizeof(uint16_t) ));
     } else if (_vertexIndexSize == 4) {
       glDrawElements(GL_TRIANGLES, iNumIndices, GL_UNSIGNED_INT, BUFFER_OFFSET(iOffset * sizeof(uint32_t) ));
-//                   GL_UNSIGNED_SHORT, BUFFER_OFFSET(iOffset * sizeof(uint16_t) ));
     }
     iOffset += iNumIndices;
 	}
@@ -337,6 +341,13 @@ bool pmxRenderer::init( pmxReader* reader, vmdReader* motion )
 	return true;
 }
 
+void dumpVec(std::vector< pmx_renderer_vertex > vec)
+{
+  for (int i = 0; i < vec.size(); i++){
+    NSLog(@"vec[%d].pos : (%f, %f, %f", i, vec[i].pos[0], vec[i].pos[1], vec[i].pos[2]);
+  }
+}
+
 void pmxRenderer::createVbo( pmxReader* pReader )
 {
   int32_t iStride = sizeof( pmx_renderer_vertex );
@@ -363,10 +374,13 @@ void pmxRenderer::createVbo( pmxReader* pReader )
 		vertex.bone[ 1 ] = 0;
 		vertex.bone[ 2 ] = 0;
 //		vertex.bone[ 3 ] = vecVertices[ iVertexIndex ].bone_weight;
-		vertex.bone[ 3 ] = (uint8_t)(vecVertices[ iVertexIndex ].bone_weight[0] * 100.0f);
+		vertex.bone[ 3 ] = (uint32_t)(vecVertices[ iVertexIndex ].bone_weight[0] * 100.0f);
 		vec.push_back( vertex );
 	}
-	
+  
+  // dump vec
+//  dumpVec(vec);
+  
 	// Set the buffer's data
 	glBufferData(GL_ARRAY_BUFFER, iStride * vec.size(), &vec[ 0 ], GL_STATIC_DRAW);
   
@@ -414,6 +428,7 @@ void pmxRenderer::createIndexBuffer( pmxReader* pReader )
 {
 //  // dump indices
 //  NSLog(@"pmxRenderer::createIndexBuffer dump indices ----");
+//  NSLog(@"getNumIndices : %d", pReader->getNumIndices());
 //  int32_t vertexIndexSize = pReader->vertexIndexSize();
 //  void *p = pReader->getIndices();
 //  for (int i = 0; i < pReader->getNumIndices();) {
@@ -421,9 +436,11 @@ void pmxRenderer::createIndexBuffer( pmxReader* pReader )
 //    p = getVertex(&v[0], p, vertexIndexSize);
 //    p = getVertex(&v[1], p, vertexIndexSize);
 //    p = getVertex(&v[2], p, vertexIndexSize);
-//    NSLog(@"index %d : (%d, %d, %d)", i, v[0], v[1], v[2]);
+//    NSLog(@"index %d : (%d, %d, %d)", i / 3, v[0], v[1], v[2]);
 //    i += 3;
 //  }
+  
+  _iNumIndices = pReader->getNumIndices();
   
   int32_t iStride = (int32_t)pReader->vertexIndexSize(); //sizeof( uint16_t );
 	glGenBuffers(1, &_vboIndex);
@@ -446,6 +463,7 @@ void pmxRenderer::createIndexBuffer( pmxReader* pReader )
 		list.iMaterialIndex = i;
 		list.iNumIndices = vecMaterial[ i ].face_vert_count;
 		_vecDrawList.push_back( list );
+//    NSLog(@"iMaterial[%d].iNumIndices = %d", i, list.iNumIndices);
 	}
 	return;
 }
@@ -713,7 +731,7 @@ int32_t pmxRenderer::getMappedVertices(std::vector<pmx_vertex> vecVertex,
 	vertex.bone[ 1 ] = int32_t(iVertexKey & 0xffffffff);
 	vertex.bone[ 2 ] = bSkinning;
   // memo : ayashii
-	vertex.bone[ 3 ] = uint8_t( float(vecVertex[ iVertexIndex ].bone_weight[0]) * 255.f);
+	vertex.bone[ 3 ] = uint32_t( float(vecVertex[ iVertexIndex ].bone_weight[0]) * 255.f);
 //	vertex.bone[ 3 ] = uint8_t( float(vecVertex[ iVertexIndex ].bone_weight[0]) / 100.f * 255.f);
 	_vecMappedVertex.push_back( vertex );
 	

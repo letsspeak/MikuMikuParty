@@ -11,7 +11,7 @@
 attribute highp vec3	myVertex;
 attribute highp vec3	myNormal;
 attribute mediump vec2	myUV;
-attribute mediump vec4	myBone;
+attribute highp vec4	myBone;
 
 varying mediump vec2	texCoord;
 varying lowp	vec4	colorDiffuse;

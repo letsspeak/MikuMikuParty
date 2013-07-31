@@ -34,7 +34,7 @@ struct pmx_renderer_vertex
 	float pos[3];
 	float normal_vec[3];
 	float uv[2];
-	uint32_t bone[4];
+	uint8_t bone[4];
 };
 
 struct pmx_skinanimation_vertex
@@ -86,7 +86,8 @@ class pmxRenderer
 	std::vector< pmx_material > _vecMaterials;
   
   uint8_t _vertexIndexSize;
-
+  int32_t _iNumIndices;
+  
 	void createVbo( pmxReader * pReader );
 	void createIndexBuffer( pmxReader* pReader );
 	void loadMaterials( pmxReader* pReader );
@@ -108,6 +109,7 @@ class pmxRenderer
 	int32_t getMappedBone( std::vector< int32_t >* pVec, const int32_t iBone );
   
 	bool _bPerformSkinmeshAnimation;
+  
 public:
 	pmxRenderer();
 	~pmxRenderer();

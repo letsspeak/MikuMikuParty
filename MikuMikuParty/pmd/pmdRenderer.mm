@@ -325,7 +325,7 @@ bool pmdRenderer::init( pmdReader* reader, vmdReader* motion )
 
 void pmdRenderer::createVbo( pmdReader* pReader )
 {
-    int32_t iStride = sizeof( renderer_vertex );
+  int32_t iStride = sizeof( renderer_vertex );
 	glGenBuffers(1, &_vboRender);
 	
 	// Bind the VBO
@@ -363,7 +363,7 @@ void pmdRenderer::createVbo( pmdReader* pReader )
 
 void pmdRenderer::createIndexBuffer( pmdReader* pReader )
 {
-    int32_t iStride = sizeof( uint16_t );
+  int32_t iStride = sizeof( uint16_t );
 	glGenBuffers(1, &_vboIndex);
 	
 	// Bind the VBO
