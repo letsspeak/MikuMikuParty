@@ -160,10 +160,10 @@ void pmxRenderer::render()
 		else
 			glDisable(GL_BLEND);
 		
-		if( _vecMaterials[ i ].edge_flag )
+//		if( _vecMaterials[ i ].edge_flag )
 			glDisable(GL_CULL_FACE);
-		else
-			glEnable(GL_CULL_FACE);
+//		else
+//			glEnable(GL_CULL_FACE);
 		
 		
 		int32_t iShaderIndex = PMX_SHADER_NOTEXTURE;
@@ -193,36 +193,36 @@ void pmxRenderer::render()
 			currentProgram = _shaders[iShaderIndex]._program;
 		}
 		
-		//
-		//
-		//Bind skin animation
-		if( _bPerformSkinmeshAnimation )
-		{
-			if( itBegin->bSkinMesh )
-			{
-				glBindBuffer(GL_ARRAY_BUFFER, _vboSkinAnimation);
-				
-				iStride = sizeof(pmx_skinanimation_vertex);
-				glVertexAttribPointer(ATTRIB_SKINANIMATION, 3, GL_FLOAT, GL_FALSE, iStride, BUFFER_OFFSET( 0 ));
-				glEnableVertexAttribArray(ATTRIB_SKINANIMATION);
-				
-				if( iShaderIndex == PMX_SHADER_NOTEXTURE )
-					iShaderIndex = PMX_SHADER_SKIN;
-				else
-					iShaderIndex = PMX_SHADER_SKIN_TEXTURE;
-				
-				glUseProgram(_shaders[iShaderIndex]._program);
-				currentProgram = _shaders[iShaderIndex]._program;
-				
-				glUniform1f( _shaders[iShaderIndex]._uiSkinWeight, fWeight );
-				
-			}
-			else
-			{
-				glDisableVertexAttribArray(ATTRIB_SKINANIMATION);
-			}
-      
-		}
+//		//
+//		//
+//		//Bind skin animation
+//		if( _bPerformSkinmeshAnimation )
+//		{
+//			if( itBegin->bSkinMesh )
+//			{
+//				glBindBuffer(GL_ARRAY_BUFFER, _vboSkinAnimation);
+//				
+//				iStride = sizeof(pmx_skinanimation_vertex);
+//				glVertexAttribPointer(ATTRIB_SKINANIMATION, 3, GL_FLOAT, GL_FALSE, iStride, BUFFER_OFFSET( 0 ));
+//				glEnableVertexAttribArray(ATTRIB_SKINANIMATION);
+//				
+//				if( iShaderIndex == PMX_SHADER_NOTEXTURE )
+//					iShaderIndex = PMX_SHADER_SKIN;
+//				else
+//					iShaderIndex = PMX_SHADER_SKIN_TEXTURE;
+//				
+//				glUseProgram(_shaders[iShaderIndex]._program);
+//				currentProgram = _shaders[iShaderIndex]._program;
+//				
+//				glUniform1f( _shaders[iShaderIndex]._uiSkinWeight, fWeight );
+//				
+//			}
+//			else
+//			{
+//				glDisableVertexAttribArray(ATTRIB_SKINANIMATION);
+//			}
+//      
+//		}
 		
 		glUniform4f( _shaders[iShaderIndex]._uiMaterialDiffuse, _vecMaterials[ i ].diffuse_color[ 0 ],
                 _vecMaterials[ i ].diffuse_color[ 1 ],
@@ -235,26 +235,26 @@ void pmxRenderer::render()
 		
 		glUniform3fv( _shaders[iShaderIndex]._uiMaterialAmbient, 1, _vecMaterials[ i ].ambient_color );
 		
-		//
-		//Set up matrix palette
-		//
-		if( _motionProvider )
-		{
-			std::vector< int32_t >& vec = itBegin->vecMatrixPalette;
-			for( int32_t iPaletteIndex = 0; iPaletteIndex < BATCH_DIVISION_THRESHOLD; ++iPaletteIndex )
-			{
-				if( vec[ iPaletteIndex ] != -1 )
-				{
-          // TODO : invalid value of vec[ iPaletteIndex ]...
-          if ( vec[ iPaletteIndex] < (*matrixPalette).size() ){
-            glUniformMatrix4fv( _shaders[iShaderIndex]._uiMatrixPalette + iPaletteIndex * 4, 1, GL_FALSE,
-                               (*matrixPalette)[ vec[ iPaletteIndex ] ].mat.ptr());
-          }
-				}
-        
-			}
-      
-		}
+//		//
+//		//Set up matrix palette
+//		//
+//		if( _motionProvider )
+//		{
+//			std::vector< int32_t >& vec = itBegin->vecMatrixPalette;
+//			for( int32_t iPaletteIndex = 0; iPaletteIndex < BATCH_DIVISION_THRESHOLD; ++iPaletteIndex )
+//			{
+//				if( vec[ iPaletteIndex ] != -1 )
+//				{
+//          // TODO : invalid value of vec[ iPaletteIndex ]...
+//          if ( vec[ iPaletteIndex] < (*matrixPalette).size() ){
+//            glUniformMatrix4fv( _shaders[iShaderIndex]._uiMatrixPalette + iPaletteIndex * 4, 1, GL_FALSE,
+//                               (*matrixPalette)[ vec[ iPaletteIndex ] ].mat.ptr());
+//          }
+//				}
+//        
+//			}
+//      
+//		}
     
 		if( currentProgram != lastProgram )
 		{
@@ -286,6 +286,7 @@ bool pmxRenderer::init( pmxReader* reader, vmdReader* motion )
 //	_bPerformSkinmeshAnimation = false;
   
   _vertexIndexSize = reader->vertexIndexSize();
+  NSLog(@"_vertexIndexSize = %d", _vertexIndexSize);
   
 	if( motion != NULL )
 	{
@@ -310,13 +311,13 @@ bool pmxRenderer::init( pmxReader* reader, vmdReader* motion )
 		{
       NSLog(@"loading sharders %d", i);
 			loadShaders(&_shaders[ i ], strVShaders[ i ], strFShaders[ i ] );
-#if defined(DEBUG)
+//#if defined(DEBUG)
 			if (!validateProgram(_shaders[ i ]._program))
 			{
 				NSLog(@"Failed to validate program: %d", _shaders[ i ]._program);
         //				return false;
 			}
-#endif
+//#endif
 		}
 	}
 	
@@ -375,8 +376,55 @@ void pmxRenderer::createVbo( pmxReader* pReader )
 	return;
 }
 
+void *getVertex(int32_t *to, void* p, int32_t size)
+{
+  if (size == 1) {
+    
+    uint8_t i, *inc;
+    memcpy(&i, p, size);
+    *to = (int32_t)i;
+    inc = (uint8_t*)p;
+    
+    return ++inc;
+  }
+  
+  if (size == 2) {
+    
+    uint16_t i, *inc;
+    memcpy(&i, p, size);
+    *to = (int32_t)i;
+    inc = (uint16_t*)p;
+    
+    return ++inc;
+  }
+  
+  if (size == 4) {
+    
+    int32_t *inc;
+    memcpy(to, p, size);
+    inc = (int32_t*)p;
+    
+    return ++inc;
+  }
+  
+  return p;
+}
+
 void pmxRenderer::createIndexBuffer( pmxReader* pReader )
 {
+//  // dump indices
+//  NSLog(@"pmxRenderer::createIndexBuffer dump indices ----");
+//  int32_t vertexIndexSize = pReader->vertexIndexSize();
+//  void *p = pReader->getIndices();
+//  for (int i = 0; i < pReader->getNumIndices();) {
+//    int32_t v[3];
+//    p = getVertex(&v[0], p, vertexIndexSize);
+//    p = getVertex(&v[1], p, vertexIndexSize);
+//    p = getVertex(&v[2], p, vertexIndexSize);
+//    NSLog(@"index %d : (%d, %d, %d)", i, v[0], v[1], v[2]);
+//    i += 3;
+//  }
+  
   int32_t iStride = (int32_t)pReader->vertexIndexSize(); //sizeof( uint16_t );
 	glGenBuffers(1, &_vboIndex);
 	

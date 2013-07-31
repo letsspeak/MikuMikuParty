@@ -158,7 +158,7 @@ inline double micro()
   else
   {
     _motionreader.init( motionFilename );
-    _pmxRenderer.init( &_pmxReader, &_motionreader );
+    _pmxRenderer.init( &_pmxReader, NULL);//&_motionreader );
   }
   
   _pmxReader.unload();
@@ -188,7 +188,7 @@ inline double micro()
     _pmdRenderer.update(micro());
     _pmdRenderer.render();
   }else if (_modelType == MMPModelTypePMX) {
-    _pmxRenderer.update(micro());
+//    _pmxRenderer.update(micro());
     _pmxRenderer.render();
   }
   
