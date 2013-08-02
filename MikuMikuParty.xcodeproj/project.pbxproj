@@ -12,6 +12,7 @@
 		0E73CFC617AC0C8900D65D33 /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E73CFC517AC0C8900D65D33 /* Twitter.framework */; };
 		0E73CFC817AC164800D65D33 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E73CFC717AC164800D65D33 /* Accounts.framework */; };
 		0E73CFCB17AC17EC00D65D33 /* TwitterAccountSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E73CFCA17AC17EC00D65D33 /* TwitterAccountSelector.m */; };
+		0E73CFCF17AC508E00D65D33 /* MMDHubController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E73CFCE17AC508E00D65D33 /* MMDHubController.m */; };
 		0E82C778178DBBC200E9E0A5 /* EAGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E82C774178DBBC200E9E0A5 /* EAGLView.mm */; };
 		0E82C779178DBBC200E9E0A5 /* ES2Renderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E82C776178DBBC200E9E0A5 /* ES2Renderer.mm */; };
 		0E82C77F178DBBCF00E9E0A5 /* pmdReader.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E82C77C178DBBCF00E9E0A5 /* pmdReader.mm */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -110,6 +111,9 @@
 		0E73CFC717AC164800D65D33 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		0E73CFC917AC17EC00D65D33 /* TwitterAccountSelector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TwitterAccountSelector.h; path = Utilities/TwitterController/TwitterAccountSelector.h; sourceTree = "<group>"; };
 		0E73CFCA17AC17EC00D65D33 /* TwitterAccountSelector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TwitterAccountSelector.m; path = Utilities/TwitterController/TwitterAccountSelector.m; sourceTree = "<group>"; };
+		0E73CFCC17AC4D6A00D65D33 /* MMPUserDefaultKeyDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMPUserDefaultKeyDefines.h; sourceTree = "<group>"; };
+		0E73CFCD17AC508E00D65D33 /* MMDHubController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMDHubController.h; path = Contents/MMDHub/MMDHubController.h; sourceTree = "<group>"; };
+		0E73CFCE17AC508E00D65D33 /* MMDHubController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMDHubController.m; path = Contents/MMDHub/MMDHubController.m; sourceTree = "<group>"; };
 		0E82C773178DBBC200E9E0A5 /* EAGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EAGLView.h; path = ESRenderer/EAGLView.h; sourceTree = "<group>"; };
 		0E82C774178DBBC200E9E0A5 /* EAGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = EAGLView.mm; path = ESRenderer/EAGLView.mm; sourceTree = "<group>"; };
 		0E82C775178DBBC200E9E0A5 /* ES2Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ES2Renderer.h; path = ESRenderer/ES2Renderer.h; sourceTree = "<group>"; };
@@ -452,6 +456,8 @@
 			isa = PBXGroup;
 			children = (
 				0EB7E4D317930C97009F2FFF /* MMDHubItem */,
+				0E73CFCD17AC508E00D65D33 /* MMDHubController.h */,
+				0E73CFCE17AC508E00D65D33 /* MMDHubController.m */,
 				0EB7E4B21792D002009F2FFF /* MMDHubItemTableView.h */,
 				0EB7E4B31792D002009F2FFF /* MMDHubItemTableView.m */,
 				0EB7E4B41792D002009F2FFF /* MMDHubViewController.h */,
@@ -602,6 +608,7 @@
 				0E82C76B178DBB6600E9E0A5 /* Shaders */,
 				0EF8DDA1178DB7A00067522B /* AppDelegate.h */,
 				0EF8DDA2178DB7A00067522B /* AppDelegate.mm */,
+				0E73CFCC17AC4D6A00D65D33 /* MMPUserDefaultKeyDefines.h */,
 				0EF8DDAA178DB7A00067522B /* ViewController.h */,
 				0EF8DDAB178DB7A00067522B /* ViewController.m */,
 				0EF8DDAD178DB7A00067522B /* ViewController_iPhone.xib */,
@@ -817,6 +824,7 @@
 				0E73CFC117AC0B8700D65D33 /* DownloadController.m in Sources */,
 				0E73CFC417AC0BA900D65D33 /* TwitterController.m in Sources */,
 				0E73CFCB17AC17EC00D65D33 /* TwitterAccountSelector.m in Sources */,
+				0E73CFCF17AC508E00D65D33 /* MMDHubController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

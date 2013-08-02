@@ -10,6 +10,7 @@
 #import "MikuMikuConnection.h"
 #import "WindowLocker+MikuMikuConnection.h"
 #import "TwitterController.h"
+#import "AppDelegate.h"
 
 @implementation MMDHubViewController
 
@@ -22,8 +23,15 @@
     UIBarButtonItem *item = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh
                                                                            target:self action:@selector(refreshButtonDidPush:)] autorelease];
     self.navigationItem.rightBarButtonItem = item;
+    self.hubController = [MMDHubController new];
   }
   return self;
+}
+
+- (void)dealloc
+{
+  self.hubController = nil;
+  [super dealloc];
 }
 
 
@@ -76,50 +84,29 @@
 {
   __block UIButton *button = (UIButton*)sender;
   button.enabled = NO;
-  [TwitterController getTwitterAccountWithUsername:nil
-                                  succeededHandler:^(ACAccount *account)
+  
+  __block MMDHubController *hubController = self.hubController;
+  __block MMDHubViewController *weakSelf = self;
+  
+  [TwitterController getTwitterAccount:nil
+                      succeededHandler:^(ACAccount *account)
   {
-    NSLog(@"succeed");
-    NSLog(@"account.username = %@", account.username);
-    
-    NSURL *url = [NSURL URLWithString:@"https://api.twitter.com/1.1/account/verify_credentials.json"];
-    TWRequest *twRequest = [[[TWRequest alloc] initWithURL:url parameters:nil requestMethod:TWRequestMethodGET] autorelease];
-    [twRequest setAccount:account];
-    
-    NSURLRequest *signedURLRequest = [twRequest signedURLRequest];
-    NSString *serviceProvider = [[signedURLRequest URL] absoluteString];
-    NSString *authorization = [signedURLRequest valueForHTTPHeaderField:@"Authorization"];
-    
-    NSLog(@"X-Auth-Service-Provider=%@", serviceProvider );
-    NSLog(@"X-Verify-Credentials-Authorization=%@", authorization );
-    
-    MikuMikuRequest *request = [MikuMikuRequest requestWithController:@"user" action:@"create"];
-    request.method = MikuMikuRequestMethodHttpPost;
-    [request.httpHeaderFields setObject:serviceProvider forKey:@"X-Auth-Service-Provider"];
-    [request.httpHeaderFields setObject:authorization forKey:@"X-Verify-Credentials-Authorization"];
-    [WindowLocker lockWithRequest:request
-                 succeededHandler:
-     ^(MikuMikuResponse *response){
-       
-       NSLog(@"response.responses = %@", response.responses);
-     }
-                    failedHandler:
-     ^(MikuMikuError *error){
-       
-       NSLog(@"user/create failed with error:¥n%@", error);
-       
-     }];
-    
+    [hubController createUserWithTwitterAccount:account
+                               succeededHandler:^(void){
+                                 [weakSelf loadUserItems];
+                               }
+                                  failedHandler:^(void){}];
     button.enabled = YES;
     [TwitterController deleteInstance];
   }
   
                                            failedHandler:^(void)
   {
-    NSLog(@"failed");
     button.enabled = YES;
     [TwitterController deleteInstance];
   } parentViewController:self];
 }
+
+
 
 @end

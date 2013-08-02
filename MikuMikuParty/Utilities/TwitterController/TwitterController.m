@@ -92,10 +92,10 @@ static TwitterController *_sharedInstance = nil;
   [super dealloc];
 }
 
-- (void)getTwitterAccountWithUsername:(NSString*)username
-                     succeededHandler:(void(^)(ACAccount *account))succeededHandler
-                        failedHandler:(void(^)(void))failedHandler
-                 parentViewController:(UIViewController*)parent
+- (void)getTwitterAccount:(NSString*)username
+         succeededHandler:(void(^)(ACAccount *account))succeededHandler
+            failedHandler:(void(^)(void))failedHandler
+     parentViewController:(UIViewController*)parent
 {
   void(^_sh)(ACAccount* account) = [[succeededHandler copy] autorelease];
   void(^_fh)(void) = [[failedHandler copy] autorelease];
@@ -158,15 +158,15 @@ static TwitterController *_sharedInstance = nil;
 
 #pragma mark - + methods
 
-+ (void)getTwitterAccountWithUsername:(NSString*)username
-                     succeededHandler:(void(^)(ACAccount *account))succeededHandler
-                        failedHandler:(void(^)(void))failedHandler
-                 parentViewController:(UIViewController*)parent
++ (void)getTwitterAccount:(NSString*)username
+         succeededHandler:(void(^)(ACAccount *account))succeededHandler
+            failedHandler:(void(^)(void))failedHandler
+     parentViewController:(UIViewController*)parent
 {
-  [[self sharedController] getTwitterAccountWithUsername:username
-                                        succeededHandler:succeededHandler
-                                           failedHandler:failedHandler
-                                    parentViewController:parent];
+  [[self sharedController] getTwitterAccount:username
+                            succeededHandler:succeededHandler
+                               failedHandler:failedHandler
+                        parentViewController:parent];
 }
 
 

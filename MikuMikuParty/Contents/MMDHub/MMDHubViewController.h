@@ -8,11 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import "MMDHubItemTableView.h"
+#import "MMDHubController.h"
 
 @interface MMDHubViewController : UIViewController
 <UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic, assign) IBOutlet MMDHubItemTableView *tableView;
+@property (nonatomic, retain) MMDHubController *hubController;
 
 - (IBAction)twitterLoginButtonDidPush:(id)sender;
 
