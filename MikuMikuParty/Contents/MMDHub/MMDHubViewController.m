@@ -81,6 +81,22 @@
   {
     NSLog(@"succeed");
     NSLog(@"account.username = %@", account.username);
+    
+    NSURL *url = [NSURL URLWithString:@"https://api.twitter.com/1.1/account/verify_credentials.json"];
+    TWRequest *twRequest = [[[TWRequest alloc] initWithURL:url parameters:nil requestMethod:TWRequestMethodGET] autorelease];
+    [twRequest setAccount:account];
+    
+    NSURLRequest *signedURLRequest = [twRequest signedURLRequest];
+    
+    // X-Auth-Service-Provider
+    NSString *serviceProvider = [[signedURLRequest URL] absoluteString];
+    NSLog(@"X-Auth-Service-Provider=%@", serviceProvider );
+    
+    
+    // X-Verify-Credentials-Authorization
+    NSString *authorization = [signedURLRequest valueForHTTPHeaderField:@"Authorization"];
+    NSLog(@"X-Verify-Credentials-Authorization=%@", authorization );
+    
     button.enabled = YES;
   }
   

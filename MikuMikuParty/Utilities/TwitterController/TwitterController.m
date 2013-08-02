@@ -11,12 +11,88 @@
 #import "WindowLocker.h"
 
 @interface TwitterController ()
-
+@property (nonatomic, retain) ACAccountStore *accountStore;
 @end
 
 @implementation TwitterController
 
-+ (void)getTwitterAccountWithUsername:(NSString*)username
+#pragma mark - singleton managements
+
+static TwitterController *_sharedInstance = nil;
+
++ (TwitterController*)sharedController
+{
+  @synchronized (self) {
+    if (_sharedInstance == nil) {
+      _sharedInstance = [[self alloc] init];
+    }
+  }
+  return _sharedInstance;
+}
+
++ (id)allocWithZone:(NSZone*)zone
+{
+  @synchronized(self){
+    if(_sharedInstance == nil){
+      _sharedInstance = [super allocWithZone:zone];
+      return _sharedInstance;
+    }
+  }
+  return nil;
+}
+
++ (id)copyWithZone:(NSZone*)zone
+{
+  return self;
+}
+
++ (void)deleteInstance
+{
+  if (_sharedInstance) {
+    @synchronized(_sharedInstance) {
+      _sharedInstance = nil;
+    }
+  }
+}
+
+- (id)retain
+{
+  return self;
+}
+
+- (unsigned)retainCount
+{
+  return UINT_MAX;
+}
+
+- (oneway void)release
+{
+  // never release
+}
+
+- (id)autorelease
+{
+  return self;
+}
+
+#pragma mark - methods
+
+- (id)init
+{
+  self = [super init];
+  if (self) {
+    self.accountStore = [[ACAccountStore new] autorelease];
+  }
+  return self;
+}
+
+- (void)dealloc
+{
+  self.accountStore = nil;
+  [super dealloc];
+}
+
+- (void)getTwitterAccountWithUsername:(NSString*)username
                      succeededHandler:(void(^)(ACAccount *account))succeededHandler
                         failedHandler:(void(^)(void))failedHandler
                  parentViewController:(UIViewController*)parent
@@ -24,13 +100,12 @@
   void(^_sh)(ACAccount* account) = [[succeededHandler copy] autorelease];
   void(^_fh)(void) = [[failedHandler copy] autorelease];
   
-  ACAccountStore *accountStore = [[ACAccountStore new] autorelease];
-  ACAccountType* twitterType = [accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
+  ACAccountType* twitterType = [self.accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
   
   __block UIViewController *_parent = parent;
   __block WindowLocker *locker = [WindowLocker loadingLocker];
-  [accountStore requestAccessToAccountsWithType:twitterType
-                          withCompletionHandler:^(BOOL granted, NSError* error)
+  [self.accountStore requestAccessToAccountsWithType:twitterType
+                               withCompletionHandler:^(BOOL granted, NSError* error)
    {
      [locker close];
      
@@ -39,7 +114,7 @@
        return;
      }
      
-     NSArray* accounts = [accountStore accountsWithAccountType:twitterType];
+     NSArray* accounts = [self.accountStore accountsWithAccountType:twitterType];
      
      if (accounts.count == 0) {
        if (_fh) _fh();
@@ -79,6 +154,19 @@
        if (_fh) _fh();
      }
    }];
+}
+
+#pragma mark - + methods
+
++ (void)getTwitterAccountWithUsername:(NSString*)username
+                     succeededHandler:(void(^)(ACAccount *account))succeededHandler
+                        failedHandler:(void(^)(void))failedHandler
+                 parentViewController:(UIViewController*)parent
+{
+  [[self sharedController] getTwitterAccountWithUsername:username
+                                        succeededHandler:succeededHandler
+                                           failedHandler:failedHandler
+                                    parentViewController:parent];
 }
 
 
