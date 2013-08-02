@@ -23,6 +23,7 @@ typedef enum {
 @property (nonatomic, retain) NSString *controller;
 @property (nonatomic, retain) NSString *action;
 @property (nonatomic, retain) NSString *urlPrameterString;
+@property (nonatomic, retain) NSMutableDictionary *httpHeaderFields;
 @property (nonatomic, retain) NSMutableDictionary *parameters;
 
 @property (nonatomic, copy) void(^succeededHandler)(MikuMikuResponse *response);

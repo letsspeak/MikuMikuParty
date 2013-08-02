@@ -67,8 +67,11 @@
   NSMutableURLRequest *urlRequest = [[[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:uri]
                                                                   cachePolicy:NSURLRequestReloadIgnoringCacheData
                                                               timeoutInterval:30.0] autorelease];
-  for (NSString *key in httpHeaderFieldDictionary.allKeys){
-    [urlRequest setValue:[httpHeaderFieldDictionary objectForKey:key] forHTTPHeaderField:key];
+  for (NSString *key in httpHeaderFieldDictionary.allKeys) {
+    [urlRequest setValue:httpHeaderFieldDictionary[key] forHTTPHeaderField:key];
+  }
+  for (NSString *key in request.httpHeaderFields.allKeys) {
+    [urlRequest setValue:request.httpHeaderFields[key] forHTTPHeaderField:key];
   }
   [urlRequest setHTTPMethod:httpMethod];
   if (request.method == MikuMikuRequestMethodHttpPost) [urlRequest setHTTPBody:jsonData];

@@ -87,15 +87,28 @@
     [twRequest setAccount:account];
     
     NSURLRequest *signedURLRequest = [twRequest signedURLRequest];
-    
-    // X-Auth-Service-Provider
     NSString *serviceProvider = [[signedURLRequest URL] absoluteString];
-    NSLog(@"X-Auth-Service-Provider=%@", serviceProvider );
-    
-    
-    // X-Verify-Credentials-Authorization
     NSString *authorization = [signedURLRequest valueForHTTPHeaderField:@"Authorization"];
+    
+    NSLog(@"X-Auth-Service-Provider=%@", serviceProvider );
     NSLog(@"X-Verify-Credentials-Authorization=%@", authorization );
+    
+    MikuMikuRequest *request = [MikuMikuRequest requestWithController:@"user" action:@"create"];
+    request.method = MikuMikuRequestMethodHttpPost;
+    [request.httpHeaderFields setObject:serviceProvider forKey:@"X-Auth-Service-Provider"];
+    [request.httpHeaderFields setObject:authorization forKey:@"X-Verify-Credentials-Authorization"];
+    [WindowLocker lockWithRequest:request
+                 succeededHandler:
+     ^(MikuMikuResponse *response){
+       
+       NSLog(@"response.responses = %@", response.responses);
+     }
+                    failedHandler:
+     ^(MikuMikuError *error){
+       
+       NSLog(@"user/create failed with error:¥n%@", error);
+       
+     }];
     
     button.enabled = YES;
     [TwitterController deleteInstance];

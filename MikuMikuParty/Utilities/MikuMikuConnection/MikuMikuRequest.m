@@ -18,6 +18,7 @@
     self.controller = controller;
     self.action = action;
     self.urlPrameterString = nil;
+    self.httpHeaderFields = [NSMutableDictionary dictionary];
     self.parameters = [NSMutableDictionary dictionary];
   }
   return self;
@@ -28,6 +29,7 @@
   self.controller = nil;
   self.action = nil;
   self.urlPrameterString = nil;
+  self.httpHeaderFields = nil;
   self.parameters = nil;
   self.succeededHandler = nil;
   self.failedHandler = nil;
