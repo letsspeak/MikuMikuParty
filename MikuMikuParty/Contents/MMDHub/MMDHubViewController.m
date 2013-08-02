@@ -98,12 +98,14 @@
     NSLog(@"X-Verify-Credentials-Authorization=%@", authorization );
     
     button.enabled = YES;
+    [TwitterController deleteInstance];
   }
   
                                            failedHandler:^(void)
   {
     NSLog(@"failed");
     button.enabled = YES;
+    [TwitterController deleteInstance];
   } parentViewController:self];
 }
 

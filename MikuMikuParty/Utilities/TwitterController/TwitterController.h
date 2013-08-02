@@ -16,5 +16,6 @@
                      succeededHandler:(void(^)(ACAccount *account))succeededHandler
                         failedHandler:(void(^)(void))failedHandler
                  parentViewController:(UIViewController*)parent;
++ (void)deleteInstance;
 
 @end
