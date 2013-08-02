@@ -9,6 +9,7 @@
 #import "MMDHubController.h"
 #import <Twitter/Twitter.h>
 #import "MikuMikuConnection.h"
+#import "MikuMikuConnectionServer.h"
 #import "WindowLocker+MikuMikuConnection.h"
 
 @implementation MMDHubController
@@ -91,6 +92,9 @@
     failedHandler();
     return;
   }
+  
+  // for debug
+  [[MikuMikuConnectionServer sharedServer] deleteAllCookies];
   
   void(^_sh)(void) = [[succeededHandler retain] autorelease];
   void(^_fh)(void) = [[failedHandler retain] autorelease];

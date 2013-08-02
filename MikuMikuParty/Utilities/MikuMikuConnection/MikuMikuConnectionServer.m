@@ -209,4 +209,97 @@ static MikuMikuConnectionServer *_sharedInstance = nil;
   return [optionsDictionary objectForKey:@"httpHeaderFieldSetting"];
 }
 
+#pragma mark - for http api format
+
+- (NSString*)currentHttpApiFormat
+{
+  if (_currentServerDictionary == nil) return nil;
+  return [self httpApiUrlFormatWithServerDictionary:_currentServerDictionary];
+}
+
+- (NSString*)currentHttpsApiFormat
+{
+  if (_currentServerDictionary == nil) return nil;
+  return [self httpsApiUrlFormatWithServerDictionary:_currentServerDictionary];
+}
+
+#pragma mark - for delete cookies
+
+- (void)deleteCookie:(NSString*)name
+{
+  NSLog(@"SmartConnectionServer deleteCookie %@ called.", name);
+  
+  NSString *httpHost = [self hostWithApiFormat:[self currentHttpApiFormat]];
+  NSLog(@"httpHost = %@", httpHost);
+  [self deleteCookie:name forHost:[NSString stringWithFormat:@"http://%@",httpHost]];
+  
+  NSString *httpsHost = [self hostWithApiFormat:[self currentHttpsApiFormat]];
+  NSLog(@"httpsHost = %@", httpsHost);
+  [self deleteCookie:name forHost:[NSString stringWithFormat:@"https://%@",httpsHost]];
+}
+
+- (void)deleteCookie:(NSString*)name forHost:(NSString*)host
+{
+  if (name == nil) return;
+  if (host == nil) return;
+  
+  NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+  NSArray *cookies = [storage cookiesForURL:[NSURL URLWithString:host]];
+  
+  for (NSHTTPCookie *cookie in cookies) {
+    if ([name isEqualToString:cookie.name]){
+      [storage deleteCookie: cookie];
+    }
+  }
+}
+
+- (void)deleteAllCookies
+{
+  NSString *httpHost = [self hostWithApiFormat:[self currentHttpApiFormat]];
+  NSLog(@"httpHost = %@", httpHost);
+  [self deleteAllCookiesForHost:[NSString stringWithFormat:@"http://%@",httpHost]];
+  
+  NSString *httpsHost = [self hostWithApiFormat:[self currentHttpsApiFormat]];
+  NSLog(@"httpsHost = %@", httpsHost);
+  [self deleteAllCookiesForHost:[NSString stringWithFormat:@"https://%@",httpsHost]];
+}
+
+- (void)deleteAllCookiesForHost:(NSString*)host
+{
+  if (host == nil) return;
+  
+  NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+  NSArray *cookies = [storage cookiesForURL:[NSURL URLWithString:host]];
+  
+  for (NSHTTPCookie *cookie in cookies) {
+    [storage deleteCookie: cookie];
+  }
+}
+
+- (NSString*)hostWithApiFormat:(NSString*)apiFormat
+{
+  NSString *pattern = @"(.+)://(.+?)/(.+)";
+  
+  NSError *error = nil;
+  NSRegularExpression *regexp =
+  [NSRegularExpression regularExpressionWithPattern:pattern
+                                            options:0
+                                              error:&error];
+  if (error) return nil;
+  
+  NSTextCheckingResult *result =
+  [regexp firstMatchInString:apiFormat options:0 range:NSMakeRange(0, apiFormat.length)];
+  
+  if (result.numberOfRanges != 4) return nil;
+  
+//  // for debug
+//  for (int i = 0; i < result.numberOfRanges; i++) {
+//    NSString *match = [apiFormat substringWithRange:[result rangeAtIndex:i]];
+//    NSLog(@"match = %@", match);
+//  }
+  
+  return [apiFormat substringWithRange:[result rangeAtIndex:2]];
+}
+
+
 @end

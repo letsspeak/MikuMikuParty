@@ -13,6 +13,7 @@
 @interface MMDHubViewController : UIViewController
 <UITableViewDataSource, UITableViewDelegate>
 
+@property (nonatomic, assign) IBOutlet UIView *loginView;
 @property (nonatomic, assign) IBOutlet MMDHubItemTableView *tableView;
 @property (nonatomic, retain) MMDHubController *hubController;
 

@@ -93,6 +93,7 @@
   {
     [hubController createUserWithTwitterAccount:account
                                succeededHandler:^(void){
+                                 weakSelf.loginView.hidden = YES;
                                  [weakSelf loadUserItems];
                                }
                                   failedHandler:^(void){}];

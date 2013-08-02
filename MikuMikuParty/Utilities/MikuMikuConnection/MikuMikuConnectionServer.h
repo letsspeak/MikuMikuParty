@@ -14,6 +14,9 @@
 - (NSString*)generateUriWithRequest:(MikuMikuRequest*)request;
 - (NSDictionary*)httpHeaderFieldDictionary;
 
+- (void)deleteCookie:(NSString*)name;
+- (void)deleteAllCookies;
+
 + (MikuMikuConnectionServer*)sharedServer;
 
 @end
