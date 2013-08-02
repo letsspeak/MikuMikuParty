@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0E73CFC117AC0B8700D65D33 /* DownloadController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E73CFC017AC0B8700D65D33 /* DownloadController.m */; };
+		0E73CFC417AC0BA900D65D33 /* TwitterController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E73CFC317AC0BA900D65D33 /* TwitterController.m */; };
+		0E73CFC617AC0C8900D65D33 /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E73CFC517AC0C8900D65D33 /* Twitter.framework */; };
+		0E73CFC817AC164800D65D33 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E73CFC717AC164800D65D33 /* Accounts.framework */; };
+		0E73CFCB17AC17EC00D65D33 /* TwitterAccountSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E73CFCA17AC17EC00D65D33 /* TwitterAccountSelector.m */; };
 		0E82C778178DBBC200E9E0A5 /* EAGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E82C774178DBBC200E9E0A5 /* EAGLView.mm */; };
 		0E82C779178DBBC200E9E0A5 /* ES2Renderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E82C776178DBBC200E9E0A5 /* ES2Renderer.mm */; };
 		0E82C77F178DBBCF00E9E0A5 /* pmdReader.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E82C77C178DBBCF00E9E0A5 /* pmdReader.mm */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -57,7 +62,6 @@
 		0EB7E4D2179308D0009F2FFF /* ItemDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0EB7E4D0179308D0009F2FFF /* ItemDetailViewController.xib */; };
 		0EB7E4D617930CDC009F2FFF /* MMDHubItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EB7E4D517930CDC009F2FFF /* MMDHubItem.m */; };
 		0EB7E4D917930CFF009F2FFF /* MMDHubItemCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EB7E4D817930CFF009F2FFF /* MMDHubItemCollection.m */; };
-		0EB7E4DD1795A0EF009F2FFF /* DownloadController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EB7E4DC1795A0EF009F2FFF /* DownloadController.m */; };
 		0EB7E4E11795A768009F2FFF /* MikuMikuDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EB7E4E01795A768009F2FFF /* MikuMikuDownloader.m */; };
 		0EB7E4E51795B30E009F2FFF /* ZipArchive.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0EB7E4E41795B30E009F2FFF /* ZipArchive.mm */; };
 		0EB7E4F01795B331009F2FFF /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 0EB7E4E81795B331009F2FFF /* ioapi.c */; };
@@ -98,6 +102,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0E73CFBF17AC0B8700D65D33 /* DownloadController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DownloadController.h; path = Utilities/DownloadController/DownloadController.h; sourceTree = "<group>"; };
+		0E73CFC017AC0B8700D65D33 /* DownloadController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DownloadController.m; path = Utilities/DownloadController/DownloadController.m; sourceTree = "<group>"; };
+		0E73CFC217AC0BA900D65D33 /* TwitterController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TwitterController.h; path = Utilities/TwitterController/TwitterController.h; sourceTree = "<group>"; };
+		0E73CFC317AC0BA900D65D33 /* TwitterController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TwitterController.m; path = Utilities/TwitterController/TwitterController.m; sourceTree = "<group>"; };
+		0E73CFC517AC0C8900D65D33 /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
+		0E73CFC717AC164800D65D33 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
+		0E73CFC917AC17EC00D65D33 /* TwitterAccountSelector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TwitterAccountSelector.h; path = Utilities/TwitterController/TwitterAccountSelector.h; sourceTree = "<group>"; };
+		0E73CFCA17AC17EC00D65D33 /* TwitterAccountSelector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TwitterAccountSelector.m; path = Utilities/TwitterController/TwitterAccountSelector.m; sourceTree = "<group>"; };
 		0E82C773178DBBC200E9E0A5 /* EAGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EAGLView.h; path = ESRenderer/EAGLView.h; sourceTree = "<group>"; };
 		0E82C774178DBBC200E9E0A5 /* EAGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = EAGLView.mm; path = ESRenderer/EAGLView.mm; sourceTree = "<group>"; };
 		0E82C775178DBBC200E9E0A5 /* ES2Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ES2Renderer.h; path = ESRenderer/ES2Renderer.h; sourceTree = "<group>"; };
@@ -183,8 +195,6 @@
 		0EB7E4D517930CDC009F2FFF /* MMDHubItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMDHubItem.m; path = Contents/MMDHub/MMDHubItem/MMDHubItem.m; sourceTree = "<group>"; };
 		0EB7E4D717930CFF009F2FFF /* MMDHubItemCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMDHubItemCollection.h; path = Contents/MMDHub/MMDHubItem/MMDHubItemCollection.h; sourceTree = "<group>"; };
 		0EB7E4D817930CFF009F2FFF /* MMDHubItemCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMDHubItemCollection.m; path = Contents/MMDHub/MMDHubItem/MMDHubItemCollection.m; sourceTree = "<group>"; };
-		0EB7E4DB1795A0EF009F2FFF /* DownloadController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DownloadController.h; path = DownloadController/DownloadController.h; sourceTree = "<group>"; };
-		0EB7E4DC1795A0EF009F2FFF /* DownloadController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DownloadController.m; path = DownloadController/DownloadController.m; sourceTree = "<group>"; };
 		0EB7E4DF1795A768009F2FFF /* MikuMikuDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MikuMikuDownloader.h; path = Utilities/MikuMikuDownloader/MikuMikuDownloader.h; sourceTree = "<group>"; };
 		0EB7E4E01795A768009F2FFF /* MikuMikuDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MikuMikuDownloader.m; path = Utilities/MikuMikuDownloader/MikuMikuDownloader.m; sourceTree = "<group>"; };
 		0EB7E4E31795B30E009F2FFF /* ZipArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZipArchive.h; path = Utilities/ZipArchive/ZipArchive.h; sourceTree = "<group>"; };
@@ -235,6 +245,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0E73CFC817AC164800D65D33 /* Accounts.framework in Frameworks */,
+				0E73CFC617AC0C8900D65D33 /* Twitter.framework in Frameworks */,
 				0EB7E4F51795B38E009F2FFF /* libz.1.2.5.dylib in Frameworks */,
 				0E82C7B9178DBD8F00E9E0A5 /* OpenGLES.framework in Frameworks */,
 				0E82C7B7178DBD8700E9E0A5 /* QuartzCore.framework in Frameworks */,
@@ -257,9 +269,47 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0E73CFBB17AC0A7900D65D33 /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				0EB7E4F41795B38D009F2FFF /* libz.1.2.5.dylib */,
+			);
+			name = Libraries;
+			path = MikuMikuParty;
+			sourceTree = "<group>";
+		};
+		0E73CFBC17AC0B1500D65D33 /* TwitterController */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = TwitterController;
+			sourceTree = "<group>";
+		};
+		0E73CFBD17AC0B4200D65D33 /* TwitterController */ = {
+			isa = PBXGroup;
+			children = (
+				0E73CFC217AC0BA900D65D33 /* TwitterController.h */,
+				0E73CFC317AC0BA900D65D33 /* TwitterController.m */,
+				0E73CFC917AC17EC00D65D33 /* TwitterAccountSelector.h */,
+				0E73CFCA17AC17EC00D65D33 /* TwitterAccountSelector.m */,
+			);
+			name = TwitterController;
+			sourceTree = "<group>";
+		};
+		0E73CFBE17AC0B6000D65D33 /* DownloadController */ = {
+			isa = PBXGroup;
+			children = (
+				0E73CFBF17AC0B8700D65D33 /* DownloadController.h */,
+				0E73CFC017AC0B8700D65D33 /* DownloadController.m */,
+			);
+			name = DownloadController;
+			sourceTree = "<group>";
+		};
 		0E82C74C178DB96800E9E0A5 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				0E73CFBE17AC0B6000D65D33 /* DownloadController */,
+				0E73CFBD17AC0B4200D65D33 /* TwitterController */,
 				0EB7E4F917997D6E009F2FFF /* NSString+Charset */,
 				0EB7E4E21795B2E8009F2FFF /* ZipArchive */,
 				0EB7E4DE1795A74F009F2FFF /* MikuMikuDownloader */,
@@ -447,15 +497,6 @@
 			name = MMDHubItem;
 			sourceTree = "<group>";
 		};
-		0EB7E4DA1795A0C9009F2FFF /* DownloadController */ = {
-			isa = PBXGroup;
-			children = (
-				0EB7E4DB1795A0EF009F2FFF /* DownloadController.h */,
-				0EB7E4DC1795A0EF009F2FFF /* DownloadController.m */,
-			);
-			name = DownloadController;
-			sourceTree = "<group>";
-		};
 		0EB7E4DE1795A74F009F2FFF /* MikuMikuDownloader */ = {
 			isa = PBXGroup;
 			children = (
@@ -514,9 +555,9 @@
 		0EF8DD86178DB7A00067522B = {
 			isa = PBXGroup;
 			children = (
-				0EB7E4F41795B38D009F2FFF /* libz.1.2.5.dylib */,
 				0EF8DD98178DB7A00067522B /* MikuMikuParty */,
 				0EF8DDBF178DB7A10067522B /* MikuMikuPartyTests */,
+				0E73CFBB17AC0A7900D65D33 /* Libraries */,
 				0EF8DD91178DB7A00067522B /* Frameworks */,
 				0EF8DD90178DB7A00067522B /* Products */,
 			);
@@ -534,7 +575,9 @@
 		0EF8DD91178DB7A00067522B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0E73CFC517AC0C8900D65D33 /* Twitter.framework */,
 				0E82C7B8178DBD8F00E9E0A5 /* OpenGLES.framework */,
+				0E73CFC717AC164800D65D33 /* Accounts.framework */,
 				0E82C7B6178DBD8700E9E0A5 /* QuartzCore.framework */,
 				0EF8DD92178DB7A00067522B /* UIKit.framework */,
 				0EF8DD94178DB7A00067522B /* Foundation.framework */,
@@ -547,7 +590,7 @@
 		0EF8DD98178DB7A00067522B /* MikuMikuParty */ = {
 			isa = PBXGroup;
 			children = (
-				0EB7E4DA1795A0C9009F2FFF /* DownloadController */,
+				0E73CFBC17AC0B1500D65D33 /* TwitterController */,
 				0EB7E4B01792CFCA009F2FFF /* Contents */,
 				0E82C74C178DB96800E9E0A5 /* Utilities */,
 				0E82C79B178DBC0A00E9E0A5 /* vmd */,
@@ -758,7 +801,6 @@
 				0EB7E4D1179308D0009F2FFF /* ItemDetailViewController.m in Sources */,
 				0EB7E4D617930CDC009F2FFF /* MMDHubItem.m in Sources */,
 				0EB7E4D917930CFF009F2FFF /* MMDHubItemCollection.m in Sources */,
-				0EB7E4DD1795A0EF009F2FFF /* DownloadController.m in Sources */,
 				0EB7E4E11795A768009F2FFF /* MikuMikuDownloader.m in Sources */,
 				0EB7E4E51795B30E009F2FFF /* ZipArchive.mm in Sources */,
 				0EB7E4F01795B331009F2FFF /* ioapi.c in Sources */,
@@ -772,6 +814,9 @@
 				0EB5339217A011B000A357F1 /* vmdMotionProviderPMX.mm in Sources */,
 				0EB5339417A0127D00A357F1 /* vmdMotionProviderPMXIK.mm in Sources */,
 				0EB5339617A0129C00A357F1 /* vmdMotionProviderPMXSkinAnimation.mm in Sources */,
+				0E73CFC117AC0B8700D65D33 /* DownloadController.m in Sources */,
+				0E73CFC417AC0BA900D65D33 /* TwitterController.m in Sources */,
+				0E73CFCB17AC17EC00D65D33 /* TwitterAccountSelector.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -56,6 +56,7 @@ static NSString *ItemSelectViewControllerCellIdentifier = @"ItemSelectViewContro
 - (void)dealloc
 {
   self.items = nil;
+  self.handler = nil;
   [super dealloc];
 }
 

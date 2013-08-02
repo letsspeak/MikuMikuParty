@@ -14,4 +14,6 @@
 
 @property (nonatomic, assign) IBOutlet MMDHubItemTableView *tableView;
 
+- (IBAction)twitterLoginButtonDidPush:(id)sender;
+
 @end

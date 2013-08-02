@@ -9,6 +9,7 @@
 #import "MMDHubViewController.h"
 #import "MikuMikuConnection.h"
 #import "WindowLocker+MikuMikuConnection.h"
+#import "TwitterController.h"
 
 @implementation MMDHubViewController
 
@@ -31,7 +32,7 @@
   [super viewDidLoad];
   
   self.tableView.parentViewController = self;
-  [self loadUserItems];
+//  [self loadUserItems];
 }
 
 - (void)loadUserItems
@@ -69,6 +70,25 @@
 - (void)refreshButtonDidPush:(id)sender
 {
   [self loadUserItems];
+}
+
+- (IBAction)twitterLoginButtonDidPush:(id)sender
+{
+  __block UIButton *button = (UIButton*)sender;
+  button.enabled = NO;
+  [TwitterController getTwitterAccountWithUsername:nil
+                                  succeededHandler:^(ACAccount *account)
+  {
+    NSLog(@"succeed");
+    NSLog(@"account.username = %@", account.username);
+    button.enabled = YES;
+  }
+  
+                                           failedHandler:^(void)
+  {
+    NSLog(@"failed");
+    button.enabled = YES;
+  } parentViewController:self];
 }
 
 @end

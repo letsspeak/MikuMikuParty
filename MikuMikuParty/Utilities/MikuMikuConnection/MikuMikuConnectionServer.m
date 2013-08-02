@@ -16,7 +16,6 @@
 
 @implementation MikuMikuConnectionServer
 
-
 #pragma mark - singleton managements
 
 static MikuMikuConnectionServer *_sharedInstance = nil;
